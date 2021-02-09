@@ -12,6 +12,35 @@ module.exports = ({ getUserByEmail }) => {
 
   //TODO: setup /register route
 
+  router.post("/register", (req, res, next) => {
+    const { name, studentId, email, password } = req.body;
+    if (!email || !password || !studentId || ! name) {
+      next(new ErrorHandler(400, "Missing field(s)"));
+    } else {
+      console.log('attempted to register with', {name, studentId, email, password});
+      // getUserByEmail(email)
+      //   .then((result) => {
+      //     if (!result.length)
+      //       throw new ErrorHandler(401, "Invalid password or email address");
+      //     const hashedPassword = result[0].password;
+      //     const isValid = bcrypt.compareSync(password, hashedPassword);
+      //     if (!isValid)
+      //       throw new ErrorHandler(401, "Invalid password or email address");
+      //     const token = jwt.sign(
+      //       {
+      //         data: result[0].id,
+      //       },
+      //       process.env.JWT_KEY,
+      //       { expiresIn: "24h" }
+      //     );
+      //     res.json({ token });
+      //   })
+      //   .catch((err) => {
+      //     next(err)
+      //   });
+    }
+  });
+
   router.post("/login", (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -34,7 +63,9 @@ module.exports = ({ getUserByEmail }) => {
           );
           res.json({ token });
         })
-        .catch((err) => next(err));
+        .catch((err) => {
+          next(err)
+        });
     }
   });
 
