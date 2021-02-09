@@ -20,15 +20,15 @@ const { authMiddleware } = require("./middlewares/authMiddleware");
 const { errorMiddleware } = require("./middlewares/errorMiddleware");
 
 // Routes setup
-const indexRouter = require("./routes/indexRoute");
+const indexRouter = require("./routes/indexRoutes");
 const usersController = require("./controllers/usersController")(db);
 app.use("/", indexRouter(usersController));
 
-const usersRouter = require("./routes/usersRoute");
+const usersRouter = require("./routes/usersRoutes");
 app.use("/users", authMiddleware, usersRouter(usersController));
 
-const Router404 = require("./routes/404Route");
-app.use("*", Router404);
+// const Router404 = require("./routes/404Route");
+// app.use("*", Router404);
 
 // Error middleware
 app.use(errorMiddleware);
