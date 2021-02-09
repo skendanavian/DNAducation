@@ -35,13 +35,17 @@ const createFakeTeachers = (n) => {
 };
 
 exports.seed = function (knex) {
-  knex.raw("ALTER SEQUENCE users_id_seq RESTART;");
   // Deletes ALL existing entries
   return knex("users")
     .del()
     .then(function () {
       // Inserts seed entries
-      const rows = [...createFakeUsers(users), ...createFakeTeachers(teachers)]
-      return knex("users").insert(rows);
+      return knex.raw('ALTER SEQUENCE users_id_seq RESTART;').then(() => {
+        const rows = [
+          ...createFakeUsers(users),
+          ...createFakeTeachers(teachers)
+        ];
+        return knex("users").insert(rows);
+      });
     });
 };

@@ -24,14 +24,15 @@ const createFakeExams = (sections, exams) => {
 };
 
 exports.seed = function (knex) {
-  knex.raw("ALTER SEQUENCE exams_id_seq RESTART;");
   // Deletes ALL existing entries
   return knex("exam_questions")
     .del()
     .then(() => {
-      // Inserts seed entries
-      const rows = createFakeExams(sections, exams);
-      return knex("exams").insert(rows);
+      return knex.raw('ALTER SEQUENCE exams_id_seq RESTART;').then(() => {
+        // Inserts seed entries
+        const rows = createFakeExams(sections, exams);
+        return knex("exams").insert(rows);
+      })
     });
 };
 

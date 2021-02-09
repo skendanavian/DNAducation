@@ -30,15 +30,15 @@ const createFakeExamAnswers = (exams, attempts, examAnswers) => {
 };
 
 exports.seed = function (knex) {
-  knex.raw("ALTER SEQUENCE exam_answers_seq RESTART;");
-
   // Deletes ALL existing entries
   return knex("exam_answers")
     .del()
     .then(() => {
-      // Inserts seed entries
-      const rows = createFakeExamAnswers(exams, exam_attempts, exam_answers);
-      return knex("exam_answers").insert(rows);
+      return knex.raw('ALTER SEQUENCE exam_answers_id_seq RESTART;').then(()=> {
+        // Inserts seed entries
+        const rows = createFakeExamAnswers(exams, exam_attempts, exam_answers);
+        return knex("exam_answers").insert(rows);
+      })
     });
 };
 

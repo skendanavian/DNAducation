@@ -29,8 +29,10 @@ exports.seed = function (knex) {
   return knex("section_students")
     .del()
     .then(function () {
-      // Inserts seed entries
-      return knex("section_students").insert(createFakeSectionStudents(section_students));
+      return knex.raw('ALTER SEQUENCE section_students_id_seq RESTART;').then(() => {
+        // Inserts seed entries
+        return knex("section_students").insert(createFakeSectionStudents(section_students));
+      })
     });
 };
 

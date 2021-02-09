@@ -19,13 +19,14 @@ const createFakeSections = (n) => {
 
 
 exports.seed = function (knex) {
-  knex.raw("ALTER SEQUENCE sections_id_seq RESTART;");
   // Deletes ALL existing entries
   return knex("sections")
     .del()
     .then(function () {
-      // Inserts seed entries
-      return knex("sections").insert(createFakeSections(sections));
+      return knex.raw('ALTER SEQUENCE sections_id_seq RESTART;').then(() =>{
+        // Inserts seed entries
+        return knex("sections").insert(createFakeSections(sections));
+      })
     });
 };
 
