@@ -21,12 +21,14 @@ const createFakeClasses = (n) => {
 
 
 exports.seed = function (knex) {
-  knex.raw("ALTER SEQUENCE classes_id_seq RESTART;");
+  
   // Deletes ALL existing entries
   return knex("classes")
     .del()
     .then(function () {
       // Inserts seed entries
-      return knex("classes").insert(createFakeClasses(classes));
+      return knex.raw('ALTER SEQUENCE classes_id_seq RESTART;').then(() => {
+        return knex("classes").insert(createFakeClasses(classes));
+      })
     });
 };
