@@ -5,11 +5,13 @@ exports.up = function (knex) {
     table.integer("student_number").notNullable();
     table.string("password").notNullable();
     table.string("email").unique().notNullable();
+    table.boolean("is_teacher").notNullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
 };
 
 exports.down = function (knex) {
+  knex.raw("ALTER SEQUENCE users_id_seq RESTART;");
   return knex.schema.dropTable("users");
 };
