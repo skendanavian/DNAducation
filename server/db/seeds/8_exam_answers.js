@@ -12,17 +12,11 @@ const createFakeExamAnswers = (exams, attempts, examAnswers) => {
       // console.log('examAttempt ', examAttempt);
       for(let attemptQ = exam * 3 - qsPerAttempt + 1; attemptQ <= exam * 3; attemptQ++) {
       // console.log('attemptQ', attemptQ);
-<<<<<<< HEAD
-
-        rows.push({
-          exam_attempt_id: exam + examAttempt - 1,
-=======
             console.log('examAttempt ', examAttempt);
 
 
         rows.push({
           exam_attempt_id: exam * 2 + examAttempt - 2,
->>>>>>> setup/db
           exam_question_id: attemptQ,
           answer: faker.lorem.sentences(2),
           mark: examAttempt % 2 === 0 ? faker.random.number({min:0, max: 11}) : null,
