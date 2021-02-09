@@ -7,7 +7,8 @@ const createFakeUsers = (n) => {
   for (let i = 0; i < n; i++) {
     const hash = bcrypt.hashSync("test", salt);
     users.push({
-      username: faker.internet.userName(),
+      name: faker.internet.userName(),
+      student_number:Math.floor(faker.random() * 999999),
       password: hash,
       email: faker.internet.email(),
     });
