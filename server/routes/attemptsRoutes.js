@@ -73,7 +73,7 @@ module.exports = ({
   });
 
   // submitting a mark for an individual question
-  router.patch(`/:attemptsId/answers/:answersId`, (req, res, next) => {
+  router.patch(`/answers/:answersId`, (req, res, next) => {
     const {
       answersId: exam_answers_id,
     } = req.params;
