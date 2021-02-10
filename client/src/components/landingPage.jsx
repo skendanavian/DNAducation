@@ -7,8 +7,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import LandingImage from "../images/landingBg.jpg";
 import { Typography } from "@material-ui/core";
 
-// import "./LandingPage.scss";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: "100vh",
