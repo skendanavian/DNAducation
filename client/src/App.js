@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import Login from "./components/Login";
-import LandingPage from "./components/LandingPage";
-import Register from "./components/Register";
+import React, { useState } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
-import { themeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
+
+import Login from "./components/Login";
+import LandingPage from "./components/LandingPage";
+import AccountPage from "./components/AccountPage";
+import Register from "./components/Register";
 
 const theme = createMuiTheme({
   palette: {
@@ -22,17 +23,24 @@ const theme = createMuiTheme({
   },
 });
 
+
+
 function App() {
+  const [token, setToken] = useState(sessionStorage.getItem("jwt") || "");
+  console.log({token});
   return (
     <Router>
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <Switch>
           <Route path="/login">
-            <Login />
+            {token ? <Redirect to="/account" /> : <Login setToken={setToken}/>}
           </Route>
           <Route path="/register">
-            <Register />
+            {token ? <Redirect to="/account" /> : <Register setToken={setToken}/>}
+          </Route>
+          <Route path="/account">
+            {token ? <AccountPage setToken={setToken}/> : <Redirect to="/register" />}
           </Route>
           <Route path="/">
             <LandingPage />

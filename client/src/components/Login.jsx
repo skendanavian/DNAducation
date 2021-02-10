@@ -1,5 +1,8 @@
 import React from "react";
 import { useState } from "react";
+
+import { useHistory } from "react-router-dom";
+
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -47,40 +50,48 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Login(props) {
+  const { setToken } = props;
   const classes = useStyles();
+  const history = useHistory();
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
   });
+
   const [loginStatus, setLoginStatus] = useState(false);
 
-  const userAuthenticated = () => {
-    axios
-      .get("http://localhost:8080/api/isUserAuth", {
-        headers: { "x-access-token": localStorage.getItem("token") },
-      })
-      .then((res) => {
-        console.log(res);
-      });
-  };
+  // const userAuthenticated = () => {
+  // axios
+  //   .get("http://localhost:8080/api/isUserAuth", {
+  //     headers: { "x-access-token": localStorage.getItem("token") },
+  //   })
+  //   .then((res) => {
+  //     console.log(res);
+  //   });
+  // };
 
   const submitLogin = (e) => {
     e.preventDefault();
 
-    axios
-      .post("http://localhost:8080/api/login", loginForm)
-      .then((res) => {
-        if (!res.data.auth) {
-          setLoginStatus(false);
-        } else {
-          console.log(res.data);
-          localStorage.setItem("token", "Bearer" + res.data.token);
-          setLoginStatus(true);
-        }
-      })
-      .catch((e) => console.log(e));
-    userAuthenticated();
+    setToken("Logged in");
+    console.log("logged in");
+    history.push("/account");
+    console.log(history);
+
+    // axios
+    //   .post("http://localhost:8080/api/login", loginForm)
+    //   .then((res) => {
+    //     if (!res.data.auth) {
+    //       setLoginStatus(false);
+    //     } else {
+    //       console.log(res.data);
+    //       localStorage.setItem("token", "Bearer" + res.data.token);
+    //       setLoginStatus(true);
+    //     }
+    //   })
+    //   .catch((e) => console.log(e));
+    // userAuthenticated();
   };
 
   const handleInput = (e) => {
