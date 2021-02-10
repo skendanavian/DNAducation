@@ -42,49 +42,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Register() {
   const classes = useStyles();
-  const [loginForm, setLoginForm] = useState({
+  const [registrationForm, setRegistrationForm] = useState({
+    username: "",
     email: "",
     password: "",
   });
-  const [loginStatus, setLoginStatus] = useState(false);
 
-  const userAuthenticated = () => {
+  const submitRegistration = (e) => {
+    e.preventDefault();
     axios
-      .get("http://localhost:8080/api/isUserAuth", {
-        headers: { "x-access-token": localStorage.getItem("token") },
-      })
+      .post("api/register", registrationForm)
       .then((res) => {
         console.log(res);
-      });
-  };
-
-  const submitLogin = (e) => {
-    e.preventDefault();
-
-    axios
-      .post("http://localhost:8080/api/login", loginForm)
-      .then((res) => {
-        if (!res.data.auth) {
-          setLoginStatus(false);
-        } else {
-          console.log(res.data);
-          localStorage.setItem("token", "Bearer" + res.data.token);
-          setLoginStatus(true);
-        }
+        console.log(res.data);
       })
       .catch((e) => console.log(e));
-
-    userAuthenticated();
   };
 
   const handleInput = (e) => {
-    setLoginForm({
-      ...loginForm,
+    setRegistrationForm({
+      ...registrationForm,
       [e.target.name]: e.target.value,
     });
-    console.log(loginForm);
   };
 
   return (
@@ -96,9 +77,25 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign Up
           </Typography>
-          <form onSubmit={submitLogin} className={classes.form} noValidate>
+          <form
+            onSubmit={submitRegistration}
+            className={classes.form}
+            noValidate
+          >
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
+              autoFocus
+              onChange={handleInput}
+            />
             <TextField
               variant="outlined"
               margin="normal"
@@ -123,6 +120,7 @@ export default function Login() {
               autoComplete="current-password"
               onChange={handleInput}
             />
+
             <Button
               type="submit"
               fullWidth
@@ -130,11 +128,11 @@ export default function Login() {
               color="primary"
               className={classes.submit}
             >
-              Sign In
+              Sign Up
             </Button>
             <Box display="flex" justifyContent="center">
-              <Link href="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link href="/login" variant="body2">
+                {"Already have an account? Login"}
               </Link>
             </Box>
           </form>
