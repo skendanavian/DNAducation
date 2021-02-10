@@ -10,35 +10,40 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import LandingImage from "../images/landingBg.jpg";
 import axios from "axios";
-import "./LoginRegister.scss";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    minHeight: "100vh",
+    minWidth: "100vw",
+    position: "absolute",
+    background: `linear-gradient(45deg, rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url(${LandingImage})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "rgb(193, 8, 8)",
-    color: "white",
+    borderRadius: "0.5rem",
+    backgroundColor: "rgba(255,255,255,1)",
+    padding: "1rem",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: "white",
-    color: "black",
+    color: "#FFFBFE",
+    backgroundColor: "#00296b",
   },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
-    backgroundColor: "white",
-    padding: theme.spacing(4),
+    padding: theme.spacing(1.5, 4),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    backgroundColor: "rgb(193, 8, 8)",
-    "&:hover": {
-      backgroundColor: "red",
-    },
   },
 }));
 
@@ -75,7 +80,6 @@ export default function Login() {
         }
       })
       .catch((e) => console.log(e));
-
     userAuthenticated();
   };
 
@@ -88,14 +92,14 @@ export default function Login() {
   };
 
   return (
-    <div className="page-container">
+    <div className={classes.root}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography color="primary" component="h1" variant="h5">
             Sign in
           </Typography>
           <form onSubmit={submitLogin} className={classes.form} noValidate>
@@ -127,14 +131,16 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.submit}
             >
-              Sign In
+              <Typography color="primary"> Sign In</Typography>
             </Button>
             <Box display="flex" justifyContent="center">
               <Link href="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
+                <Typography variant="body1">
+                  {"Don't have an account? Sign Up"}
+                </Typography>
               </Link>
             </Box>
           </form>
