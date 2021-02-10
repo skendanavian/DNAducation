@@ -7,6 +7,19 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
+  const createNewUser = (data) => {
+    const {name, student_number, password, email} = data;
+    return db("classes")
+    .insert({
+      name,
+      student_number,
+      email,
+      password
+    })
+    .returning("*")
+    .then((result) => result);
+  }
+
   const getUserById = (id) => {
     return db
       .select("*")
@@ -28,5 +41,6 @@ module.exports = (db) => {
     getUsers,
     getUserById,
     getUserByEmail,
+    createNewUser
   };
 };
