@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "../../.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { ErrorHandler } = require("../helpers/errorsHelper");
