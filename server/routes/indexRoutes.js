@@ -14,10 +14,15 @@ module.exports = ({ getUserByEmail }) => {
 
   router.post("/register", (req, res, next) => {
     const { name, studentId, email, password } = req.body;
-    if (!email || !password || !studentId || ! name) {
+    if (!email || !password || !studentId || !name) {
       next(new ErrorHandler(400, "Missing field(s)"));
     } else {
-      console.log('attempted to register with', {name, studentId, email, password});
+      console.log("attempted to register with", {
+        name,
+        studentId,
+        email,
+        password,
+      });
       // getUserByEmail(email)
       //   .then((result) => {
       //     if (!result.length)
@@ -43,6 +48,7 @@ module.exports = ({ getUserByEmail }) => {
 
   router.post("/login", (req, res, next) => {
     const { email, password } = req.body;
+    console.log(req.body);
     if (!email || !password) {
       next(new ErrorHandler(400, "Missing field(s)"));
     } else {
@@ -64,7 +70,7 @@ module.exports = ({ getUserByEmail }) => {
           res.json({ token });
         })
         .catch((err) => {
-          next(err)
+          next(err);
         });
     }
   });

@@ -1,5 +1,7 @@
 import React from "react";
 import { useState } from "react";
+import useAxios from "../hooks/useAxios";
+
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,7 +13,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import LandingImage from "../images/landingBg.jpg";
-import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,16 +49,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
-  const classes = useStyles();
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
   });
+
   const [loginStatus, setLoginStatus] = useState(false);
+
+  const classes = useStyles();
+  const axios = useAxios();
 
   const userAuthenticated = () => {
     axios
-      .get("http://localhost:8080/api/isUserAuth", {
+      .get("http://localhost:8/api/isUserAuth", {
         headers: { "x-access-token": localStorage.getItem("token") },
       })
       .then((res) => {
@@ -69,18 +73,20 @@ export default function Login() {
     e.preventDefault();
 
     axios
-      .post("http://localhost:8080/api/login", loginForm)
+      .post("http://localhost:3001/login", loginForm)
       .then((res) => {
-        if (!res.data.auth) {
+        console.log(res.data);
+        if (!res.data) {
+          console.log("bad response");
           setLoginStatus(false);
         } else {
           console.log(res.data);
-          localStorage.setItem("token", "Bearer" + res.data.token);
+          console.log("itworked");
           setLoginStatus(true);
         }
       })
       .catch((e) => console.log(e));
-    userAuthenticated();
+    // userAuthenticated();
   };
 
   const handleInput = (e) => {
