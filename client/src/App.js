@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import LandingPage from './components/LandingPage'
 import "./App.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -17,7 +18,7 @@ function App() {
           <Register />
         </Route>
         <Route path="/">
-          <h1>Landing Page?</h1>
+          <LandingPage></LandingPage>
         </Route>
       </Switch>
     </Router>
