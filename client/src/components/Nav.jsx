@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
-import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,11 +9,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Link from "@material-ui/core/Link";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
+
+import MenuIcon from "@material-ui/icons/Menu";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import AirlineSeatReclineExtraIcon from "@material-ui/icons/AirlineSeatReclineExtra";
 import FunctionsIcon from "@material-ui/icons/Functions";
@@ -119,22 +120,14 @@ export default function Nav(props) {
           <Typography variant="h6" noWrap>
             {pageTitle}
           </Typography>
-          <Link
-            href="/Login"
-            component="button"
-            color="secondary"
-            variant="button"
-          >
-            {"Login"}
-          </Link>
-          <Link
-            href="/register"
-            component="button"
-            color="secondary"
-            variant="button"
-          >
-            {"Register"}
-          </Link>
+          <Box marginLeft="auto">
+            <Link href="/login" color="secondary">
+              {"Login"}
+            </Link>
+            <Link href="/register" color="secondary">
+              {"Register"}
+            </Link>
+          </Box>
         </Toolbar>
       </AppBar>
       <Hidden xsDown implementation="css">
