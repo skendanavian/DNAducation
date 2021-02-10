@@ -27,6 +27,14 @@ app.use("/", indexRouter(usersController));
 const usersRouter = require("./routes/usersRoutes");
 app.use("/users", authMiddleware, usersRouter(usersController));
 
+const examsRouter = require("./routes/examsRoutes");
+const examsController = require("./controllers/examsController")(db);
+app.use("/exams", examsRouter(examsController));
+
+const attemptsRouter = require("./routes/attemptsRoutes");
+const attemptsController = require("./controllers/attemptsController")(db);
+app.use("/attempts", attemptsRouter(attemptsController));
+
 // const Router404 = require("./routes/404Route");
 // app.use("*", Router404);
 
