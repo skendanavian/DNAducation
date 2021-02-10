@@ -2,7 +2,7 @@ import Nav from "./Nav";
 import Typography from "@material-ui/core/Typography";
 
 const AccountPage = (props) => {
-  // const { data } = props;
+  const { setToken } = props;
   const classCodes = [
     "STAT 100",
     "HIST 220",
@@ -16,6 +16,7 @@ const AccountPage = (props) => {
   const user = { name: "Devin Sanders", email: "dsand@gmail.com" };
 
   const navProps = {
+    setToken,
     classCodes,
     pageTitle,
     user,

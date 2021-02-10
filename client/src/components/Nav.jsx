@@ -1,4 +1,7 @@
 import React from "react";
+
+import { useHistory } from "react-router-dom";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
@@ -7,6 +10,7 @@ import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
 import Link from "@material-ui/core/Link";
+import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
@@ -56,26 +60,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const classCodeIconFinder = (code) => {
+  const subject = code.split(" ")[0].toUpperCase();
+  return {
+    STAT: <EqualizerIcon />,
+    PHIL: <AirlineSeatReclineExtraIcon />,
+    CALC: <FunctionsIcon />,
+    ENG: <BookIcon />,
+    HIST: <HistoryIcon />,
+    PSY: <PeopleAltIcon />,
+    ANTH: <NaturePeopleIcon />,
+  }[subject];
+};
+
 export default function Nav(props) {
+  const { classCodes, pageTitle, user, setToken } = props;
   const classes = useStyles();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const history = useHistory();
   const theme = useTheme();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  let { classCodes, pageTitle, user } = props;
-
-  const classCodeIconFinder = (code) => {
-    const subject = code.split(" ")[0].toUpperCase();
-    return {
-      STAT: <EqualizerIcon />,
-      PHIL: <AirlineSeatReclineExtraIcon />,
-      CALC: <FunctionsIcon />,
-      ENG: <BookIcon />,
-      HIST: <HistoryIcon />,
-      PSY: <PeopleAltIcon />,
-      ANTH: <NaturePeopleIcon />,
-    }[subject];
+  const logout = () => {
+    setToken("");
+    history.push("/login");
   };
 
   const drawer = (
@@ -121,12 +131,9 @@ export default function Nav(props) {
             {pageTitle}
           </Typography>
           <Box marginLeft="auto">
-            <Link href="/login" color="secondary">
-              {"Login"}
-            </Link>
-            <Link href="/register" color="secondary">
-              {"Register"}
-            </Link>
+            <Button variant="contained" onClick={logout} color="secondary">
+              {"Logout"}
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>

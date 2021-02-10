@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import useAxios from "../hooks/useAxios";
+import { useHistory } from "react-router-dom";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -48,7 +49,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Login(props) {
+  const { setToken } = props;
+  const history = useHistory();
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
@@ -71,6 +74,10 @@ export default function Login() {
 
   const submitLogin = (e) => {
     e.preventDefault();
+    setToken("Logged in");
+    console.log("logged in");
+    history.push("/account");
+    console.log(history);
 
     axios
       .post("http://localhost:3001/login", loginForm)
@@ -86,7 +93,6 @@ export default function Login() {
         }
       })
       .catch((e) => console.log(e));
-    // userAuthenticated();
   };
 
   const handleInput = (e) => {
