@@ -1,8 +1,14 @@
 import Nav from "./Nav";
 import Typography from "@material-ui/core/Typography";
 
+import UserIdContext from "../contexts/UserIdContext";
+
+import { useContext } from "react";
+
 const AccountPage = (props) => {
   const { setToken } = props;
+  const userId = useContext(UserIdContext);
+  console.log(userId);
   const classCodes = [
     "STAT 100",
     "HIST 220",

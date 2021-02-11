@@ -49,47 +49,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login(props) {
-  const { setToken } = props;
+export default function Login({ setToken, setUserId }) {
   const history = useHistory();
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
   });
 
-  const [loginStatus, setLoginStatus] = useState(false);
-
   const classes = useStyles();
   const axios = useAxios();
 
-  const userAuthenticated = () => {
-    axios
-      .get("http://localhost:8/api/isUserAuth", {
-        headers: { "x-access-token": localStorage.getItem("token") },
-      })
-      .then((res) => {
-        console.log(res);
-      });
-  };
-
   const submitLogin = (e) => {
     e.preventDefault();
-    setToken("Logged in");
-    console.log("logged in");
-    history.push("/account");
-    console.log(history);
 
     axios
       .post("http://localhost:3001/login", loginForm)
       .then((res) => {
-        console.log(res.data);
         if (!res.data) {
-          console.log("bad response");
-          setLoginStatus(false);
-        } else {
           console.log(res.data);
-          console.log("itworked");
-          setLoginStatus(true);
+        } else {
+          console.log("Login response: ", res.data);
+          setToken(res.data.token);
+          setUserId(res.data.id);
+          sessionStorage.setItem("jwt", res.data.token);
+          history.push("/account");
         }
       })
       .catch((e) => console.log(e));
@@ -100,7 +83,6 @@ export default function Login(props) {
       ...loginForm,
       [e.target.name]: e.target.value,
     });
-    console.log(loginForm);
   };
 
   return (

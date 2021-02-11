@@ -5,7 +5,7 @@ exports.up = function (knex) {
     table.integer("student_number").notNullable();
     table.string("password").notNullable();
     table.string("email").unique().notNullable();
-    table.boolean("is_teacher").notNullable().defaultTo(false);
+    table.boolean("is_teacher").defaultTo(false);
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });

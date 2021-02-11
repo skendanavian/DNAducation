@@ -1,5 +1,8 @@
 import React from "react";
 import { useState } from "react";
+import useAxios from "../hooks/useAxios";
+import { useHistory } from "react-router-dom";
+
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,7 +14,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import LandingImage from "../images/landingBg.jpg";
-import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,23 +48,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Register() {
+export default function Register({ setToken }) {
+  const history = useHistory();
   const classes = useStyles();
   const [registrationForm, setRegistrationForm] = useState({
     firstName: "",
     lastName: "",
-    studentNumber: "",
+    studentId: "",
     email: "",
     password: "",
   });
+  const axios = useAxios();
 
   const submitRegistration = (e) => {
     e.preventDefault();
+
+    const { firstName, lastName, studentId } = registrationForm;
+    const name = `${firstName} ${lastName}`;
+    // const studentId = Number(studentId);
+    const data = { name, ...registrationForm };
+
     axios
-      .post("api/register", registrationForm)
+      .post("http://localhost:3001/register", data)
       .then((res) => {
-        console.log(res);
-        console.log(res.data);
+        console.log("Register response: ", res.data);
+        setToken(res.data.token);
+        sessionStorage.setItem("jwt", res.data.token);
+        history.push("/account");
       })
       .catch((e) => console.log(e));
   };
@@ -88,7 +100,7 @@ export default function Register() {
           <form
             onSubmit={submitRegistration}
             className={classes.form}
-            noValidate
+            // noValidate
           >
             <TextField
               variant="outlined"
@@ -117,12 +129,13 @@ export default function Register() {
               margin="normal"
               required
               fullWidth
-              id="studentNumber"
-              label="Student Number"
-              name="studentNumber"
+              id="studentId"
+              label="Student Id"
+              name="studentId"
               autoFocus
               onChange={handleInput}
             />
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -134,7 +147,9 @@ export default function Register() {
               autoComplete="email"
               autoFocus
               onChange={handleInput}
+              validate
             />
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -145,6 +160,7 @@ export default function Register() {
               type="password"
               id="password"
               autoComplete="current-password"
+              inputProps={{ maxLength: 10 }}
               onChange={handleInput}
             />
 

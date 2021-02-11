@@ -8,17 +8,17 @@ module.exports = (db) => {
   };
 
   const createNewUser = (data) => {
-    const {name, student_number, password, email} = data;
-    return db("classes")
-    .insert({
-      name,
-      student_number,
-      email,
-      password
-    })
-    .returning("*")
-    .then((result) => result);
-  }
+    const { name, student_number, password, email } = data;
+    return db("users")
+      .insert({
+        name,
+        student_number,
+        email,
+        password,
+      })
+      .returning("*")
+      .then((result) => result);
+  };
 
   const getUserById = (id) => {
     return db
@@ -37,10 +37,19 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
+  const getUserByStudentNumber = (student_number) => {
+    return db
+      .select("*")
+      .from("users")
+      .where({ student_number })
+      .then((result) => result);
+  };
+
   return {
     getUsers,
     getUserById,
     getUserByEmail,
-    createNewUser
+    createNewUser,
+    getUserByStudentNumber,
   };
 };

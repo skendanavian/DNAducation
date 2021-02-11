@@ -85,6 +85,7 @@ export default function Nav(props) {
   };
   const logout = () => {
     setToken("");
+    sessionStorage.removeItem("jwt");
     history.push("/login");
   };
 
