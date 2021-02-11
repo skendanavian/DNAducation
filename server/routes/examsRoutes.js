@@ -8,9 +8,8 @@ module.exports = ({
   getQuestionsByExam,
   incrementSubmissionCount,
   setQuestionsByExam,
-  deleteQuestionsByExam
+  deleteQuestionsByExam,
 }) => {
-
   // get all exams
   router.get("/", (req, res, next) => {
     getExams()
@@ -31,7 +30,7 @@ module.exports = ({
 
   // get exam by id
   router.get("/:examId", (req, res, next) => {
-    const {examId} = req.params;
+    const { examId } = req.params;
     getExamById(examId)
       .then((exam) => {
         res.json(exam);
@@ -52,6 +51,7 @@ module.exports = ({
   // get all questions for an exam
   router.get(`/:examId/questions`, (req, res, next) => {
     const { examId } = req.params;
+    console.log(examId);
     getQuestionsByExam(examId)
       .then((result) => {
         if (!result.length) throw new ErrorHandler(404, "Not found");
@@ -75,7 +75,7 @@ module.exports = ({
   // delete all questions for an exam
   router.delete(`/:examId/questions`, (req, res, next) => {
     const { examId } = req.params;
-    
+
     deleteQuestionsByExam(examId)
       .then((result) => {
         res.json(result);

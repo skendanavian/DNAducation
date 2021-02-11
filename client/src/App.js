@@ -36,41 +36,52 @@ const theme = createMuiTheme({
 function App() {
   const [token, setToken] = useState(sessionStorage.getItem("jwt") || "");
   const [userId, setUserId] = useState(null);
+  // This will be passed to Class View and set exam Id on Exam start.
+  // Can then be accessed as prop by exam view (currently defaulting to 1 for testing)
+  const [examId, setExamId] = useState(1);
 
   return (
     <Router>
       <CssBaseline />
-        <ThemeProvider theme={theme}>
-          <Switch>
-            <Route path="/login">
-              {token ? (
-                <Redirect to="/account" />
-              ) : (
-                <Login setToken={setToken} setUserId={setUserId} />
-              )}
-            </Route>
-            <Route path="/register">
-              {token ? (
-                <Redirect to="/account" />
-              ) : (
-                <Register setToken={setToken} setUserId={setUserId} />
-              )}
-            </Route>
-            <Route path="/account">
-              {token ? (
-                <AccountPage setToken={setToken} setUserId={setUserId} />
-              ) : (
-                <Redirect to="/register" />
-              )}
-            </Route>
-            <Route path="/exam">
-              {token ? <Question setToken={setToken} /> : <Redirect to="/" />}
-            </Route>
-            <Route path="/">
-              <LandingPage />
-            </Route>
-          </Switch>
-        </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <Switch>
+          <Route path="/login">
+            {token ? (
+              <Redirect to="/account" />
+            ) : (
+              <Login setToken={setToken} setUserId={setUserId} />
+            )}
+          </Route>
+          <Route path="/register">
+            {token ? (
+              <Redirect to="/account" />
+            ) : (
+              <Register setToken={setToken} setUserId={setUserId} />
+            )}
+          </Route>
+          <Route path="/account">
+            {token ? (
+              <AccountPage setToken={setToken} setUserId={setUserId} />
+            ) : (
+              <Redirect to="/register" />
+            )}
+          </Route>
+          <Route path="/exam">
+            {token ? (
+              <Question
+                examId={examId}
+                setToken={setToken}
+                setExamId={setExamId}
+              />
+            ) : (
+              <Redirect to="/" />
+            )}
+          </Route>
+          <Route path="/">
+            <LandingPage />
+          </Route>
+        </Switch>
+      </ThemeProvider>
     </Router>
   );
 }

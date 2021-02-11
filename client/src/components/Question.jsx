@@ -1,7 +1,9 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
+import useAxios from "../hooks/useAxios";
+import { formatExamQuestions } from "../helpers/formatExamQuestions";
 
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -45,28 +47,28 @@ const examQuestionObject = {
   questions: [
     {
       questionId: 1,
-      question_number: 1,
+      questionNumber: 1,
       markValue: 20,
       question:
         "Describe the difference between a unimodal and bimodal distribution.",
     },
     {
       questionId: 2,
-      question_number: 2,
+      questionNumber: 2,
       markValue: 20,
       question:
         "Describe the difference between a unimodal and bimodal distribution",
     },
     {
       questionId: 3,
-      question_number: 3,
+      questionNumber: 3,
       markValue: 20,
       question:
         "Describe the difference between a unimodal and bimodal distribution",
     },
     {
       questionId: 4,
-      question_number: 4,
+      questionNumber: 4,
       markValue: 20,
       question:
         "Describe the difference between a unimodal and bimodal distribution",
@@ -74,13 +76,40 @@ const examQuestionObject = {
   ],
 };
 
-export default function Question(props) {
-  const { classCode, examId, questions } = examQuestionObject;
+export default function Question({ examId, setToken, setExamId }) {
+  const { classCode, questions } = examQuestionObject;
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
+  const axios = useAxios();
+  const baseURL = process.env.REACT_APP_REQUEST_URL;
+  console.log(baseURL);
+  const userId = localStorage.getItem("userId");
+
+  // useEffect -> axios request -> store exam questions in session storage?
+  useEffect(() => {
+    if (userId) {
+      const examUrl = baseURL + `/exams/${examId}/questions`;
+      console.log(examUrl);
+
+      axios
+        .get(examUrl)
+        .then((res) => {
+          // const classCodes = sections.map((sec) => sec.code);
+          // const sectionIds = sections.map((sec) => sec.section_id);
+          // setClassCodes(classCodes);
+          console.table(res.data);
+          // console.table(formatExamQuestions(res.data));
+          // return axios.get(examUrl, { params: { sectionIds } });
+        })
+        .then(({ data: exams }) => {
+          // setExams(exams);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -110,7 +139,7 @@ export default function Question(props) {
       <Container className={classes.questionContainer}>
         <Typography variant="h5" color="primary" className={classes.centerText}>
           Question {questions[questionIndex].question_number}
-          <Typography variant="h5" color="secondary">
+          <Typography color="secondary">
             {questions[questionIndex].markValue} marks
           </Typography>
         </Typography>
