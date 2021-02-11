@@ -49,7 +49,7 @@ export default function LandingPage() {
           align="center"
           className={classes.margin}
         >
-          DNAducation
+          🧬 DNAducation
         </Typography>
         <div>
           <Link href="/register">

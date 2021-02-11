@@ -77,7 +77,9 @@ export default function Question(props) {
             {/* <Button variant="contained" onClick={logout} color="secondary">
               {"Logout"}
             </Button> */}
-            <Typography color="secondary">STA 220 - EXAM 1</Typography>
+            <Typography color="secondary">
+              STA 220 - EXAM 1 - Question 1
+            </Typography>
           </Box>
         </Toolbar>
       </AppBar>

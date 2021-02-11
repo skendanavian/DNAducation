@@ -64,7 +64,7 @@ function App() {
                 <Redirect to="/register" />
               )}
             </Route>
-            <Route path="/question">
+            <Route path="/exam">
               {token ? <Question setToken={setToken} /> : <Redirect to="/" />}
             </Route>
             <Route path="/">
