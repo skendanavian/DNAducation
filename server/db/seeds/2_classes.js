@@ -5,14 +5,14 @@ const {classes} = require("../constants/seedConstants");
 const createFakeClasses = (n) => {
   const rows = [];
   for (let i = 0; i < n; i++) {
-    const classCode1 =["STA", "PHIL", "CALC", "ENG", "HIST", "PSY", "ANTH"];
+    const classCode1 =["STAT", "PHIL", "CALC", "ENG", "HIST", "PSY", "ANTH"];
     const classCode2 =['100', '200', '300', '400', '120', '220', '320'];
     const classTitle = ["Theoretical Solutions", "Introductory Course 1"]
 
     Math.floor(Math.random() * 7)
     rows.push({
       title: classTitle[i],
-      code:classCode1[Math.floor(Math.random() * 7)] + classCode2[Math.floor(Math.random() * 7)],
+      code:classCode1[Math.floor(Math.random() * 7)] + ' ' + classCode2[Math.floor(Math.random() * 7)],
       description: faker.random.words(10)      
     });
   }
