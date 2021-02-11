@@ -21,20 +21,25 @@ const db = require("knex")(knexfile[process.env.NODE_ENV]);
 const { authMiddleware } = require("./middlewares/authMiddleware");
 const { errorMiddleware } = require("./middlewares/errorMiddleware");
 
-// Routes setup
 const indexRouter = require("./routes/indexRoutes");
+const usersRouter = require("./routes/usersRoutes");
+const examsRouter = require("./routes/examsRoutes");
+const attemptsRouter = require("./routes/attemptsRoutes");
+
 const usersController = require("./controllers/usersController")(db);
+const sectionsController = require("./controllers/sectionsController")(db);
+const examsController = require("./controllers/examsController")(db);
+const attemptsController = require("./controllers/attemptsController")(db);
+
+
+
+// Routes setup
 app.use("/", indexRouter(usersController));
 
-const usersRouter = require("./routes/usersRoutes");
-app.use("/users", authMiddleware, usersRouter(usersController));
+app.use("/users", authMiddleware, usersRouter({...usersController, ...sectionsController}));
 
-const examsRouter = require("./routes/examsRoutes");
-const examsController = require("./controllers/examsController")(db);
 app.use("/exams", examsRouter(examsController));
 
-const attemptsRouter = require("./routes/attemptsRoutes");
-const attemptsController = require("./controllers/attemptsController")(db);
 app.use("/attempts", attemptsRouter(attemptsController));
 
 // const Router404 = require("./routes/404Route");
