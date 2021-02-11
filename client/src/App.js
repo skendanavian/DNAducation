@@ -14,6 +14,7 @@ import Login from "./components/Login";
 import LandingPage from "./components/LandingPage";
 import AccountPage from "./components/AccountPage";
 import Register from "./components/Register";
+import Question from "./components/Question";
 
 const theme = createMuiTheme({
   palette: {
@@ -26,6 +27,9 @@ const theme = createMuiTheme({
     light: {
       main: "#FFFBFE",
     },
+  },
+  typography: {
+    fontSize: 17,
   },
 });
 
@@ -58,6 +62,9 @@ function App() {
               ) : (
                 <Redirect to="/register" />
               )}
+            </Route>
+            <Route path="/exam">
+              {token ? <Question setToken={setToken} /> : <Redirect to="/" />}
             </Route>
             <Route path="/">
               <LandingPage />

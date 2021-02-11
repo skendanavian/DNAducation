@@ -7,6 +7,5 @@ export default function useAxios(token) {
     ...axios.defaults.headers,
     "Access-Control-Allow-Origin": "*",
   };
-
   return axios;
 }
