@@ -18,7 +18,6 @@ module.exports = ({
   //TODO: setup /register route
 
   router.post("/register", (req, res, next) => {
-    console.log(req.body);
     const { name, studentId, email, password } = req.body;
     const salt = bcrypt.genSaltSync(13);
     const hashedPassword = bcrypt.hashSync(password, salt);
@@ -72,7 +71,6 @@ module.exports = ({
 
   router.post("/login", (req, res, next) => {
     const { email, password } = req.body;
-    console.log(req.body);
     if (!email || !password) {
       next(new ErrorHandler(400, "Missing field(s)"));
     } else {
