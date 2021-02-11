@@ -55,10 +55,23 @@ const getSectionsByStudent = (id) => {
   .then((result) => result);
 };
 
+const getExamsBySections = (sectionIds) => {
+  return db
+  .select(
+    "sections.id as section_id",
+    "exams.id as exam_id", '*')
+  .from("sections")
+  .join("exams", 'section_id', '=','sections.id' )
+  .whereIn('section_id', sectionIds)
+  .orderBy('due_time')
+  .then((result) => result);
+};
+
   return {
    getSections,
    createSection,
    getSectionsByTeacher,
    getSectionsByStudent,
+   getExamsBySections
   };
 };
