@@ -65,7 +65,6 @@ export default function Register({ setToken }) {
 
     const { firstName, lastName, studentId } = registrationForm;
     const name = `${firstName} ${lastName}`;
-    // const studentId = Number(studentId);
     const data = { name, ...registrationForm };
 
     axios
@@ -146,7 +145,6 @@ export default function Register({ setToken }) {
               autoComplete="email"
               autoFocus
               onChange={handleInput}
-              validate
               inputProps={{ maxLength: 40 }}
             />
 

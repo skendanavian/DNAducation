@@ -66,7 +66,7 @@ export default function Login({ setToken, setUserId }) {
       .post("http://localhost:3001/login", loginForm)
       .then((res) => {
         if (!res.data) {
-          console.log(res.data);
+          console.log(res.data.message);
         } else {
           console.log("Login response: ", res.data);
           setToken(res.data.token);
