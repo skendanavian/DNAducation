@@ -96,7 +96,7 @@ export default function Login({ setToken, setUserId }) {
           <Typography color="primary" component="h1" variant="h5">
             Sign in
           </Typography>
-          <form onSubmit={submitLogin} className={classes.form} noValidate>
+          <form onSubmit={submitLogin} className={classes.form}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -108,6 +108,7 @@ export default function Login({ setToken, setUserId }) {
               autoComplete="email"
               autoFocus
               onChange={handleInput}
+              inputProps={{ maxLength: 40 }}
             />
             <TextField
               variant="outlined"
@@ -119,6 +120,7 @@ export default function Login({ setToken, setUserId }) {
               type="password"
               id="password"
               autoComplete="current-password"
+              inputProps={{ maxLength: 40 }}
               onChange={handleInput}
             />
             <Button

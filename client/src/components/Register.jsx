@@ -97,11 +97,7 @@ export default function Register({ setToken }) {
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
-          <form
-            onSubmit={submitRegistration}
-            className={classes.form}
-            // noValidate
-          >
+          <form onSubmit={submitRegistration} className={classes.form}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -112,6 +108,7 @@ export default function Register({ setToken }) {
               name="firstName"
               autoFocus
               onChange={handleInput}
+              inputProps={{ maxLength: 30 }}
             />
             <TextField
               variant="outlined"
@@ -123,6 +120,7 @@ export default function Register({ setToken }) {
               name="lastName"
               autoFocus
               onChange={handleInput}
+              inputProps={{ maxLength: 40 }}
             />
             <TextField
               variant="outlined"
@@ -133,6 +131,7 @@ export default function Register({ setToken }) {
               label="Student Id"
               name="studentId"
               autoFocus
+              inputProps={{ maxLength: 8 }}
               onChange={handleInput}
             />
 
@@ -148,6 +147,7 @@ export default function Register({ setToken }) {
               autoFocus
               onChange={handleInput}
               validate
+              inputProps={{ maxLength: 40 }}
             />
 
             <TextField
@@ -160,8 +160,8 @@ export default function Register({ setToken }) {
               type="password"
               id="password"
               autoComplete="current-password"
-              inputProps={{ maxLength: 10 }}
               onChange={handleInput}
+              inputProps={{ maxLength: 40 }}
             />
 
             <Button
