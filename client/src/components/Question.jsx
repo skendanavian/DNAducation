@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 import { formatExamQuestions } from "../helpers/formatExamQuestions";
@@ -42,46 +42,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//Sample Test Data
-const examQuestionObject = {
-  classCode: "STA 220",
-  examId: "2",
-  questions: [
-    {
-      questionId: 1,
-      questionNumber: 1,
-      markValue: 20,
-      question:
-        "Describe the difference between a unimodal and bimodal distribution.",
-    },
-    {
-      questionId: 2,
-      questionNumber: 2,
-      markValue: 20,
-      question:
-        "Describe the difference between a unimodal and bimodal distribution",
-    },
-    {
-      questionId: 3,
-      questionNumber: 3,
-      markValue: 20,
-      question:
-        "Describe the difference between a unimodal and bimodal distribution",
-    },
-    {
-      questionId: 4,
-      questionNumber: 4,
-      markValue: 20,
-      question:
-        "Describe the difference between a unimodal and bimodal distribution",
-    },
-  ],
-};
-
 export default function Question({ examId, setToken, setExamId }) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
   const [questionObject, setQuestionObject] = useState({});
+  const [attemptObject, setAttemptObject] = useState({});
   const [loading, setLoading] = useState(true);
   const classes = useStyles();
   const history = useHistory();
@@ -89,24 +54,36 @@ export default function Question({ examId, setToken, setExamId }) {
   const baseURL = process.env.REACT_APP_REQUEST_URL;
   const userId = localStorage.getItem("userId");
 
+  //Need to make time variable in correct DB format
+
   useEffect(() => {
     if (userId) {
-      const examUrl = baseURL + `/exams/${examId}/questions`;
+      const createAttemptUrl = baseURL + "/attempts";
+      const getQuestionsUrl = baseURL + `/exams/${examId}/questions`;
+      const date = new Date(Date.now());
 
       axios
-        .get(examUrl)
+        .post(createAttemptUrl, {
+          section_students_id: userId,
+          exam_id: examId,
+          time_started: date.toISOString(),
+        })
+        .then((res) => {
+          console.log(res.data);
+          return axios.get(getQuestionsUrl);
+        })
         .then((res) => {
           const data = formatExamQuestions(res.data);
           setQuestionObject(data);
           setLoading(false);
         })
-
         .catch((err) => console.error(err));
     }
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     setAnswerText("");
     setQuestionIndex(questionIndex + 1);
   };
