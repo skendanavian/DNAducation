@@ -30,6 +30,9 @@ const theme = createMuiTheme({
       main: "#FFFBFE",
     },
   },
+  typography: {
+    fontSize: 17,
+  },
 });
 
 function App() {

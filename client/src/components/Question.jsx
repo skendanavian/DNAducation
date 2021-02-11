@@ -1,93 +1,149 @@
 import React from "react";
+import { useState } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 
-import Drawer from "@material-ui/core/Drawer";
-import Hidden from "@material-ui/core/Hidden";
-import IconButton from "@material-ui/core/IconButton";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
-import Link from "@material-ui/core/Link";
-import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-
-import MenuIcon from "@material-ui/icons/Menu";
-import EqualizerIcon from "@material-ui/icons/Equalizer";
-import AirlineSeatReclineExtraIcon from "@material-ui/icons/AirlineSeatReclineExtra";
-import FunctionsIcon from "@material-ui/icons/Functions";
-import BookIcon from "@material-ui/icons/Book";
-import HistoryIcon from "@material-ui/icons/History";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import NaturePeopleIcon from "@material-ui/icons/NaturePeople";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Button from "@material-ui/core/Button";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    minHeight: "100vh",
+    minWidth: "100vw",
+  },
+  questionContainer: {
     display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    marginTop: "2rem",
+    margin: "auto",
   },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
+  centerText: {
+    textAlign: "center",
   },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
+  question: {
+    margin: "1.2rem",
   },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerContainer: {
-    overflow: "auto",
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
-      display: "none",
-    },
+  answerField: {
+    width: "80vw",
+    margin: "1rem auto",
   },
 }));
 
+//Sample Test Data
+const examQuestionObject = {
+  classCode: "STA 220",
+  examId: "2",
+  questions: [
+    {
+      questionId: 1,
+      question_number: 1,
+      markValue: 20,
+      question:
+        "Describe the difference between a unimodal and bimodal distribution.",
+    },
+    {
+      questionId: 2,
+      question_number: 2,
+      markValue: 20,
+      question:
+        "Describe the difference between a unimodal and bimodal distribution",
+    },
+    {
+      questionId: 3,
+      question_number: 3,
+      markValue: 20,
+      question:
+        "Describe the difference between a unimodal and bimodal distribution",
+    },
+    {
+      questionId: 4,
+      question_number: 4,
+      markValue: 20,
+      question:
+        "Describe the difference between a unimodal and bimodal distribution",
+    },
+  ],
+};
+
 export default function Question(props) {
-  const { classCodes, pageTitle, user, setToken } = props;
+  const { classCode, examId, questions } = examQuestionObject;
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [answerText, setAnswerText] = useState("");
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // submit axios post request here
+    console.log(answerText);
+    setAnswerText("");
+    setQuestionIndex(questionIndex + 1);
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+
+      <AppBar position="sticky">
         <Toolbar>
           <Typography variant="h6" noWrap>
             🧬 DNAducation
           </Typography>
+
           <Box marginLeft="auto">
-            {/* <Button variant="contained" onClick={logout} color="secondary">
-              {"Logout"}
-            </Button> */}
             <Typography color="secondary">
-              STA 220 - EXAM 1 - Question 1
+              {classCode} - EXAM {examId}
             </Typography>
           </Box>
         </Toolbar>
       </AppBar>
+      <Container className={classes.questionContainer}>
+        <Typography variant="h5" color="primary" className={classes.centerText}>
+          Question {questions[questionIndex].question_number}
+          <Typography variant="h5" color="secondary">
+            {questions[questionIndex].markValue} marks
+          </Typography>
+        </Typography>
+        <Typography
+          variant="h6"
+          color="primary"
+          className={`${classes.centerText} ${classes.question}`}
+        >
+          {questions[questionIndex].question}
+        </Typography>
+        <form
+          onSubmit={(e) => handleSubmit(e)}
+          className={classes.questionContainer}
+        >
+          <TextField
+            className={classes.answerField}
+            variant="outlined"
+            placeholder="Write Answer Here....."
+            value={answerText}
+            multiline
+            rows={25}
+            onChange={(e) => {
+              setAnswerText(e.target.value);
+            }}
+          ></TextField>
 
-      <main className={classes.content}>
-        <Toolbar />
-        {props.children}
-      </main>
+          <Box display="flex" justifyContent="space-evenly" padding={5}>
+            <Button type="submit" variant="contained" color="secondary">
+              Submit Answer
+            </Button>
+          </Box>
+        </form>
+      </Container>
     </div>
   );
 }
