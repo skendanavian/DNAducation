@@ -25,6 +25,7 @@ const indexRouter = require("./routes/indexRoutes");
 const usersRouter = require("./routes/usersRoutes");
 const examsRouter = require("./routes/examsRoutes");
 const attemptsRouter = require("./routes/attemptsRoutes");
+const sectionsRouter = require("./routes/sectionsRoutes");
 
 const usersController = require("./controllers/usersController")(db);
 const sectionsController = require("./controllers/sectionsController")(db);
@@ -35,12 +36,10 @@ const attemptsController = require("./controllers/attemptsController")(db);
 
 // Routes setup
 app.use("/", indexRouter(usersController));
-
 app.use("/users", authMiddleware, usersRouter({...usersController, ...sectionsController}));
-
 app.use("/exams", examsRouter(examsController));
-
 app.use("/attempts", attemptsRouter(attemptsController));
+app.use("/sections", sectionsRouter(sectionsController));
 
 // const Router404 = require("./routes/404Route");
 // app.use("*", Router404);
