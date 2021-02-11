@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import useAxios from "../hooks/useAxios";
 import { useHistory } from "react-router-dom";
 
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login({ setToken, setUserId }) {
+export default function Login({ setToken }) {
   const history = useHistory();
   const [loginForm, setLoginForm] = useState({
     email: "",
@@ -70,7 +70,7 @@ export default function Login({ setToken, setUserId }) {
         } else {
           console.log("Login response: ", res.data);
           setToken(res.data.token);
-          setUserId(res.data.id);
+          localStorage.setItem("userId", res.data.id);
           sessionStorage.setItem("jwt", res.data.token);
           history.push("/account");
         }
