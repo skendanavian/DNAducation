@@ -28,7 +28,7 @@ module.exports = (db) => {
     return db
     .select("sections.id as section_id", "teacher_user_id as teacher_id", "classes.id as class_id", "title", "code" )
     .from("sections").join("classes", "class_id", "=", "classes.id")
-    .where({'teacher_user_id', id})
+    .where({'teacher_user_id': id})
     .then((result) => result);
   };
 
@@ -40,19 +40,25 @@ module.exports = (db) => {
 
 const getSectionsByStudent = (id) => {
   return db
-  .select("sections.id as section_id", "user_id as student_id", "classes.id as class_id", "title", "code", 'users.name as teacher_name' )
-  .from("sections").join("classes", "class_id", "=", "classes.id").join("users", "users.id", "=", "teacher_user_id")
-  .where({'user_id', id})
+  .select(
+    "sections.id as section_id",
+    "user_id as student_id",
+    "classes.id as class_id",
+    "title",
+    "code",
+    'users.name as teacher_name')
+  .from("sections")
+  .join("section_students", 'section_id', '=','sections.id' )
+  .join("users", "user_id", "=", "users.id")
+  .join("classes", "class_id", "=", "classes.id")
+  .where({'user_id': id})
   .then((result) => result);
 };
-
-
 
   return {
    getSections,
    createSection,
    getSectionsByTeacher,
    getSectionsByStudent,
-   
   };
 };
