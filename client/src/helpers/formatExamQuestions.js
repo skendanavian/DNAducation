@@ -1,16 +1,25 @@
 const formatExamQuestions = (data) => {
-  const examId = data[0].exam_id;
+  console.table(data);
+  const { examId, sectionId, classCode, dueDate, classTitle } = data[0];
   const formattedQuestions = data.map((q) => {
     return {
-      questionId: q.id,
-      questionNumber: q.question_number,
-      markValue: q.mark_value,
-      question: q.question,
+      questionId: q.questionId,
+      questionNumber: q.questionNumber,
+      markValue: q.markValue,
+      question: q.questions,
     };
   });
 
-  const formattedData = { examId: examId, questions: formattedQuestions };
-  console.log(formattedData);
+  const formattedData = {
+    examId,
+    sectionId,
+    classCode,
+    classTitle,
+    dueDate,
+    questions: formattedQuestions,
+  };
+
+  return formattedData;
 };
 
 module.exports = {

@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const drawerWidth = 240;
 
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "100vh",
     minWidth: "100vw",
   },
+
   questionContainer: {
     display: "flex",
     flexDirection: "column",
@@ -77,44 +79,34 @@ const examQuestionObject = {
 };
 
 export default function Question({ examId, setToken, setExamId }) {
-  const { classCode, questions } = examQuestionObject;
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
+  const [questionObject, setQuestionObject] = useState({});
+  const [loading, setLoading] = useState(true);
   const classes = useStyles();
   const history = useHistory();
-  const theme = useTheme();
-  const axios = useAxios();
+  const axios = useAxios(sessionStorage.getItem("jwt"));
   const baseURL = process.env.REACT_APP_REQUEST_URL;
-  console.log(baseURL);
   const userId = localStorage.getItem("userId");
 
-  // useEffect -> axios request -> store exam questions in session storage?
   useEffect(() => {
     if (userId) {
       const examUrl = baseURL + `/exams/${examId}/questions`;
-      console.log(examUrl);
 
       axios
         .get(examUrl)
         .then((res) => {
-          // const classCodes = sections.map((sec) => sec.code);
-          // const sectionIds = sections.map((sec) => sec.section_id);
-          // setClassCodes(classCodes);
-          console.table(res.data);
-          // console.table(formatExamQuestions(res.data));
-          // return axios.get(examUrl, { params: { sectionIds } });
+          const data = formatExamQuestions(res.data);
+          setQuestionObject(data);
+          setLoading(false);
         })
-        .then(({ data: exams }) => {
-          // setExams(exams);
-        })
+
         .catch((err) => console.error(err));
     }
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // submit axios post request here
-    console.log(answerText);
     setAnswerText("");
     setQuestionIndex(questionIndex + 1);
   };
@@ -128,51 +120,64 @@ export default function Question({ examId, setToken, setExamId }) {
           <Typography variant="h6" noWrap>
             🧬 DNAducation
           </Typography>
-
-          <Box marginLeft="auto">
-            <Typography color="secondary">
-              {classCode} - EXAM {examId}
-            </Typography>
-          </Box>
+          {!loading && (
+            <Box marginLeft="auto">
+              <Typography color="secondary">
+                {questionObject.classCode} - {questionObject.classTitle} - EXAM{" "}
+                {questionObject.examId}
+              </Typography>
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
-      <Container className={classes.questionContainer}>
-        <Typography variant="h5" color="primary" className={classes.centerText}>
-          Question {questions[questionIndex].question_number}
-          <Typography color="secondary">
-            {questions[questionIndex].markValue} marks
+      {loading ? (
+        <Typography color="secondary" margin="auto">
+          LOADING....
+        </Typography>
+      ) : (
+        // <CircularProgress size={200} margin="auto" />
+        <Container className={classes.questionContainer}>
+          <Typography
+            variant="h5"
+            color="primary"
+            className={classes.centerText}
+          >
+            Question {questionObject.questions[questionIndex].questionNumber}
+            <Typography color="secondary">
+              {questionObject.questions[questionIndex].markValue} marks
+            </Typography>
           </Typography>
-        </Typography>
-        <Typography
-          variant="h6"
-          color="primary"
-          className={`${classes.centerText} ${classes.question}`}
-        >
-          {questions[questionIndex].question}
-        </Typography>
-        <form
-          onSubmit={(e) => handleSubmit(e)}
-          className={classes.questionContainer}
-        >
-          <TextField
-            className={classes.answerField}
-            variant="outlined"
-            placeholder="Write Answer Here....."
-            value={answerText}
-            multiline
-            rows={25}
-            onChange={(e) => {
-              setAnswerText(e.target.value);
-            }}
-          ></TextField>
+          <Typography
+            variant="h6"
+            color="primary"
+            className={`${classes.centerText} ${classes.question}`}
+          >
+            {questionObject.questions[questionIndex].question}
+          </Typography>
+          <form
+            onSubmit={(e) => handleSubmit(e)}
+            className={classes.questionContainer}
+          >
+            <TextField
+              className={classes.answerField}
+              variant="outlined"
+              placeholder="Write Answer Here....."
+              value={answerText}
+              multiline
+              rows={25}
+              onChange={(e) => {
+                setAnswerText(e.target.value);
+              }}
+            ></TextField>
 
-          <Box display="flex" justifyContent="space-evenly" padding={5}>
-            <Button type="submit" variant="contained" color="secondary">
-              Submit Answer
-            </Button>
-          </Box>
-        </form>
-      </Container>
+            <Box display="flex" justifyContent="space-evenly" padding={5}>
+              <Button type="submit" variant="contained" color="secondary">
+                Submit Answer
+              </Button>
+            </Box>
+          </form>
+        </Container>
+      )}
     </div>
   );
 }
