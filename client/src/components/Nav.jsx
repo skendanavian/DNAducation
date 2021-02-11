@@ -62,15 +62,17 @@ const useStyles = makeStyles((theme) => ({
 
 const classCodeIconFinder = (code) => {
   const subject = code.split(" ")[0].toUpperCase();
-  return {
-    STAT: <EqualizerIcon />,
-    PHIL: <AirlineSeatReclineExtraIcon />,
-    CALC: <FunctionsIcon />,
-    ENG: <BookIcon />,
-    HIST: <HistoryIcon />,
-    PSY: <PeopleAltIcon />,
-    ANTH: <NaturePeopleIcon />,
-  }[subject];
+  return (
+    {
+      STAT: <EqualizerIcon />,
+      PHIL: <AirlineSeatReclineExtraIcon />,
+      CALC: <FunctionsIcon />,
+      ENG: <BookIcon />,
+      HIST: <HistoryIcon />,
+      PSY: <PeopleAltIcon />,
+      ANTH: <NaturePeopleIcon />,
+    }[subject] || <BookIcon />
+  );
 };
 
 export default function Nav(props) {
@@ -103,12 +105,13 @@ export default function Nav(props) {
         </List>
         <Divider />
         <List>
-          {classCodes.map((code, index) => (
-            <ListItem button key={code}>
-              <ListItemIcon>{classCodeIconFinder(code)}</ListItemIcon>
-              <ListItemText primary={code} />
-            </ListItem>
-          ))}
+          {classCodes &&
+            classCodes.map((code, index) => (
+              <ListItem button key={`${index}${code}`}>
+                <ListItemIcon>{classCodeIconFinder(code)}</ListItemIcon>
+                <ListItemText primary={code} />
+              </ListItem>
+            ))}
         </List>
       </div>
     </>
