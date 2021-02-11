@@ -3,13 +3,13 @@ const router = express.Router();
 const regex = require("../helpers/regex");
 const { ErrorHandler } = require("../helpers/errorsHelper");
 
-module.exports = ({  
+module.exports = ({
   getAttemptsByUser,
   getAttemptById,
   createAttempt,
   updateAttempt,
   setExamAttemptAnswer,
-  submitMarkForAnswer
+  submitMarkForAnswer,
 }) => {
   // router.get("/", (req, res, next) => {
   //   getUsers()
@@ -30,7 +30,7 @@ module.exports = ({
   });
 
   //const {section_students_id, exam_id, time_started} = data;
-// const createAttemptTest = {"section_students_id": 2, 'exam_id': 3, "time_started": "2021-02-09 22:58:41.175932+00" }
+  // const createAttemptTest = {"section_students_id": 2, 'exam_id': 3, "time_started": "2021-02-09 22:58:41.175932+00" }
   router.post(`/`, (req, res, next) => {
     // const {  } = req.body;
     createAttempt(req.body)
@@ -57,12 +57,13 @@ module.exports = ({
 
   // answering question
   router.post(`/:attemptsId/answers`, (req, res, next) => {
-    const {
-      attemptsId: exam_attempt_id,
-    } = req.params;
+    const { attemptsId: exam_attempt_id } = req.params;
 
-    const data = {exam_attempt_id, ...req.body};
-    
+    console.log(req.params);
+    console.log(req.data);
+
+    const data = { exam_attempt_id, ...req.body };
+
     setExamAttemptAnswer(data)
       .then((result) => {
         if (!result.length) throw new ErrorHandler(404, "Not found");
@@ -74,9 +75,7 @@ module.exports = ({
 
   // submitting a mark for an individual question
   router.patch(`/answers/:answersId`, (req, res, next) => {
-    const {
-      answersId: exam_answers_id,
-    } = req.params;
+    const { answersId: exam_answers_id } = req.params;
     const { mark } = req.body;
 
     submitMarkForAnswer(Number(exam_answers_id), mark)

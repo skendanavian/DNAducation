@@ -46,15 +46,13 @@ export default function Question({ examId, setToken, setExamId }) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
   const [questionObject, setQuestionObject] = useState({});
-  const [attemptObject, setAttemptObject] = useState({});
+  const [attemptId, setAttemptId] = useState("");
   const [loading, setLoading] = useState(true);
   const classes = useStyles();
   const history = useHistory();
   const axios = useAxios(sessionStorage.getItem("jwt"));
   const baseURL = process.env.REACT_APP_REQUEST_URL;
   const userId = localStorage.getItem("userId");
-
-  //Need to make time variable in correct DB format
 
   useEffect(() => {
     if (userId) {
@@ -69,13 +67,14 @@ export default function Question({ examId, setToken, setExamId }) {
           time_started: date.toISOString(),
         })
         .then((res) => {
-          console.log(res.data);
+          setAttemptId(res.data.id);
           return axios.get(getQuestionsUrl);
         })
         .then((res) => {
           const data = formatExamQuestions(res.data);
           setQuestionObject(data);
           setLoading(false);
+          console.table({ questionObject });
         })
         .catch((err) => console.error(err));
     }
@@ -83,6 +82,23 @@ export default function Question({ examId, setToken, setExamId }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
+    const exam_question_id = questionObject.questions[questionIndex].questionId;
+    //Submit individual answer to DB
+    // **Confidence Level Currently Hard Coded
+
+    axios
+      .post(submitAnswerUrl, {
+        exam_question_id,
+        exam_attempt_id: attemptId,
+        answer: answerText,
+        confidence_level: 75,
+      })
+      .then((res) => {
+        console.log("submitted", res.data);
+      });
+
+    //Update entire Exam status in DB
 
     setAnswerText("");
     setQuestionIndex(questionIndex + 1);
@@ -149,7 +165,9 @@ export default function Question({ examId, setToken, setExamId }) {
 
             <Box display="flex" justifyContent="space-evenly" padding={5}>
               <Button type="submit" variant="contained" color="secondary">
-                Submit Answer
+                {questionIndex === questionObject.questions.length - 1
+                  ? "Submit Answer & Finish Exam"
+                  : "Submit Answer"}
               </Button>
             </Box>
           </form>
