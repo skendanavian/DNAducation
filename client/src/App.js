@@ -10,8 +10,6 @@ import {
   Redirect,
 } from "react-router-dom";
 
-import { UserIdProvider } from "./contexts/UserIdContext";
-
 import Login from "./components/Login";
 import LandingPage from "./components/LandingPage";
 import AccountPage from "./components/AccountPage";
@@ -34,12 +32,10 @@ const theme = createMuiTheme({
 function App() {
   const [token, setToken] = useState(sessionStorage.getItem("jwt") || "");
   const [userId, setUserId] = useState(null);
-  const UserIdContext = React.createContext();
 
   return (
     <Router>
       <CssBaseline />
-      <UserIdProvider value={userId}>
         <ThemeProvider theme={theme}>
           <Switch>
             <Route path="/login">
@@ -68,7 +64,6 @@ function App() {
             </Route>
           </Switch>
         </ThemeProvider>
-      </UserIdProvider>
     </Router>
   );
 }
