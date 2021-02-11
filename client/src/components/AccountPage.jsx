@@ -1,15 +1,16 @@
-import Nav from "./Nav";
+import { useContext, useEffect } from "react";
+
 import Typography from "@material-ui/core/Typography";
 
+import useAxios from "../hooks/useAxios";
 import UserIdContext from "../contexts/UserIdContext";
-
-import { useContext } from "react";
+import Nav from "./Nav";
 
 const AccountPage = (props) => {
   const { setToken } = props;
   const userId = useContext(UserIdContext);
-  console.log(userId);
-  const classCodes = [
+
+  let classCodes = [
     "STAT 100",
     "HIST 220",
     "PHIL 230",
@@ -19,7 +20,9 @@ const AccountPage = (props) => {
     "ANTH 440",
   ];
   const pageTitle = "🧬 DNAducation";
-  const user = { name: "Devin Sanders", email: "dsand@gmail.com" };
+  let user = { name: "Devin Sanders", email: "dsand@gmail.com" };
+
+  const axios = useAxios();
 
   const navProps = {
     setToken,
