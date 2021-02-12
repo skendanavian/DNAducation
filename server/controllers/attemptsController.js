@@ -1,11 +1,18 @@
 module.exports = (db) => {
-  const getAttemptsByUser = (user_id) => {
+  const getAttemptsByStudent = (user_id) => {
     return db
       .select("*")
       .from("exam_attempts")
+      .join(
+        "section_students",
+        "section_students_id",
+        "=",
+        "section_students.id"
+      )
       .where({ user_id })
       .then((result) => result);
   };
+
   const getAttemptById = (id) => {
     return db
       .select("*")
@@ -67,7 +74,7 @@ module.exports = (db) => {
   };
 
   return {
-    getAttemptsByUser,
+    getAttemptsByStudent,
     getAttemptById,
     createAttempt,
     updateAttempt,

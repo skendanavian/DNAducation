@@ -9,7 +9,6 @@ import IconButton from "@material-ui/core/IconButton";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
-import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
@@ -20,14 +19,8 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import MenuIcon from "@material-ui/icons/Menu";
-import EqualizerIcon from "@material-ui/icons/Equalizer";
-import AirlineSeatReclineExtraIcon from "@material-ui/icons/AirlineSeatReclineExtra";
-import FunctionsIcon from "@material-ui/icons/Functions";
-import BookIcon from "@material-ui/icons/Book";
-import HistoryIcon from "@material-ui/icons/History";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import NaturePeopleIcon from "@material-ui/icons/NaturePeople";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+
+import SubjectIcon from "./SubjectIcon";
 
 const drawerWidth = 240;
 
@@ -60,23 +53,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const classCodeIconFinder = (code) => {
-  const subject = code.split(" ")[0].toUpperCase();
-  return (
-    {
-      STAT: <EqualizerIcon />,
-      PHIL: <AirlineSeatReclineExtraIcon />,
-      CALC: <FunctionsIcon />,
-      ENG: <BookIcon />,
-      HIST: <HistoryIcon />,
-      PSY: <PeopleAltIcon />,
-      ANTH: <NaturePeopleIcon />,
-    }[subject] || <BookIcon />
-  );
-};
-
 export default function Nav(props) {
-  const { classCodes, pageTitle, user, setToken } = props;
+  const { buttonDefs, pageTitle, setToken } = props;
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
@@ -90,33 +68,36 @@ export default function Nav(props) {
     sessionStorage.removeItem("jwt");
     history.push("/login");
   };
-
+  console.log({ buttonDefs });
   const drawer = (
     <>
       <Toolbar />
       <div className={classes.drawerContainer}>
-        <List>
-          <ListItem button key={"Account"}>
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Account"} />
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          {classCodes &&
-            classCodes.map((code, index) => (
-              <ListItem button key={`${index}${code}`}>
-                <ListItemIcon>{classCodeIconFinder(code)}</ListItemIcon>
-                <ListItemText primary={code} />
-              </ListItem>
-            ))}
-        </List>
+        {buttonDefs &&
+          buttonDefs.map((listSection, index) => {
+            return (
+              <List key={index}>
+                {listSection.map((button, index) => {
+                  const { text, navAction } = button;
+                  return (
+                    <ListItem
+                      button
+                      key={`${text}${index}`}
+                      onClick={navAction}
+                    >
+                      <ListItemIcon>
+                        <SubjectIcon {...{ text }} />
+                      </ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItem>
+                  );
+                })}
+              </List>
+            );
+          })}
       </div>
     </>
   );
-
   return (
     <div className={classes.root}>
       <CssBaseline />
