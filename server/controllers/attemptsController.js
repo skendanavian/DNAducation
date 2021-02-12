@@ -38,9 +38,6 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
-  // INSERT INTO exam_answers (exam_attempt_id, exam_question_id, answer, confidence_level)
-  // VALUES (3, 2, 'hello world', 75);
-
   const setExamAttemptAnswer = (data) => {
     const {
       exam_attempt_id,

@@ -87,6 +87,7 @@ export default function Question({ examId, setToken, setExamId }) {
     e.preventDefault();
 
     const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
+
     const exam_question_id = currentQ.questionId;
 
     //Submit individual answer to DB
@@ -108,7 +109,12 @@ export default function Question({ examId, setToken, setExamId }) {
               average_confidence: 75,
               time_submitted: date.toISOString(),
             })
-            .then(() => {
+            .then((res) => {
+              const incrementSubmissionURL =
+                baseURL + `/exams/${questionObject.examId}`;
+              return axios.patch(incrementSubmissionURL);
+            })
+            .then((res) => {
               history.push("/account");
               return;
             });
