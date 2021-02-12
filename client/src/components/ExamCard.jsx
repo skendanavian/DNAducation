@@ -88,12 +88,6 @@ export default function ExamCard(props) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
@@ -108,8 +102,10 @@ export default function ExamCard(props) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then
-            serve.
+            {exam.attempts.length &&
+              exam.attempts.map((att) => {
+                return JSON.stringify(att);
+              })}
           </Typography>
         </CardContent>
       </Collapse>
