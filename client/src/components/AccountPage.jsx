@@ -12,10 +12,10 @@ require("dotenv").config({ path: "../../.env" });
 const baseURL = process.env.REACT_APP_REQUEST_URL;
 
 const AccountPage = (props) => {
-  const { setToken } = props;
+  const { setToken, userId } = props;
   const pageTitle = "🧬 DNAducation";
 
-  const userId = localStorage.getItem("userId");
+  // const userId = localStorage.getItem("userId");
 
   const [exams, setExams] = useState([]);
   const [contentView, setContentView] = useState("Account");

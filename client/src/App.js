@@ -35,7 +35,7 @@ const theme = createMuiTheme({
 
 function App() {
   const [token, setToken] = useState(sessionStorage.getItem("jwt") || "");
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState("");
   // This will be passed to Class View and set exam Id on Exam start.
   // Can then be accessed as prop by exam view (currently defaulting to 1 for testing)
   const [examId, setExamId] = useState(1);
@@ -61,7 +61,11 @@ function App() {
           </Route>
           <Route path="/account">
             {token ? (
-              <AccountPage setToken={setToken} setUserId={setUserId} />
+              <AccountPage
+                setToken={setToken}
+                setUserId={setUserId}
+                userId={userId}
+              />
             ) : (
               <Redirect to="/register" />
             )}
@@ -72,6 +76,7 @@ function App() {
                 examId={examId}
                 setToken={setToken}
                 setExamId={setExamId}
+                userId={userId}
               />
             ) : (
               <Redirect to="/" />

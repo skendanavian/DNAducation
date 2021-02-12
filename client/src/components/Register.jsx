@@ -73,6 +73,7 @@ export default function Register({ setToken }) {
         console.log("Register response: ", res.data);
         setToken(res.data.token);
         sessionStorage.setItem("jwt", res.data.token);
+
         history.push("/account");
       })
       .catch((e) => console.log(e));
