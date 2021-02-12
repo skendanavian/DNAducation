@@ -3,7 +3,7 @@ const router = express.Router();
 const regex = require("../helpers/regex");
 const { ErrorHandler } = require("../helpers/errorsHelper");
 
-module.exports = ({ getUsers, getUserById, getSectionsByStudent }) => {
+module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsByStudent  }) => {
   router.get("/", (req, res, next) => {
     getUsers()
       .then((users) => {
@@ -22,12 +22,28 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent }) => {
       .catch((err) => next(err));
   });
 
+  // get sections by student id
   router.get(`/:id/sections`, (req, res, next) => {
     const { id } = req.params;
+
     getSectionsByStudent(id)
       .then((result) => {
         if (!result.length) {
           throw new ErrorHandler(404, "No sections found for user")
+        };
+        res.json(result);
+      })
+      .catch((err) => next(err));
+  });
+
+  // get all attemmpts by student id 
+  router.get(`/:id/attempts`, (req, res, next) => {
+    const { id } = req.params;
+
+    getAttemptsByStudent(id)
+      .then((result) => {
+        if (!result.length) {
+          throw new ErrorHandler(404, "No attempts found for user")
         };
         res.json(result);
       })
