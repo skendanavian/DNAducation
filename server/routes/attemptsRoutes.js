@@ -42,9 +42,10 @@ module.exports = ({
       .catch((err) => next(err));
   });
 
-  router.post(`/`, (req, res, next) => {
-    // const {  } = req.body;
-    createAttempt(req.body)
+  //Update attempt on final submit
+  router.patch(`/:attemptId`, (req, res, next) => {
+    console.log(req.body);
+    updateAttempt(req.body)
       .then((result) => {
         if (!result.length) throw new ErrorHandler(404, "Not found");
         console.log(result);
@@ -52,8 +53,6 @@ module.exports = ({
       })
       .catch((err) => next(err));
   });
-
-  //{"exam_attempt_id": 3, "exam_question_id": 2, "answer": "this is my answer", "confidence_level": 97 }
 
   // answering question
   router.post(`/:attemptsId/answers`, (req, res, next) => {

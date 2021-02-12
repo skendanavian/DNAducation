@@ -1,5 +1,4 @@
 const formatExamQuestions = (data) => {
-  console.table(data);
   const { examId, sectionId, classCode, dueDate, classTitle } = data[0];
   const formattedQuestions = data.map((q) => {
     return {

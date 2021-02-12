@@ -54,6 +54,10 @@ export default function Question({ examId, setToken, setExamId }) {
   const baseURL = process.env.REACT_APP_REQUEST_URL;
   const userId = localStorage.getItem("userId");
 
+  const currentQ = Object.keys(questionObject).length
+    ? questionObject.questions[questionIndex]
+    : "";
+
   useEffect(() => {
     if (userId) {
       const createAttemptUrl = baseURL + "/attempts";
@@ -74,7 +78,6 @@ export default function Question({ examId, setToken, setExamId }) {
           const data = formatExamQuestions(res.data);
           setQuestionObject(data);
           setLoading(false);
-          console.table({ questionObject });
         })
         .catch((err) => console.error(err));
     }
@@ -82,11 +85,12 @@ export default function Question({ examId, setToken, setExamId }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
-    const exam_question_id = questionObject.questions[questionIndex].questionId;
+    const exam_question_id = currentQ.questionId;
+
     //Submit individual answer to DB
     // **Confidence Level Currently Hard Coded
-
     axios
       .post(submitAnswerUrl, {
         exam_question_id,
@@ -95,13 +99,43 @@ export default function Question({ examId, setToken, setExamId }) {
         confidence_level: 75,
       })
       .then((res) => {
-        console.log("submitted", res.data);
-      });
+        if (currentQ.questionNumber === questionObject.questions.length) {
+          const submitExamUrl = baseURL + `/attempts/${attemptId}`;
+          const date = new Date(Date.now());
+          return axios
+            .patch(submitExamUrl, {
+              id: attemptId,
+              average_confidence: 75,
+              time_submitted: date.toISOString(),
+            })
+            .then(() => {
+              history.push("/account");
+              return;
+            });
+        }
+        setAnswerText("");
+        setQuestionIndex(questionIndex + 1);
+        return;
+      })
+      .catch((err) => console.log(err));
 
-    //Update entire Exam status in DB
+    //Update entire exam status in DB
 
-    setAnswerText("");
-    setQuestionIndex(questionIndex + 1);
+    // if (currentQ.questionNumber === questionObject.questions.length - 1) {
+    //   const submitExamUrl = baseURL + `/attempts/${attemptId}`;
+    //   const date = new Date(Date.now());
+    //   axios
+    //     .patch(submitAnswerUrl, {
+    //       id: attemptId,
+    //       average_confidence: 75,
+    //       time_submitted: date.toISOString(),
+    //     })
+    //     .then((res) => {
+    //       console.log("submitted", res.data);
+    //       history.push("/account");
+    //     })
+    //     .catch((err) => console.log(err));
+    // }
   };
 
   return (
@@ -135,9 +169,9 @@ export default function Question({ examId, setToken, setExamId }) {
             color="primary"
             className={classes.centerText}
           >
-            Question {questionObject.questions[questionIndex].questionNumber}
+            Question {currentQ.questionNumber}
             <Typography color="secondary">
-              {questionObject.questions[questionIndex].markValue} marks
+              {currentQ.markValue} marks
             </Typography>
           </Typography>
           <Typography
@@ -145,7 +179,7 @@ export default function Question({ examId, setToken, setExamId }) {
             color="primary"
             className={`${classes.centerText} ${classes.question}`}
           >
-            {questionObject.questions[questionIndex].question}
+            {currentQ.question}
           </Typography>
           <form
             onSubmit={(e) => handleSubmit(e)}
@@ -158,6 +192,7 @@ export default function Question({ examId, setToken, setExamId }) {
               value={answerText}
               multiline
               rows={25}
+              required
               onChange={(e) => {
                 setAnswerText(e.target.value);
               }}
