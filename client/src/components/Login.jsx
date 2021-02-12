@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login({ setToken, setUserId }) {
+export default function Login({ setToken, setUserId, token }) {
   const history = useHistory();
   const [loginForm, setLoginForm] = useState({
     email: "",
@@ -57,7 +57,7 @@ export default function Login({ setToken, setUserId }) {
   });
 
   const classes = useStyles();
-  const axios = useAxios();
+  const axios = useAxios(token);
 
   const submitLogin = (e) => {
     e.preventDefault();
@@ -70,9 +70,11 @@ export default function Login({ setToken, setUserId }) {
         } else {
           console.log("Login response: ", res.data);
           setToken(res.data.token);
-          setUserId(res.data.id);
+
           sessionStorage.setItem("jwt", res.data.token);
-          history.push("/exam");
+          setUserId(res.data.id);
+
+          // history.push("/exam");
           history.push("/account");
         }
       })

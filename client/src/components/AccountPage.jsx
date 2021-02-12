@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 import Typography from "@material-ui/core/Typography";
 import { Box, Button, Divider } from "@material-ui/core";
-
 import useAxios from "../hooks/useAxios";
 import Nav from "./Nav";
 import ExamCard from "./ExamCard";
@@ -12,7 +11,8 @@ require("dotenv").config({ path: "../../.env" });
 const baseURL = process.env.REACT_APP_REQUEST_URL;
 
 const AccountPage = (props) => {
-  const { setToken, userId } = props;
+  console.log(props);
+  const { setToken, userId, token } = props;
   const pageTitle = "🧬 DNAducation";
 
   const [exams, setExams] = useState([]);
@@ -75,7 +75,7 @@ const AccountPage = (props) => {
         })
         .catch((err) => console.error(err));
     }
-  }, []);
+  }, [userId]);
 
   const sectionDetails = (details) => {
     const { title, description, teacher_id, code } = details;

@@ -8,6 +8,8 @@ import {
   Route,
   Link,
   Redirect,
+  useHistory,
+  browserHistory,
 } from "react-router-dom";
 
 import Login from "./components/Login";
@@ -34,51 +36,51 @@ const theme = createMuiTheme({
 });
 
 function App() {
+  console.table();
   const [token, setToken] = useState(sessionStorage.getItem("jwt") || "");
-  const [userId, setUserId] = useState("");
-  // This will be passed to Class View and set exam Id on Exam start.
-  // Can then be accessed as prop by exam view (currently defaulting to 1 for testing)
-  const [examId, setExamId] = useState(1);
-
-  console.log(userId);
+  const [userId, setUserId] = useState(""); // This will be passed to Class View and set exam Id on Exam start. // Can then be accessed as prop by exam view (currently defaulting to 1 for testing)
+  /*   const userId = 1;
+   */ const [examId, setExamId] = useState(1);
 
   return (
     <Router>
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <Switch>
-          <Route path="/login">
+          <Route exact path="/login">
             {token ? (
               <Redirect to="/account" />
             ) : (
-              <Login setToken={setToken} setUserId={setUserId} />
+              <Login setToken={setToken} setUserId={setUserId} token={token} />
             )}
           </Route>
-          <Route path="/register">
+          <Route exact path="/register">
             {token ? (
               <Redirect to="/account" />
             ) : (
               <Register setToken={setToken} setUserId={setUserId} />
             )}
           </Route>
-          <Route path="/account">
+          <Route exact path="/account">
             {token ? (
               <AccountPage
                 setToken={setToken}
                 setUserId={setUserId}
                 userId={userId}
+                token={token}
               />
             ) : (
               <Redirect to="/register" />
             )}
           </Route>
-          <Route path="/exam">
+          <Route exact path="/exam">
             {token ? (
               <Question
                 examId={examId}
                 setToken={setToken}
                 setExamId={setExamId}
                 userId={userId}
+                token={token}
               />
             ) : (
               <Redirect to="/" />
