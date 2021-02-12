@@ -5,6 +5,8 @@ const { ErrorHandler } = require("../helpers/errorsHelper");
 const authMiddleware = (req, res, next) => {
   const { authorization } = req.headers;
 
+  console.table(authorization);
+
   jwt.verify(authorization, process.env.JWT_KEY, (err, decoded) => {
     if (err && err.message === "jwt expired") {
       next(new ErrorHandler(401, "Session expired"));

@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login({ setToken }) {
+export default function Login({ setToken, setUserId }) {
   const history = useHistory();
   const [loginForm, setLoginForm] = useState({
     email: "",
@@ -70,9 +70,12 @@ export default function Login({ setToken }) {
         } else {
           console.log("Login response: ", res.data);
           setToken(res.data.token);
+
           localStorage.setItem("userId", res.data.id);
+          setUserId(res.data.id);
+
           sessionStorage.setItem("jwt", res.data.token);
-          history.push("/account");
+          history.push(`/account`);
         }
       })
       .catch((e) => console.log(e));

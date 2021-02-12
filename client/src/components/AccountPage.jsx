@@ -12,16 +12,16 @@ require("dotenv").config({ path: "../../.env" });
 const baseURL = process.env.REACT_APP_REQUEST_URL;
 
 const AccountPage = (props) => {
-  const { setToken } = props;
-  const pageTitle = "🧬 DNAducation";
+  const { setToken, token, userId } = props;
+  // const userId = userIdProps || localStorage.getItem("userId");
+  // const token = tokenProps || sessionStorage.getItem("jwt");
 
-  const userId = localStorage.getItem("userId");
+  const pageTitle = "🧬 DNAducation";
 
   const [exams, setExams] = useState([]);
   const [contentView, setContentView] = useState("Account");
 
   const updateContentView = (view) => {
-    console.log(view);
     setContentView(view);
   };
   const initalNavState = [
@@ -29,10 +29,10 @@ const AccountPage = (props) => {
   ];
   const [navButtons, setNavButtons] = useState(initalNavState);
 
-  const axios = useAxios(sessionStorage.getItem("jwt"));
+  const axios = useAxios(token);
 
   useEffect(() => {
-    if (userId) {
+    if (userId && token) {
       const sectionsURL = baseURL + `/users/${userId}/sections`;
       const attemptsURL = baseURL + `/users/${userId}/attempts`;
       const examsURL = baseURL + `/sections/exams`;
@@ -77,7 +77,7 @@ const AccountPage = (props) => {
         })
         .catch((err) => console.error(err));
     }
-  }, []);
+  }, [userId, token, axios]);
 
   const sectionDetails = (details) => {
     const { title, description, teacher_id, code } = details;

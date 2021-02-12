@@ -15,6 +15,7 @@ import LandingPage from "./components/LandingPage";
 import AccountPage from "./components/AccountPage";
 import Register from "./components/Register";
 import Question from "./components/Question";
+import DummyAccountPage from "./components/DummyAccountPage";
 
 const theme = createMuiTheme({
   palette: {
@@ -40,6 +41,9 @@ function App() {
   // Can then be accessed as prop by exam view (currently defaulting to 1 for testing)
   const [examId, setExamId] = useState(1);
 
+  const passToken = token || sessionStorage.getItem("jwt");
+  const passUserId = userId || localStorage.getItem("userId");
+
   return (
     <Router>
       <CssBaseline />
@@ -61,7 +65,7 @@ function App() {
           </Route>
           <Route path="/account">
             {token ? (
-              <AccountPage setToken={setToken} setUserId={setUserId} />
+              <AccountPage token={passToken} userId={passUserId} setToken={setToken} setUserId={setUserId} />
             ) : (
               <Redirect to="/register" />
             )}
@@ -72,6 +76,8 @@ function App() {
                 examId={examId}
                 setToken={setToken}
                 setExamId={setExamId}
+                userId={passUserId}
+                token={passToken}
               />
             ) : (
               <Redirect to="/" />

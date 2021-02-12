@@ -41,17 +41,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Question({ examId, setToken, setExamId }) {
+export default function Question({
+  examId,
+  setToken,
+  setExamId,
+  userId,
+  token,
+}) {
+  // const userId = userIdProps || localStorage.getItem("userId");
+  // const token = tokenProps || sessionStorage.getItem("jwt");
+
+  const history = useHistory();
+  const classes = useStyles();
+
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
   const [questionObject, setQuestionObject] = useState({});
   const [attemptId, setAttemptId] = useState("");
   const [loading, setLoading] = useState(true);
-  const classes = useStyles();
-  const history = useHistory();
-  const axios = useAxios(sessionStorage.getItem("jwt"));
+
+  const axios = useAxios(token);
   const baseURL = process.env.REACT_APP_REQUEST_URL;
-  const userId = localStorage.getItem("userId");
 
   const currentQ = Object.keys(questionObject).length
     ? questionObject.questions[questionIndex]
@@ -80,7 +90,7 @@ export default function Question({ examId, setToken, setExamId }) {
         })
         .catch((err) => console.error(err));
     }
-  }, []);
+  }, [axios, baseURL, examId, userId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
