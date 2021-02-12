@@ -35,46 +35,44 @@ const AccountPage = (props) => {
       const attemptsURL = baseURL + `/users/${userId}/attempts`;
       const examsURL = baseURL + `/sections/exams`;
 
-      let attempts = [];
-      let sections = [];
+      const sectionsReq = axios.get(sectionsURL);
+      const attemptsReq = axios.get(attemptsURL);
 
-      // get sections and attempts for user
-      Promise.all([axios.get(sectionsURL), axios.get(attemptsURL)])
-        .then(([{ data: sectionsRes }, { data: attemptsRes }]) => {
-          attempts = attemptsRes;
-          sections = sectionsRes;
-
-          // set classcodes and nav callbacks for drawer/sidebar
-          setNavButtons((prev) => {
+      sectionsReq
+        .then(({ data: sections }) => {
+          setNavButtons(() => {
             return [
-              ...prev,
+              ...initalNavState,
               sections.map((sec) => {
                 const { code } = sec;
                 return { text: code, navAction: () => updateContentView(code) };
               }),
             ];
           });
-
-          // get exams for sections user is in
           const sectionIds = sections.map((sec) => sec.section_id);
-          return axios.get(examsURL, { params: { sectionIds } });
+          const examsReq = axios.get(examsURL, { params: { sectionIds } });
+          return Promise.all([sectionsReq, attemptsReq, examsReq]);
         })
-        .then(({ data: exams }) => {
-          const examsWithAttempts = exams.map((exam) => {
+        .then(([{ data: sections }, { data: attempts }, { data: exams }]) => {
+          const examsWithData = exams.map((exam) => {
+            const examSection = sections.find((sec) => {
+              return sec.section_id === exam.section_id;
+            });
+            const examAttempts = attempts.filter((att) => {
+              return att.exam_id === exam.id;
+            });
+
             return {
               ...exam,
-              section: sections.find((sec) => {
-                return sec.section_id === exam.section_id;
-              }),
-              attempts: attempts.filter((att) => {
-                return att.exam_id === exam.id;
-              }),
+              section: examSection,
+              attempts: examAttempts,
             };
           });
-          console.log({ examsWithAttempts });
-          setExams(examsWithAttempts);
+          setExams(examsWithData);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          console.error(err);
+        });
     }
   }, [userId, token, axios]);
 
