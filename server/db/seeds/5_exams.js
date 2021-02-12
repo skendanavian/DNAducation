@@ -13,9 +13,14 @@ const createFakeExams = (sections, exams) => {
   for (let i = 1; i <= sections; i++) {
     
     for(let j = 0; j < examsPerSection; j++) {
+      const examType = ['Exam', 'Quiz', 'Test'][Math.floor(Math.random() * 3)];
+      const noun = faker.company.bsNoun();
+      const nounCapitalized = noun.charAt(0).toUpperCase() + noun.slice(1);
       rows.push({
         section_id: i,
         total_submissions: 2,
+        title: `${nounCapitalized} ${examType}`,
+        description: faker.lorem.sentences(3),
         due_time: faker.date.between(daysFromNow(-200), daysFromNow(30))
       });
     }
