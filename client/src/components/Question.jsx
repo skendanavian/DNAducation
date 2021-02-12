@@ -57,7 +57,6 @@ export default function Question({ userId, examId, setExamId }) {
     : "";
 
   useEffect(() => {
-    setExamId(1);
     if (userId) {
       const createAttemptUrl = baseURL + "/attempts";
       const getQuestionsUrl = baseURL + `/exams/${examId}/questions`;
