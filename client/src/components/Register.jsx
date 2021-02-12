@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Register({ setToken }) {
+export default function Register({ setToken, setUserId }) {
   const history = useHistory();
   const classes = useStyles();
   const [registrationForm, setRegistrationForm] = useState({
@@ -74,6 +74,7 @@ export default function Register({ setToken }) {
         setToken(res.data.token);
         sessionStorage.setItem("jwt", res.data.token);
         history.push("/account");
+        // setUserId(res.)
       })
       .catch((e) => console.log(e));
   };

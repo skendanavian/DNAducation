@@ -32,6 +32,7 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsBySt
           throw new ErrorHandler(404, "No sections found for user")
         };
         res.json(result);
+        
       })
       .catch((err) => next(err));
   });
@@ -46,6 +47,7 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsBySt
           throw new ErrorHandler(404, "No attempts found for user")
         };
         res.json(result);
+       
       })
       .catch((err) => next(err));
   });

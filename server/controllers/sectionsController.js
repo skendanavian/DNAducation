@@ -56,6 +56,9 @@ const getSectionsByStudent = (id) => {
 };
 
 const getExamsBySections = (sectionIds) => {
+  if(!sectionIds) return new Promise((res, rej) => {
+    res([]);
+  })
   return db
   .select(
     "sections.id as section_id",

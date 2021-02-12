@@ -5,6 +5,8 @@ const cors = require("cors");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+app.disable('etag');
+
 
 // Environment setup
 if (process.env.NODE_ENV !== "production") {
@@ -36,10 +38,10 @@ const attemptsController = require("./controllers/attemptsController")(db);
 
 // Routes setup
 app.use("/", indexRouter(usersController));
-app.use("/users", authMiddleware, usersRouter({...usersController, ...sectionsController, ...attemptsController}));
+app.use("/users", /* authMiddleware, */  usersRouter({...usersController, ...sectionsController, ...attemptsController}));
 app.use("/exams", examsRouter(examsController));
-app.use("/attempts", attemptsRouter(attemptsController));
-app.use("/sections", sectionsRouter(sectionsController));
+app.use("/attempts", /* authMiddleware, */ attemptsRouter(attemptsController));
+app.use("/sections", /* authMiddleware, */ sectionsRouter(sectionsController));
 
 // const Router404 = require("./routes/404Route");
 // app.use("*", Router404);

@@ -12,7 +12,7 @@ import {
 
 import Login from "./components/Login";
 import LandingPage from "./components/LandingPage";
-import AccountPage from "./components/AccountPage";
+import PageContainer from "./components/PageContainer";
 import Register from "./components/Register";
 import Question from "./components/Question";
 
@@ -35,7 +35,7 @@ const theme = createMuiTheme({
 
 function App() {
   const [token, setToken] = useState(sessionStorage.getItem("jwt") || "");
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(1);
   // This will be passed to Class View and set exam Id on Exam start.
   // Can then be accessed as prop by exam view (currently defaulting to 1 for testing)
   const [examId, setExamId] = useState(1);
@@ -61,7 +61,7 @@ function App() {
           </Route>
           <Route path="/account">
             {token ? (
-              <AccountPage setToken={setToken} setUserId={setUserId} />
+              <AccountPage setToken={setToken} setUserId={setUserId} userId={userId} />
             ) : (
               <Redirect to="/register" />
             )}
@@ -69,6 +69,7 @@ function App() {
           <Route path="/exam">
             {token ? (
               <Question
+                userId={userId}
                 examId={examId}
                 setToken={setToken}
                 setExamId={setExamId}

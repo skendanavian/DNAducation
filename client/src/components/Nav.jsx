@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Nav(props) {
-  const { buttonDefs, pageTitle, setToken } = props;
+  const { buttonDefs, pageTitle, setToken, setUserId } = props;
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
@@ -65,6 +65,7 @@ export default function Nav(props) {
   };
   const logout = () => {
     setToken("");
+    setUserId(null);
     sessionStorage.removeItem("jwt");
     history.push("/login");
   };

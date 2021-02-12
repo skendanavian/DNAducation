@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login({ setToken }) {
+export default function Login({ setToken, setUserId }) {
   const history = useHistory();
   const [loginForm, setLoginForm] = useState({
     email: "",
@@ -68,11 +68,14 @@ export default function Login({ setToken }) {
         if (!res.data) {
           console.log(res.data.message);
         } else {
-          console.log("Login response: ", res.data);
-          setToken(res.data.token);
-          localStorage.setItem("userId", res.data.id);
-          sessionStorage.setItem("jwt", res.data.token);
-          history.push("/account");
+          let timer = setTimeout(() => {
+            console.log("Login response: ", res.data);
+            setToken(res.data.token);
+            setUserId(res.data.id);
+            sessionStorage.setItem("jwt", res.data.token);
+            history.push(`/account`);
+            clearTimeout(timer);
+          }, 3000);
         }
       })
       .catch((e) => console.log(e));
@@ -96,7 +99,7 @@ export default function Login({ setToken }) {
           <Typography color="primary" component="h1" variant="h5">
             Sign in
           </Typography>
-          <form onSubmit={submitLogin} className={classes.form}>
+          <form onSubmit={(e) => submitLogin(e)} className={classes.form}>
             <TextField
               variant="outlined"
               margin="normal"

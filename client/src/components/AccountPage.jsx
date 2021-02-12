@@ -12,10 +12,7 @@ require("dotenv").config({ path: "../../.env" });
 const baseURL = process.env.REACT_APP_REQUEST_URL;
 
 const AccountPage = (props) => {
-  const { setToken } = props;
   const pageTitle = "🧬 DNAducation";
-
-  const userId = localStorage.getItem("userId");
 
   const [exams, setExams] = useState([]);
   const [contentView, setContentView] = useState("Account");
@@ -31,53 +28,8 @@ const AccountPage = (props) => {
 
   const axios = useAxios(sessionStorage.getItem("jwt"));
 
-  useEffect(() => {
-    if (userId) {
-      const sectionsURL = baseURL + `/users/${userId}/sections`;
-      const attemptsURL = baseURL + `/users/${userId}/attempts`;
-      const examsURL = baseURL + `/sections/exams`;
-
-      let attempts = [];
-      let sections = [];
-
-      // get sections and attempts for user
-      Promise.all([axios.get(sectionsURL), axios.get(attemptsURL)])
-        .then(([{ data: sectionsRes }, { data: attemptsRes }]) => {
-          attempts = attemptsRes;
-          sections = sectionsRes;
-
-          // set classcodes and nav callbacks for drawer/sidebar
-          setNavButtons((prev) => {
-            return [
-              ...prev,
-              sections.map((sec) => {
-                const { code } = sec;
-                return { text: code, navAction: () => updateContentView(code) };
-              }),
-            ];
-          });
-
-          // get exams for sections user is in
-          const sectionIds = sections.map((sec) => sec.section_id);
-          return axios.get(examsURL, { params: { sectionIds } });
-        })
-        .then(({ data: exams }) => {
-          const examsWithAttempts = exams.map((exam) => {
-            return {
-              ...exam,
-              section: sections.find((sec) => {
-                return sec.section_id === exam.section_id;
-              }),
-              attempts: attempts.filter((att) => {
-                return att.exam_id === exam.id;
-              }),
-            };
-          });
-          setExams(examsWithAttempts);
-        })
-        .catch((err) => console.error(err));
-    }
-  }, []);
+  const [attempts, setAttempts] = useState([]);
+  let [sections, setSections] = useState([]);
 
   const sectionDetails = (details) => {
     const { title, description, teacher_id, code } = details;
@@ -148,10 +100,17 @@ const AccountPage = (props) => {
 
   const navProps = {
     buttonDefs: navButtons,
+    setUserId,
     setToken,
     pageTitle,
   };
-  return <Nav {...navProps}>{contentController(contentView, exams)}</Nav>;
+  return (
+    <>
+      <Nav {...navProps}>{contentController(contentView, exams)}</Nav>
+      <Typography>Sections{sections && JSON.stringify(sections[0])}</Typography>
+      <Typography>Attempts{attempts && JSON.stringify(attempts[0])}</Typography>
+    </>
+  );
 };
 
 export default AccountPage;
