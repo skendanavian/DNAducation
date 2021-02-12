@@ -6,7 +6,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect,
 } from "react-router-dom";
 
@@ -15,7 +14,6 @@ import LandingPage from "./components/LandingPage";
 import AccountPage from "./components/AccountPage";
 import Register from "./components/Register";
 import Question from "./components/Question";
-import DummyAccountPage from "./components/DummyAccountPage";
 
 const theme = createMuiTheme({
   palette: {
