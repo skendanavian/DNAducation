@@ -15,8 +15,6 @@ const AccountPage = (props) => {
   const { setToken, userId } = props;
   const pageTitle = "🧬 DNAducation";
 
-  // const userId = localStorage.getItem("userId");
-
   const [exams, setExams] = useState([]);
   const [contentView, setContentView] = useState("Account");
 
@@ -31,14 +29,14 @@ const AccountPage = (props) => {
 
   const axios = useAxios(sessionStorage.getItem("jwt"));
 
+  let attempts = [];
+  let sections = [];
+
   useEffect(() => {
     if (userId) {
       const sectionsURL = baseURL + `/users/${userId}/sections`;
       const attemptsURL = baseURL + `/users/${userId}/attempts`;
       const examsURL = baseURL + `/sections/exams`;
-
-      let attempts = [];
-      let sections = [];
 
       // get sections and attempts for user
       Promise.all([axios.get(sectionsURL), axios.get(attemptsURL)])

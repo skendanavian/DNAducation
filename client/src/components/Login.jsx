@@ -70,7 +70,6 @@ export default function Login({ setToken, setUserId }) {
         } else {
           console.log("Login response: ", res.data);
           setToken(res.data.token);
-          // localStorage.setItem("userId", res.data.id);
           setUserId(res.data.id);
           sessionStorage.setItem("jwt", res.data.token);
           history.push("/exam");

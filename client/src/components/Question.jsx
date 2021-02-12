@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Question({ examId, setToken, setExamId }) {
+export default function Question({ userId, examId, setExamId }) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
   const [questionObject, setQuestionObject] = useState({});
@@ -51,13 +51,13 @@ export default function Question({ examId, setToken, setExamId }) {
   const history = useHistory();
   const axios = useAxios(sessionStorage.getItem("jwt"));
   const baseURL = process.env.REACT_APP_REQUEST_URL;
-  const userId = localStorage.getItem("userId");
 
   const currentQ = Object.keys(questionObject).length
     ? questionObject.questions[questionIndex]
     : "";
 
   useEffect(() => {
+    setExamId(1);
     if (userId) {
       const createAttemptUrl = baseURL + "/attempts";
       const getQuestionsUrl = baseURL + `/exams/${examId}/questions`;

@@ -40,6 +40,8 @@ function App() {
   // Can then be accessed as prop by exam view (currently defaulting to 1 for testing)
   const [examId, setExamId] = useState(1);
 
+  console.log(userId);
+
   return (
     <Router>
       <CssBaseline />
