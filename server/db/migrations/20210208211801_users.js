@@ -6,6 +6,7 @@ exports.up = function (knex) {
     table.string("password").notNullable();
     table.string("email").unique().notNullable();
     table.boolean("is_teacher").defaultTo(false);
+    table.boolean("has_recorded_typedna").defaultTo(false);
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
