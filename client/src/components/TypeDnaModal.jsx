@@ -32,18 +32,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FormDialog() {
-  const [open, setOpen] = React.useState(false);
+export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
+  // const [open, setOpen] = React.useState(false);
 
   const classes = useStyles();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
   return (
     <div>

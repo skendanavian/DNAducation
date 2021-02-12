@@ -19,7 +19,6 @@ export default function AccountContent(props) {
     return (
       <>
         <UserDetails />
-        <Divider></Divider>
         <Typography>Unsubmitted Assessments</Typography>
         <ExamsContainer exams={examsToDisplay} />
       </>
