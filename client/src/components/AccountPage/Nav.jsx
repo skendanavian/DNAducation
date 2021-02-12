@@ -20,7 +20,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import MenuIcon from "@material-ui/icons/Menu";
 
-import SubjectIcon from "./SubjectIcon";
+import SubjectIcon from "../SubjectIcon";
 
 const drawerWidth = 240;
 
@@ -68,7 +68,6 @@ export default function Nav(props) {
     sessionStorage.removeItem("jwt");
     history.push("/login");
   };
-  console.log({ buttonDefs });
   const drawer = (
     <>
       <Toolbar />
@@ -76,23 +75,26 @@ export default function Nav(props) {
         {buttonDefs &&
           buttonDefs.map((listSection, index) => {
             return (
-              <List key={index}>
-                {listSection.map((button, index) => {
-                  const { text, navAction } = button;
-                  return (
-                    <ListItem
-                      button
-                      key={`${text}${index}`}
-                      onClick={navAction}
-                    >
-                      <ListItemIcon>
-                        <SubjectIcon {...{ text }} />
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItem>
-                  );
-                })}
-              </List>
+              <>
+                {index > 0 && <Divider />}
+                <List key={index}>
+                  {listSection.map((button, index) => {
+                    const { text, navAction } = button;
+                    return (
+                      <ListItem
+                        button
+                        key={`${text}${index}`}
+                        onClick={navAction}
+                      >
+                        <ListItemIcon>
+                          <SubjectIcon {...{ text }} />
+                        </ListItemIcon>
+                        <ListItemText primary={text} />
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </>
             );
           })}
       </div>

@@ -15,7 +15,6 @@ import AccountPage from "./components/AccountPage";
 import Register from "./components/Register";
 import Question from "./components/Question";
 import ModalTestPage from "./components/ModalTestPage";
-import DummyAccountPage from "./components/DummyAccountPage";
 
 const theme = createMuiTheme({
   palette: {
