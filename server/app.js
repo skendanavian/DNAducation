@@ -32,11 +32,17 @@ const sectionsController = require("./controllers/sectionsController")(db);
 const examsController = require("./controllers/examsController")(db);
 const attemptsController = require("./controllers/attemptsController")(db);
 
-
-
 // Routes setup
 app.use("/", indexRouter(usersController));
-app.use("/users", authMiddleware, usersRouter({...usersController, ...sectionsController, ...attemptsController}));
+app.use(
+  "/users",
+  authMiddleware,
+  usersRouter({
+    ...usersController,
+    ...sectionsController,
+    ...attemptsController,
+  })
+);
 app.use("/exams", examsRouter(examsController));
 app.use("/attempts", attemptsRouter(attemptsController));
 app.use("/sections", sectionsRouter(sectionsController));
