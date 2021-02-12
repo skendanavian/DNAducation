@@ -13,7 +13,6 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 const drawerWidth = 240;
 
@@ -90,7 +89,7 @@ export default function Question({ examId, setToken, setExamId }) {
 
     const exam_question_id = currentQ.questionId;
 
-    //Submit individual answer to DB
+    //Submit individual answers to DB
     // **Confidence Level Currently Hard Coded
     axios
       .post(submitAnswerUrl, {
@@ -101,6 +100,7 @@ export default function Question({ examId, setToken, setExamId }) {
       })
       .then((res) => {
         if (currentQ.questionNumber === questionObject.questions.length) {
+          //Submit Full Exam Attempt Update on last question
           const submitExamUrl = baseURL + `/attempts/${attemptId}`;
           const date = new Date(Date.now());
           return axios
@@ -110,6 +110,7 @@ export default function Question({ examId, setToken, setExamId }) {
               time_submitted: date.toISOString(),
             })
             .then((res) => {
+              // Increment total in DB
               const incrementSubmissionURL =
                 baseURL + `/exams/${questionObject.examId}`;
               return axios.patch(incrementSubmissionURL);
@@ -124,24 +125,6 @@ export default function Question({ examId, setToken, setExamId }) {
         return;
       })
       .catch((err) => console.log(err));
-
-    //Update entire exam status in DB
-
-    // if (currentQ.questionNumber === questionObject.questions.length - 1) {
-    //   const submitExamUrl = baseURL + `/attempts/${attemptId}`;
-    //   const date = new Date(Date.now());
-    //   axios
-    //     .patch(submitAnswerUrl, {
-    //       id: attemptId,
-    //       average_confidence: 75,
-    //       time_submitted: date.toISOString(),
-    //     })
-    //     .then((res) => {
-    //       console.log("submitted", res.data);
-    //       history.push("/account");
-    //     })
-    //     .catch((err) => console.log(err));
-    // }
   };
 
   return (
@@ -168,7 +151,6 @@ export default function Question({ examId, setToken, setExamId }) {
           LOADING....
         </Typography>
       ) : (
-        // <CircularProgress size={200} margin="auto" />
         <Container className={classes.questionContainer}>
           <Typography
             variant="h5"
