@@ -15,9 +15,9 @@ import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
-import SubjectIcon from "./SubjectIcon";
+import SubjectIcon from "../SubjectIcon";
 
-import { getTimeToDue, dateIsPast } from "../helpers/dateHelpers";
+import { getTimeToDue, dateIsPast } from "../../helpers/dateHelpers";
 
 const useStyles = makeStyles((theme) => ({
   root: {

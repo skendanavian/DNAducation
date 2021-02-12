@@ -20,7 +20,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import MenuIcon from "@material-ui/icons/Menu";
 
-import SubjectIcon from "./SubjectIcon";
+import SubjectIcon from "../SubjectIcon";
 
 const drawerWidth = 240;
 
