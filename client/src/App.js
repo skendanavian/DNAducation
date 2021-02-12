@@ -6,8 +6,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect,
+  useParams,
 } from "react-router-dom";
 
 import Login from "./components/Login";
@@ -63,14 +63,19 @@ function App() {
               <Register setToken={setToken} setUserId={setUserId} />
             )}
           </Route>
-          <Route path="/account">
+          <Route path="/account/:user">
             {token ? (
-              <AccountPage token={passToken} userId={passUserId} setToken={setToken} setUserId={setUserId} />
+              <AccountPage
+                token={passToken}
+                userId={passUserId}
+                setToken={setToken}
+                setUserId={setUserId}
+              />
             ) : (
               <Redirect to="/register" />
             )}
           </Route>
-          <Route path="/exam">
+          <Route path="/exam/:user">
             {token ? (
               <Question
                 examId={examId}

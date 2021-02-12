@@ -75,7 +75,9 @@ export default function Login({ setToken, setUserId }) {
           setUserId(res.data.id);
 
           sessionStorage.setItem("jwt", res.data.token);
-          history.push(`/account`);
+          const user = res.data.id;
+          setUserId(user);
+          history.push(`/account/${user}`);
         }
       })
       .catch((e) => console.log(e));

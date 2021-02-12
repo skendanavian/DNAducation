@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import Typography from "@material-ui/core/Typography";
 import { Box, Button, Divider } from "@material-ui/core";
-
+import { useParams } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 import Nav from "./Nav";
 import ExamCard from "./ExamCard";
@@ -15,6 +15,10 @@ const AccountPage = (props) => {
   const { setToken, token, userId } = props;
   // const userId = userIdProps || localStorage.getItem("userId");
   // const token = tokenProps || sessionStorage.getItem("jwt");
+
+  const { userId } = useParams();
+  // console.log(user);
+  // const userId = user;
 
   const pageTitle = "🧬 DNAducation";
 
