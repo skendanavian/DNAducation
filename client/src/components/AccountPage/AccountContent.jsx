@@ -6,7 +6,6 @@ import ExamsContainer from "./ExamsContainer";
 
 export default function AccountContent(props) {
   const { contentView, exams } = props;
-  console.table(props);
   if (!contentView) {
     return <Typography>404 Error</Typography>;
   }
@@ -19,12 +18,10 @@ export default function AccountContent(props) {
 
     return (
       <>
-        <UserDetails
-          user={{ name: "Dummy", email: "fake email" }}
-        ></UserDetails>
+        <UserDetails />
         <Divider></Divider>
         <Typography>Unsubmitted Assessments</Typography>
-        <ExamsContainer exams={examsToDisplay}></ExamsContainer>
+        <ExamsContainer exams={examsToDisplay} />
       </>
     );
   } else {
@@ -36,10 +33,10 @@ export default function AccountContent(props) {
 
     return (
       <>
-        <SectionDetails details={examsToDisplay[0].section}></SectionDetails>
+        <SectionDetails details={examsToDisplay[0].section} />
         <Divider></Divider>
         <Typography>Unsubmitted Assessments</Typography>
-        <ExamsContainer exams={examsToDisplay}></ExamsContainer>
+        <ExamsContainer exams={examsToDisplay} />
       </>
     );
   }
