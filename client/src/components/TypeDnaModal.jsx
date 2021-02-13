@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -8,20 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-
-//Currently importing from NPM package
-import TypingDnaClient from "typingdnaclient";
-
-// Alternate ways to import typedna
-// import TypingDNA from "../typeDna/typingdna";
-// import "../typeDna/typingdna";
-
-const tdna = new TypingDnaClient(
-  process.env.REACT_APP_TYPEDNA_API_KEY,
-  process.env.REACT_APP_TYPEDNA_SECRET
-);
-
-console.log(tdna);
+import TypeDNA from "../typeDna/typingdna";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,6 +30,14 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.3rem",
     textAlign: "center",
   },
+  success: {
+    color: "#8CDD81",
+    textAlign: "center",
+  },
+  failure: {
+    color: "#Df2935",
+    textAlign: "center",
+  },
 }));
 
 export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
@@ -53,17 +48,34 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   // const textArea = document.getElementById("typeDna");
   // tdna.getTypingPattern(20, "Hello World");
 
-  const testString = "Type this line to set up your typing dna authorization.";
+  // console.log(typeDna.getTypingPattern({ id: "typeDna" }));
+  // console.log(TypeDNA);
+  const tdna = new TypeDNA();
+
+  const testString = "Type this line to set up your typing dna authorization";
+
+  const typingCode = TypeDNA.getTypingPattern({
+    type: 0,
+    text: `${testString}`,
+    targetId: "typeDna",
+  });
 
   const tooLong = textValue.length > testString.length;
   const matchedText = textValue === testString;
 
+  if (matchedText || textValue.length === testString.length) {
+    TypeDNA.stop();
+    console.log(typingCode);
+  }
   const handleTyping = (e) => {
     setTextValue(e.target.value);
   };
 
   //This line may have some potential.  Currently console.logs the counter for key presses.
-  console.log(tdna.auto());
+  // console.log(tdna.auto({ id: "123456", tp: "hello world" }));
+  // console.log(tdna);
+  // tdna.addTarget("typeDna");
+  // console.log(tdna);
 
   return (
     <div>
@@ -92,16 +104,21 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
               <DialogContentText color="primary">
                 {testString}
               </DialogContentText>
-              <DialogContentText color="primary">
-                {matchedText && "Exact Match"}
-              </DialogContentText>
-              <DialogContentText color="error">
+              <div
+                className={
+                  textValue.length === testString.length && matchedText
+                    ? classes.success
+                    : classes.failure
+                }
+              >
                 {!matchedText && textValue.length === testString.length
-                  ? "sentence does not match  ||   "
+                  ? "Sentence does not match - "
                   : ""}
                 {tooLong && "too many characters  ||  "}
-                {textValue.length} / {testString.length} characters
-              </DialogContentText>
+                {matchedText
+                  ? "Exact Match - Please submit your profile"
+                  : `${textValue.length} / ${testString.length}`}
+              </div>
             </Box>
             <Box flexGrow="1">
               <form>
