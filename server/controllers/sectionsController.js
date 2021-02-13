@@ -45,8 +45,9 @@ const getSectionsByStudent = (id) => {
     "user_id as student_id",
     "classes.id as class_id",
     "title",
+    "description",
     "code",
-    'users.name as teacher_name')
+    "teacher_user_id")
   .from("sections")
   .join("section_students", 'section_id', '=','sections.id' )
   .join("users", "user_id", "=", "users.id")
