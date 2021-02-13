@@ -71,7 +71,6 @@ export default function Nav(props) {
     sessionStorage.removeItem("jwt");
     history.push("/login");
   };
-  console.log({ buttonDefs });
   const drawer = (
     <>
       <Toolbar />
