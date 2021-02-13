@@ -8,7 +8,6 @@ const baseURL = process.env.REACT_APP_REQUEST_URL;
 require("dotenv").config({ path: "../../../.env" });
 
 export default function UserDetails() {
-  const userId = localStorage.getItem("userId");
   const [user, setUser] = useState({});
 
   const [open, setOpen] = useState(false);
@@ -19,16 +18,18 @@ export default function UserDetails() {
     setOpen(false);
   };
 
+  const userId = localStorage.getItem("userId");
+  const token = sessionStorage.getItem("jwt");
+
   useEffect(() => {
-    const token = sessionStorage.getItem("jwt");
+    const axios = generateAxios(token);
     if (userId && token) {
-      const axios = generateAxios(token);
       const userURL = baseURL + `/users/${userId}`;
       axios.get(userURL).then(({ data: userRes }) => {
         setUser(userRes);
       });
     }
-  }, [userId]);
+  }, [userId, token]);
 
   return (
     <Card>

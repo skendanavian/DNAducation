@@ -8,18 +8,20 @@ require("dotenv").config({ path: "../../../.env" });
 export default function SectionDetails(props) {
   const { details, height } = props;
   const { title, teacher_user_id, code, description } = details;
-  const axios = generateAxios(sessionStorage.getItem("jwt"));
 
   const [teacher, setTeacher] = useState({});
 
+  const token = sessionStorage.getItem("jwt");
+
   useEffect(() => {
+    const axios = generateAxios(token);
     if (teacher_user_id) {
       const userURL = baseURL + `/users/${teacher_user_id}`;
       axios.get(userURL).then(({ data: userRes }) => {
         setTeacher(userRes);
       });
     }
-  }, [axios, teacher_user_id]);
+  }, [teacher_user_id, token]);
 
   return (
     <Card>
