@@ -21,8 +21,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import MenuIcon from "@material-ui/icons/Menu";
 
 import SubjectIcon from "../SubjectIcon";
+import { LIGHT_GRAY } from "../../constants/colors";
 
-const drawerWidth = 240;
+const drawerWidth = 180;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +45,8 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    backgroundColor: LIGHT_GRAY,
+    minHeight: "100vh",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -68,6 +71,7 @@ export default function Nav(props) {
     sessionStorage.removeItem("jwt");
     history.push("/login");
   };
+  console.log({ buttonDefs });
   const drawer = (
     <>
       <Toolbar />
