@@ -9,6 +9,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import TypeDNA from "../typeDna/typingdna";
+import highlightWords from "highlight-words";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,44 +39,58 @@ const useStyles = makeStyles((theme) => ({
     color: "#Df2935",
     textAlign: "center",
   },
+
+  highlight: {
+    backgroundColor: "#fdc500",
+  },
 }));
 
 export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const classes = useStyles();
   const [textValue, setTextValue] = useState("");
+  const [profileAttempt, setProfileAttempt] = useState(1);
 
-  // tdna.getTypingPattern({ type: 0, length: 180 });
-  // const textArea = document.getElementById("typeDna");
-  // tdna.getTypingPattern(20, "Hello World");
-
-  // console.log(typeDna.getTypingPattern({ id: "typeDna" }));
-  // console.log(TypeDNA);
   const tdna = new TypeDNA();
 
-  const testString = "Type this line to set up your typing dna authorization";
+  const testStrings = [
+    "Type out this line to begin setting up your typing dna profile",
+    "Here is another sentence that will be used to recored your typing characteristics",
+    "This is the last phrase that you will need to write out before your type dna profile will be completed",
+  ];
 
+  const testString = testStrings[profileAttempt - 1];
+
+  // set highlighter params for test string
   const typingCode = TypeDNA.getTypingPattern({
     type: 0,
     text: `${testString}`,
     targetId: "typeDna",
   });
 
-  const tooLong = textValue.length > testString.length;
+  const inputLength = textValue.length;
+  const tooLong = inputLength > testString.length;
   const matchedText = textValue === testString;
 
   if (matchedText || textValue.length === testString.length) {
     TypeDNA.stop();
     console.log(typingCode);
   }
+  let chunks = highlightWords({
+    text: testString,
+    query: textValue,
+    matchExactly: true,
+  });
+
+  console.log(chunks);
   const handleTyping = (e) => {
     setTextValue(e.target.value);
   };
 
-  //This line may have some potential.  Currently console.logs the counter for key presses.
-  // console.log(tdna.auto({ id: "123456", tp: "hello world" }));
-  // console.log(tdna);
-  // tdna.addTarget("typeDna");
-  // console.log(tdna);
+  const handleButton = (e) => {
+    console.log("clicked");
+    if (profileAttempt === 3) handleClose();
+    setProfileAttempt(profileAttempt + 1);
+  };
 
   return (
     <div>
@@ -102,7 +117,16 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
           >
             <Box flexGrow="1">
               <DialogContentText color="primary">
-                {testString}
+                {chunks.map(({ text, match, key }) =>
+                  match ? (
+                    <span className={classes.highlight} key={key}>
+                      {text}
+                      {console.log(text)}
+                    </span>
+                  ) : (
+                    <span key={key}>{text}</span>
+                  )
+                )}
               </DialogContentText>
               <div
                 className={
@@ -133,7 +157,6 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
                   onChange={(e) => {
                     handleTyping(e);
                   }}
-                  //added custom id for type dna to grab value
                   InputProps={{
                     className: classes.input,
                     id: "typeDna",
@@ -144,7 +167,13 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
           </Box>
         </DialogContent>
         <DialogActions className={classes.btnGroup}>
-          <Button onClick={handleClose} variant="contained" color="secondary">
+          <Button
+            onClick={(e) => {
+              handleButton(e);
+            }}
+            variant="contained"
+            color="secondary"
+          >
             Submit TypeDNA Profile
           </Button>
           <Button onClick={handleClose} color="primary">
