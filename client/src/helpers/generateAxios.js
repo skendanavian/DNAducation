@@ -1,5 +1,5 @@
 import axios from "axios";
-export default function useAxios(token) {
+export default function generateAxios(token) {
   axios.defaults.headers.common["Authorization"] = token;
   axios.defaults.headers.post["Content-Type"] =
     "application/x-www-form-urlencoded";
