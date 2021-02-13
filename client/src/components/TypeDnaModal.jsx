@@ -117,7 +117,7 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
                 {tooLong && "too many characters  ||  "}
                 {matchedText
                   ? "Exact Match - Please submit your profile"
-                  : `${textValue.length} / ${testString.length}`}
+                  : `${textValue.length} of ${testString.length}`}
               </div>
             </Box>
             <Box flexGrow="1">
