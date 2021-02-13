@@ -1,14 +1,13 @@
 import { Box, Button, Divider, Typography, Card } from "@material-ui/core";
 import { useEffect, useState } from "react";
 
-import useAxios from "../../hooks/useAxios";
+import generateAxios from "../../helpers/generateAxios";
 import TypeDnaModal from "../TypeDnaModal";
 
 const baseURL = process.env.REACT_APP_REQUEST_URL;
 require("dotenv").config({ path: "../../../.env" });
 
 export default function UserDetails() {
-  const axios = useAxios(sessionStorage.getItem("jwt"));
   const userId = localStorage.getItem("userId");
   const [user, setUser] = useState({});
 
@@ -21,13 +20,15 @@ export default function UserDetails() {
   };
 
   useEffect(() => {
-    if (userId) {
+    const token = sessionStorage.getItem("jwt");
+    if (userId && token) {
+      const axios = generateAxios(token);
       const userURL = baseURL + `/users/${userId}`;
       axios.get(userURL).then(({ data: userRes }) => {
         setUser(userRes);
       });
     }
-  }, [userId, axios]);
+  }, [userId]);
 
   return (
     <Card>

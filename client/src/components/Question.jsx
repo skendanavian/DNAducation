@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
-import useAxios from "../hooks/useAxios";
+import generateAxios from "../helpers/generateAxios";
 import { formatExamQuestions } from "../helpers/formatExamQuestions";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -13,8 +13,6 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-
-const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,9 +46,6 @@ export default function Question({
   userId,
   token,
 }) {
-  // const userId = userIdProps || localStorage.getItem("userId");
-  // const token = tokenProps || sessionStorage.getItem("jwt");
-
   const history = useHistory();
   const classes = useStyles();
 
@@ -60,7 +55,7 @@ export default function Question({
   const [attemptId, setAttemptId] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const axios = useAxios(token);
+  const axios = generateAxios(token);
   const baseURL = process.env.REACT_APP_REQUEST_URL;
 
   const currentQ = Object.keys(questionObject).length

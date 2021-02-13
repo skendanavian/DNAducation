@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import useAxios from "../hooks/useAxios";
+import generateAxios from "../helpers/generateAxios";
 import { useHistory } from "react-router-dom";
 
 import Avatar from "@material-ui/core/Avatar";
@@ -58,10 +58,11 @@ export default function Register({ setToken }) {
     email: "",
     password: "",
   });
-  const axios = useAxios();
 
   const submitRegistration = (e) => {
     e.preventDefault();
+
+    const axios = generateAxios();
 
     const { firstName, lastName, studentId } = registrationForm;
     const name = `${firstName} ${lastName}`;
