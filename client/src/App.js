@@ -14,7 +14,6 @@ import LandingPage from "./components/LandingPage";
 import AccountPage from "./components/AccountPage";
 import Register from "./components/Register";
 import Question from "./components/Question";
-import ModalTestPage from "./components/ModalTestPage";
 
 const theme = createMuiTheme({
   palette: {
@@ -86,9 +85,6 @@ function App() {
             ) : (
               <Redirect to="/" />
             )}
-          </Route>
-          <Route path="/modal">
-            <ModalTestPage />
           </Route>
           <Route path="/">
             <LandingPage />

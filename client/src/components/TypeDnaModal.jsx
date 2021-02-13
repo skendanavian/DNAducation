@@ -1,14 +1,27 @@
 import React from "react";
+import { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
-import Typography from "@material-ui/core/Typography";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
+
+//Currently importing from NPM package
+import TypingDnaClient from "typingdnaclient";
+
+// Alternate ways to import typedna
+// import TypingDNA from "../typeDna/typingdna";
+// import "../typeDna/typingdna";
+
+const tdna = new TypingDnaClient(
+  process.env.REACT_APP_TYPEDNA_API_KEY,
+  process.env.REACT_APP_TYPEDNA_SECRET
+);
+
+console.log(tdna);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,17 +46,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
-  // const [open, setOpen] = React.useState(false);
-
   const classes = useStyles();
+  const [textValue, setTextValue] = useState("");
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
+  // tdna.getTypingPattern({ type: 0, length: 180 });
+  // const textArea = document.getElementById("typeDna");
+  // tdna.getTypingPattern(20, "Hello World");
 
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
+  const testString = "Type this line to set up your typing dna authorization.";
+
+  const tooLong = textValue.length > testString.length;
+  const matchedText = textValue === testString;
+
+  const handleTyping = (e) => {
+    setTextValue(e.target.value);
+  };
+
+  //This line may have some potential.  Currently console.logs the counter for key presses.
+  console.log(tdna.auto());
 
   return (
     <div>
@@ -59,12 +79,6 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
         maxWidth="xl"
         modalProps={{ className: classes.root }}
       >
-        <DialogTitle id="form-dialog-title">
-          <Typography color="primary" className={classes.heading}>
-            Please type the provided text in the input box and then submit
-            profile.{" "}
-          </Typography>
-        </DialogTitle>
         <DialogContent>
           <Box
             className={classes.input}
@@ -76,29 +90,37 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
           >
             <Box flexGrow="1">
               <DialogContentText color="primary">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
-                corporis et culpa libero eligendi quam reiciendis provident
-                omnis ad beatae facere.
+                {testString}
+              </DialogContentText>
+              <DialogContentText color="primary">
+                {matchedText && "Exact Match"}
+              </DialogContentText>
+              <DialogContentText color="error">
+                {!matchedText && textValue.length === testString.length
+                  ? "sentence does not match  ||   "
+                  : ""}
+                {tooLong && "too many characters  ||  "}
+                {textValue.length} / {testString.length} characters
               </DialogContentText>
             </Box>
             <Box flexGrow="1">
-              <form
-              // onSubmit={(e) => handleSubmit(e)}
-              // className={classes.questionContainer}
-              >
+              <form>
                 <TextField
-                  // className={classes.answerField}
                   variant="outlined"
-                  placeholder="Type the above paragraph here....."
-                  // value={answerText}
+                  placeholder="Type the above line here....."
+                  value={textValue}
                   multiline
-                  rows={10}
+                  rows={5}
                   width="xl"
                   required
                   onChange={(e) => {
-                    // setAnswerText(e.target.value);
+                    handleTyping(e);
                   }}
-                  InputProps={{ className: classes.input }}
+                  //added custom id for type dna to grab value
+                  InputProps={{
+                    className: classes.input,
+                    id: "typeDna",
+                  }}
                 ></TextField>
               </form>
             </Box>
