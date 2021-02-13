@@ -6,7 +6,7 @@ const baseURL = process.env.REACT_APP_REQUEST_URL;
 require("dotenv").config({ path: "../../../.env" });
 
 export default function SectionDetails(props) {
-  const { details, height } = props;
+  const { details } = props;
   const { title, teacher_user_id, code, description } = details;
 
   const [teacher, setTeacher] = useState({});
@@ -28,16 +28,15 @@ export default function SectionDetails(props) {
       <Box
         display="flex"
         alignItems="center"
-        justifyContent="center"
+        justifyContent=""
         padding="1rem"
         margin="1rem"
-        height={height}
       >
-        <Box mr="2em">
-          <Typography color="textSecondary" variant="overline">
+        <Box mr="2em" minWidth="50%">
+          <Typography color="textSecondary" variant="body2">
             {code}
           </Typography>
-          <Typography variant="h5">{title}</Typography>
+          <Typography variant="body2">{title}</Typography>
           <Typography variant="subtitle2" color="textSecondary">
             Professor:
             <Typography color="textPrimary" variant="subtitle2">
@@ -47,7 +46,9 @@ export default function SectionDetails(props) {
         </Box>
         <Divider flexItem orientation="vertical" />
         <Box ml="2em">
-          <Typography color="textSecondary">{description}</Typography>
+          <Typography variant="body2" color="textSecondary">
+            {description}
+          </Typography>
         </Box>
       </Box>
     </Card>
