@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Typography, Box } from "@material-ui/core";
 
 import ExamCard from "./ExamCard";
 
@@ -11,10 +11,14 @@ export default function ExamsContainer(props) {
   }
 
   return (
-    <Grid>
+    <Box
+      display="grid"
+      gridTemplateColumns="repeat(auto-fill, minmax(360px, 1fr))"
+      gridGap="1rem"
+    >
       {exams.map((exam) => {
         return <ExamCard key={exam.title} exam={exam} />;
       })}
-    </Grid>
+    </Box>
   );
 }

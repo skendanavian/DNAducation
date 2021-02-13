@@ -20,9 +20,7 @@ import SubjectIcon from "../SubjectIcon";
 import { getTimeToDue, dateIsPast } from "../../helpers/dateHelpers";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: 380,
-  },
+  root: {},
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9

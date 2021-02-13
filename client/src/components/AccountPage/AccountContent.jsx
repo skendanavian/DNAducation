@@ -17,11 +17,11 @@ export default function AccountContent(props) {
     });
 
     return (
-      <>
+      <Box>
         <UserDetails />
         <Typography>Unsubmitted Assessments</Typography>
         <ExamsContainer exams={examsToDisplay} />
-      </>
+      </Box>
     );
   } else {
     // if view not account, view is a code
@@ -31,12 +31,11 @@ export default function AccountContent(props) {
     });
 
     return (
-      <>
+      <Box>
         <SectionDetails details={examsToDisplay[0].section} />
-        <Divider></Divider>
-        <Typography>Unsubmitted Assessments</Typography>
+        <Typography>All Assessments</Typography>
         <ExamsContainer exams={examsToDisplay} />
-      </>
+      </Box>
     );
   }
 }

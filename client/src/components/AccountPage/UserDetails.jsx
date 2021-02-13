@@ -31,23 +31,52 @@ export default function UserDetails() {
 
   return (
     <Card>
-      <Box display="flex" justifyContent="center" padding="1rem" margin="1rem">
-        <Box marginRight="auto">
-          <Typography>Name: {user.name}</Typography>
-          <Typography>Email: {user.email}</Typography>
-          <Typography>Student Number: {user.student_number}</Typography>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        padding="1rem"
+        margin="1rem"
+      >
+        <Box marginRight="2rem" minWidth="50%" overflow="hidden">
+          <Typography variant="body2">
+            <Typography variant="body2" display="inline" color="textSecondary">
+              Name:{" "}
+            </Typography>
+            {user.name}
+          </Typography>
+          <Typography variant="body2">
+            <Typography variant="body2" display="inline" color="textSecondary">
+              Email:{" "}
+            </Typography>
+            {user.email}
+          </Typography>
+          <Typography variant="body2">
+            <Typography variant="body2" display="inline" color="textSecondary">
+              Student Number:{" "}
+            </Typography>
+            {user.student_number}
+          </Typography>
         </Box>
+        <Divider flexItem orientation="vertical" />
 
-        <Button
-          size="small"
-          variant="contained"
-          color="secondary"
-          marginLeft="0.5rem"
-          onClick={handleClickOpen}
-          disabled={user.has_recorded_typedna}
+        <Box
+          marginLeft="2rem"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width="50%"
         >
-          Record Your TypeDNA Profile!
-        </Button>
+          <Button
+            size="small"
+            variant="contained"
+            color="secondary"
+            onClick={handleClickOpen}
+            disabled={user.has_recorded_typedna}
+          >
+            Record Your TypeDNA Profile!
+          </Button>
+        </Box>
 
         {open && (
           <TypeDnaModal
