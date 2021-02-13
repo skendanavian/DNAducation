@@ -10,6 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import TypeDNA from "../typeDna/typingdna";
 import highlightWords from "highlight-words";
+import generateAxios from "../helpers/generateAxios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,46 +51,60 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const [textValue, setTextValue] = useState("");
   const [profileAttempt, setProfileAttempt] = useState(1);
 
-  const tdna = new TypeDNA();
+  let tdna = useRef(new TypeDNA());
 
   const testStrings = [
     "Type out this line to begin setting up your typing dna profile",
-    "Here is another sentence that will be used to recored your typing characteristics",
-    "This is the last phrase that you will need to write out before your type dna profile will be completed",
+    "Here is another sentence that will be used to record your typing characteristics",
+    "This is the last phrase that you will need to write out before your typing dna profile is completed",
   ];
 
   const testString = testStrings[profileAttempt - 1];
 
-  // set highlighter params for test string
-  const typingCode = TypeDNA.getTypingPattern({
+  //typing dna config
+  const typingCode = tdna.current.getTypingPattern({
     type: 0,
     text: `${testString}`,
     targetId: "typeDna",
   });
 
   const inputLength = textValue.length;
-  const tooLong = inputLength > testString.length;
+  const testStringLength = testString.length;
+  const tooLong = inputLength > testStringLength;
   const matchedText = textValue === testString;
 
-  if (matchedText || textValue.length === testString.length) {
-    TypeDNA.stop();
+  if (matchedText || inputLength === testStringLength) {
+    tdna.current.stop();
     console.log(typingCode);
   }
+
+  //set text highlighing config
   let chunks = highlightWords({
     text: testString,
     query: textValue,
     matchExactly: true,
   });
 
-  console.log(chunks);
   const handleTyping = (e) => {
     setTextValue(e.target.value);
   };
 
+  const userId = localStorage.getItem("userId");
+  const token = sessionStorage.getItem("jwt");
+  const axios = generateAxios(token);
+
   const handleButton = (e) => {
-    console.log("clicked");
     if (profileAttempt === 3) handleClose();
     setProfileAttempt(profileAttempt + 1);
+
+    const apiRoute = process.env.REACT_APP_REQUEST_URL + `/api/${userId}`;
+    axios
+      .post(apiRoute, { user_id: userId, tdnaProfile: typingCode })
+      .then((res) => {
+        console.log(res);
+        tdna.current.reset();
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -121,7 +136,6 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
                   match ? (
                     <span className={classes.highlight} key={key}>
                       {text}
-                      {console.log(text)}
                     </span>
                   ) : (
                     <span key={key}>{text}</span>
@@ -130,18 +144,18 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
               </DialogContentText>
               <div
                 className={
-                  textValue.length === testString.length && matchedText
+                  textValue.length === testStringLength && matchedText
                     ? classes.success
                     : classes.failure
                 }
               >
-                {!matchedText && textValue.length === testString.length
+                {!matchedText && textValue.length === testStringLength
                   ? "Sentence does not match - "
                   : ""}
                 {tooLong && "too many characters  ||  "}
                 {matchedText
                   ? "Exact Match - Please submit your profile"
-                  : `${textValue.length} of ${testString.length}`}
+                  : `${textValue.length} of ${testStringLength}`}
               </div>
             </Box>
             <Box flexGrow="1">
@@ -173,6 +187,7 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
             }}
             variant="contained"
             color="secondary"
+            disabled={!matchedText && inputLength !== testStringLength}
           >
             Submit TypeDNA Profile
           </Button>
