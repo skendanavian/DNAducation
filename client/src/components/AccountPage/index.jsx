@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-import Typography from "@material-ui/core/Typography";
-import { Box, Button, Divider } from "@material-ui/core";
-
-import useAxios from "../../hooks/useAxios";
+import generateAxios from "../../helpers/generateAxios";
 import Nav from "./Nav";
 import AccountContent from "./AccountContent";
 
@@ -13,8 +10,6 @@ const baseURL = process.env.REACT_APP_REQUEST_URL;
 
 const AccountPage = (props) => {
   const { setToken, token, userId } = props;
-
-  const pageTitle = "🧬 DNAducation";
 
   const [exams, setExams] = useState([]);
   const [contentView, setContentView] = useState("Account");
@@ -27,13 +22,13 @@ const AccountPage = (props) => {
   ]);
   const [navButtons, setNavButtons] = useState(initalNavState.current);
 
-  const axios = useAxios(token);
-
   useEffect(() => {
     if (userId && token) {
       const sectionsURL = baseURL + `/users/${userId}/sections`;
       const attemptsURL = baseURL + `/users/${userId}/attempts`;
       const examsURL = baseURL + `/sections/exams`;
+
+      const axios = generateAxios(token);
 
       const sectionsReq = axios.get(sectionsURL);
       const attemptsReq = axios.get(attemptsURL);
@@ -74,12 +69,12 @@ const AccountPage = (props) => {
           console.error(err);
         });
     }
-  }, [userId, token, axios]);
+  }, [userId, token]);
 
   const navProps = {
     buttonDefs: navButtons,
     setToken,
-    pageTitle,
+    pageTitle: "🧬 DNAducation",
   };
   return (
     <Nav {...navProps}>

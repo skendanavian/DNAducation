@@ -1,14 +1,14 @@
 import { Box, Button, Divider, Typography, Card } from "@material-ui/core";
 import { useEffect, useState } from "react";
 
-import useAxios from "../../hooks/useAxios";
+import generateAxios from "../../helpers/generateAxios";
 const baseURL = process.env.REACT_APP_REQUEST_URL;
 require("dotenv").config({ path: "../../../.env" });
 
 export default function SectionDetails(props) {
   const { details, height } = props;
   const { title, teacher_user_id, code, description } = details;
-  const axios = useAxios(sessionStorage.getItem("jwt"));
+  const axios = generateAxios(sessionStorage.getItem("jwt"));
 
   const [teacher, setTeacher] = useState({});
 

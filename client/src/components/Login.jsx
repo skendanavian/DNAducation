@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useContext } from "react";
-import useAxios from "../hooks/useAxios";
+import generateAxios from "../helpers/generateAxios";
 import { useHistory } from "react-router-dom";
 
 import Avatar from "@material-ui/core/Avatar";
@@ -57,10 +57,11 @@ export default function Login({ setToken, setUserId }) {
   });
 
   const classes = useStyles();
-  const axios = useAxios();
 
   const submitLogin = (e) => {
     e.preventDefault();
+
+    const axios = generateAxios();
 
     axios
       .post("http://localhost:3001/login", loginForm)
@@ -75,7 +76,6 @@ export default function Login({ setToken, setUserId }) {
           setUserId(res.data.id);
 
           sessionStorage.setItem("jwt", res.data.token);
-          history.push(`/account`);
         }
       })
       .catch((e) => console.log(e));
