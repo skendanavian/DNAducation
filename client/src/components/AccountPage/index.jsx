@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import Typography from "@material-ui/core/Typography";
 import { Box, Button, Divider } from "@material-ui/core";
@@ -18,14 +18,14 @@ const AccountPage = (props) => {
 
   const [exams, setExams] = useState([]);
   const [contentView, setContentView] = useState("Account");
+  const updateContentView = (view) => setContentView(view);
 
-  const updateContentView = (view) => {
-    setContentView(view);
-  };
-  const initalNavState = [
+  // bewlo stored in useRef for good react practice
+  // as value read in useEffect below, eslint complains otherwise
+  const initalNavState = useRef([
     [{ text: "Account", navAction: () => updateContentView("Account") }],
-  ];
-  const [navButtons, setNavButtons] = useState(initalNavState);
+  ]);
+  const [navButtons, setNavButtons] = useState(initalNavState.current);
 
   const axios = useAxios(token);
 
@@ -42,7 +42,7 @@ const AccountPage = (props) => {
         .then(({ data: sections }) => {
           setNavButtons(() => {
             return [
-              ...initalNavState,
+              ...initalNavState.current,
               sections.map((sec) => {
                 const { code } = sec;
                 return { text: code, navAction: () => updateContentView(code) };
@@ -55,11 +55,11 @@ const AccountPage = (props) => {
         })
         .then(([{ data: sections }, { data: attempts }, { data: exams }]) => {
           const examsWithData = exams.map((exam) => {
-            const examSection = sections.find((sec) => {
-              return sec.section_id === exam.section_id;
+            const examSection = sections.find((section) => {
+              return section.section_id === exam.section_id;
             });
-            const examAttempts = attempts.filter((att) => {
-              return att.exam_id === exam.id;
+            const examAttempts = attempts.filter((attempt) => {
+              return attempt.exam_id === exam.id;
             });
 
             return {
