@@ -12,7 +12,7 @@ export default function AccountContent(props) {
 
   if (contentView === "Account") {
     // display unsubmitted exams
-    const examsToDisplay = exams.filter((exam) => {
+    const examsToDisplay = exams.filter((exam, index) => {
       return !exam.attempts.length;
     });
 
