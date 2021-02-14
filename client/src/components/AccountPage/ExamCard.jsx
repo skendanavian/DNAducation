@@ -1,50 +1,110 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
+import {
+  Box,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  Collapse,
+  Avatar,
+  Typography,
+  IconButton,
+  Button,
+  Divider,
+  Dialog,
+} from "@material-ui/core";
+import Modal from "@material-ui/core/Modal";
+
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
+import AttemptTable from "../AttemptTable";
 import SubjectIcon from "../SubjectIcon";
-import { LIGHT_GRAY } from "../../constants/colors";
+import {
+  GREEN,
+  PRIMARY,
+  RED,
+  SECONDARY,
+  SNOW_WHITE,
+} from "../../constants/colors";
 
 import { getTimeToDue, dateIsPast } from "../../helpers/dateHelpers";
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
-  media: {
-    height: 0,
-    paddingTop: "56.25%", // 16:9
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
+  detailsOpened: {
+    gridRowStart: 1,
+    gridColumnStart: 1,
+    gridColumnEnd: -1,
     transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest,
     }),
   },
-  expandOpen: {
-    transform: "rotate(180deg)",
+  startButton: {
+    marginLeft: "auto",
+  },
+  statusTag: {
+    submissions: { color: GREEN },
+    overdue: { color: RED },
+    upcoming: { color: PRIMARY },
   },
   avatar: {
-    backgroundColor: LIGHT_GRAY,
+    backgroundColor: PRIMARY,
   },
 }));
 
-export default function ExamCard(props) {
-  const { exam } = props;
-  const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+const statusTag = (status, classes, modal, handleAttemptsClick) => {
+  const colorRef = {
+    Submissions: GREEN,
+    Overdue: RED,
+    Upcoming: SECONDARY,
+  };
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  if (status === "Submissions") {
+    return (
+      <Button onClick={handleAttemptsClick} variant="text" size="small">
+        See Submissions
+      </Button>
+    );
+  } else {
+    return (
+      <Box
+        bgcolor={colorRef[status]}
+        color={SNOW_WHITE}
+        display="inline"
+        px={2}
+        py={0.4}
+        m={1}
+        borderRadius="100px"
+      >
+        <Typography display="inline" variant="subtitle2" color="inherit">
+          {status}
+        </Typography>
+      </Box>
+    );
+  }
+};
+
+export default function ExamCard(props) {
+  const { exam, startExam, hasRecordedProfile } = props;
+  const classes = useStyles();
+  const [modal, setModal] = React.useState(false);
+
+  const handleAttemptsClick = () => {
+    setModal(!modal);
+  };
+  // const handleAttempsCloseClick = () => {
+  //   setModal(!modal);
+  // };
+
+  const handleStartExamClick = () => {
+    startExam();
   };
 
   const isPast = dateIsPast(exam.due_time);
@@ -52,7 +112,7 @@ export default function ExamCard(props) {
 
   let status = "";
   if (exam && exam.attempts.length) {
-    status = "Submitted";
+    status = "Submissions";
   } else if (isPast) {
     status = "Overdue";
   } else {
@@ -63,7 +123,7 @@ export default function ExamCard(props) {
     <Card className={classes.root}>
       <CardHeader
         avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
+          <Avatar aria-label="assessment" className={classes.avatar}>
             <SubjectIcon text={exam.section.code} />
           </Avatar>
         }
@@ -73,38 +133,36 @@ export default function ExamCard(props) {
           </IconButton>
         }
         title={`${exam.section.code} - ${exam.title}`}
-        subheader={`Due ${inTime && inTime}`}
+        subheader={`Due ${inTime}`}
       />
+      {}
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {status}
-        </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
           {exam && exam.description}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing>
-        <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
+      <CardActions disableSpacing classes={{ root: classes.cardContent }}>
+        {statusTag(status, classes, handleAttemptsClick)}
+        <Button
+          color="secondary"
+          variant="contained"
+          classes={{ root: classes.startButton }}
+          onClick={handleStartExamClick}
+          disabled={!hasRecordedProfile}
         >
-          <ExpandMoreIcon />
-        </IconButton>
+          START
+        </Button>
       </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography>
-            {exam.attempts.length &&
-              exam.attempts.map((att) => {
-                return JSON.stringify(att);
-              })}
-          </Typography>
-        </CardContent>
-      </Collapse>
+      <Divider />
+      <Dialog>
+        open={modal}
+        onClose={handleAttemptsClick}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description" >
+        {exam.attempts.length && (
+          <AttemptTable dueTime={exam.dueTime} attempts={exam.attempts} />
+        )}
+      </Dialog>
     </Card>
   );
 }
