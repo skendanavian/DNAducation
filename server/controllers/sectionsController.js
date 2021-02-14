@@ -24,13 +24,24 @@ module.exports = (db) => {
 // JOIN classes ON class_id = classes.id
 // WHERE teacher_user_id = 10
 
-  const getSectionsByTeacher = (id) => {
-    return db
-    .select("sections.id as section_id", "teacher_user_id as teacher_id", "classes.id as class_id", "title", "code" )
-    .from("sections").join("classes", "class_id", "=", "classes.id")
-    .where({'teacher_user_id': id})
-    .then((result) => result);
-  };
+const getSectionsByTeacher = (id) => {
+  console.log('looking for teacher sections of', id);
+  return db
+  .select(
+    "sections.id as section_id",
+    "user_id as student_id",
+    "classes.id as class_id",
+    "title",
+    "description",
+    "code",
+    "teacher_user_id")
+  .from("sections")
+  .join("section_students", 'section_id', '=','sections.id' )
+  .join("users", "user_id", "=", "users.id")
+  .join("classes", "class_id", "=", "classes.id")
+  .where({'teacher_user_id': id})
+  .then((result) => result);
+};
 
 // SELECT sections.id as section_id, user_id as student_id, classes.id as class_id, title, code, users.name as teacher_name  FROM sections 
 // JOIN classes ON class_id = classes.id
@@ -39,6 +50,7 @@ module.exports = (db) => {
 // WHERE user_id = 4;
 
 const getSectionsByStudent = (id) => {
+  console.log('looking for student sections of', id);
   return db
   .select(
     "sections.id as section_id",
@@ -55,6 +67,8 @@ const getSectionsByStudent = (id) => {
   .where({'user_id': id})
   .then((result) => result);
 };
+
+
 
 const getExamsBySections = (sectionIds) => {
   return db
@@ -73,6 +87,7 @@ const getExamsBySections = (sectionIds) => {
    createSection,
    getSectionsByTeacher,
    getSectionsByStudent,
-   getExamsBySections
+   getExamsBySections,
+   getSectionsByTeacher,
   };
 };

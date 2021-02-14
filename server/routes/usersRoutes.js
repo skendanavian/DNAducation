@@ -3,7 +3,7 @@ const router = express.Router();
 const regex = require("../helpers/regex");
 const { ErrorHandler } = require("../helpers/errorsHelper");
 
-module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsByStudent  }) => {
+module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsByStudent, getSectionsByTeacher  }) => {
   router.get("/", (req, res, next) => {
     getUsers()
       .then((users) => {
@@ -37,18 +37,32 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsBySt
   });
 
   // get sections by user id, that that person teaches 
-  // router.get(`/:id/sections`, (req, res, next) => {
-  //   const { id } = req.params;
+  router.get(`/:id/sections`, (req, res, next) => {
+    const { id } = req.params;
+    // const { teacher } = req.query;
 
-  //   getSectionsByStudent(id)
-  //     .then((result) => {
-  //       if (!result.length) {
-  //         throw new ErrorHandler(404, "No sections found for user")
-  //       }
-  //       res.json(result);
-  //     })
-  //     .catch((err) => next(err));
-  // });
+    console.log(':::::::', req);
+
+    if(!teacher) {
+      getSectionsByStudent(id)
+        .then((result) => {
+          if (!result.length) {
+            throw new ErrorHandler(404, "No sections found for user")
+          }
+          res.json(result);
+        })
+        .catch((err) => next(err));
+    } else {
+      getSectionsByTeacher(id)
+      .then((result) => {
+        if (!result.length) {
+          throw new ErrorHandler(404, "No sections found for teacher")
+        }
+        res.json(result);
+      })
+      .catch((err) => next(err));
+    }
+  });
 
   // get all attemmpts by student id 
   router.get(`/:id/attempts`, (req, res, next) => {

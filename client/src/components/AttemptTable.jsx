@@ -43,17 +43,15 @@ export default function AttemptTable(props) {
                 submissionStatus = "Not submitted";
               }
               return (
-                <>
-                  <TableRow key={row.created_at}>
-                    <TableCell component="th" scope="row">
-                      {toReadable(row.created_at)}
-                    </TableCell>
-                    <TableCell align="right">{submissionStatus}</TableCell>
-                    <TableCell align="right">
-                      {row.average_mark || "Not marked"}
-                    </TableCell>
-                  </TableRow>
-                </>
+                <TableRow key={row.created_at}>
+                  <TableCell component="th" scope="row">
+                    {toReadable(row.created_at)}
+                  </TableCell>
+                  <TableCell align="right">{submissionStatus}</TableCell>
+                  <TableCell align="right">
+                    {row.average_mark || "Not marked"}
+                  </TableCell>
+                </TableRow>
               );
             })}
         </TableBody>

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Typography } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 
 import SectionDetails from "./SectionDetails";
 import UserDetails from "./UserDetails";
@@ -35,7 +35,7 @@ export default function AccountContent(props) {
     return (
       <Box>
         <SectionDetails details={examsToDisplay[0].section} />
-        <Typography>All Assessments</Typography>
+        <Typography variant="h6">All Assessments</Typography>
         <ExamsContainer exams={examsToDisplay} />
       </Box>
     );

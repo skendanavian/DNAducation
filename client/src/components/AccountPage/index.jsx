@@ -1,18 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 
-import generateAxios from "../../helpers/generateAxios";
 import Nav from "./Nav";
 import AccountContent from "./AccountContent";
 
-require("dotenv").config({ path: "../../../.env" });
+import {
+  fetchStudentData,
+  fetchTeacherData,
+  fetchUserData,
+} from "../../helpers/dataFetchers";
 
-const baseURL = process.env.REACT_APP_REQUEST_URL;
+require("dotenv").config({ path: "../../../.env" });
 
 const AccountPage = (props) => {
   const { setToken, token, userId } = props;
 
-  const [user, setUser] = useState({});
   const [exams, setExams] = useState([]);
+  const [user, setUser] = useState({});
   const [contentView, setContentView] = useState("Account");
   const updateContentView = (view) => setContentView(view);
 
@@ -25,21 +28,16 @@ const AccountPage = (props) => {
 
   useEffect(() => {
     if (userId && token) {
-      const sectionsURL = baseURL + `/users/${userId}/sections`;
-      const attemptsURL = baseURL + `/users/${userId}/attempts`;
-      const examsURL = baseURL + `/sections/exams`;
-      const userURL = baseURL + `/users/${userId}`;
-
-      const axios = generateAxios(token);
-
-      const sectionsReq = axios.get(sectionsURL);
-      const attemptsReq = axios.get(attemptsURL);
-      axios.get(userURL).then(({ data: userRes }) => {
-        setUser(userRes);
+      fetchUserData(userId, token).then(({ data: user }) => {
+        setUser(user);
       });
+    }
+  }, [token, userId]);
 
-      sectionsReq
-        .then(({ data: sections }) => {
+  useEffect(() => {
+    if (userId && token) {
+      fetchStudentData(userId, token)
+        .then(([{ data: sections }, { data: attempts }, { data: exams }]) => {
           setNavButtons(() => {
             return [
               ...initalNavState.current,
@@ -49,11 +47,6 @@ const AccountPage = (props) => {
               }),
             ];
           });
-          const sectionIds = sections.map((sec) => sec.section_id);
-          const examsReq = axios.get(examsURL, { params: { sectionIds } });
-          return Promise.all([sectionsReq, attemptsReq, examsReq]);
-        })
-        .then(([{ data: sections }, { data: attempts }, { data: exams }]) => {
           const examsWithData = exams.map((exam) => {
             const examSection = sections.find((section) => {
               return section.section_id === exam.section_id;
@@ -73,8 +66,43 @@ const AccountPage = (props) => {
         .catch((err) => {
           console.error(err);
         });
+      if (user && user.is_teacher) {
+        fetchTeacherData(userId, token)
+          .then(([{ data: sections }, { data: attempts }, { data: exams }]) => {
+            setNavButtons((prev) => {
+              return [
+                ...prev,
+                sections.map((sec) => {
+                  const { code } = sec;
+                  return {
+                    text: code,
+                    navAction: () => updateContentView(code),
+                  };
+                }),
+              ];
+            });
+            const examsWithData = exams.map((exam) => {
+              const examSection = sections.find((section) => {
+                return section.section_id === exam.section_id;
+              });
+              const examAttempts = attempts.filter((attempt) => {
+                return attempt.exam_id === exam.id;
+              });
+
+              return {
+                ...exam,
+                section: examSection,
+                attempts: examAttempts,
+              };
+            });
+            setExams((prev) => [...prev, ...examsWithData]);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      }
     }
-  }, [userId, token]);
+  }, [userId, token, user]);
 
   const navProps = {
     buttonDefs: navButtons,
