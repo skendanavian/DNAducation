@@ -26,13 +26,13 @@ const usersRouter = require("./routes/usersRoutes");
 const examsRouter = require("./routes/examsRoutes");
 const attemptsRouter = require("./routes/attemptsRoutes");
 const sectionsRouter = require("./routes/sectionsRoutes");
-const apiRouter = require("./routes/api");
+const apiRouter = require("./routes/apiRoutes");
 
 const usersController = require("./controllers/usersController")(db);
 const sectionsController = require("./controllers/sectionsController")(db);
 const examsController = require("./controllers/examsController")(db);
 const attemptsController = require("./controllers/attemptsController")(db);
-const apiController = require("./controllers/apiController");
+const apiController = require("./controllers/apiController")(db);
 
 // Routes setup
 app.use("/", indexRouter(usersController));
@@ -43,6 +43,7 @@ app.use(
     ...usersController,
     ...sectionsController,
     ...attemptsController,
+    ...apiController,
   })
 );
 app.use("/exams", examsRouter(examsController));

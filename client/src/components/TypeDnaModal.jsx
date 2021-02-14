@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -56,17 +56,18 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const testStrings = [
     "Type out this line to begin setting up your typing dna profile",
     "Here is another sentence that will be used to record your typing characteristics",
-    "This is the last phrase that you will need to write out before your typing dna profile is completed",
+    "This is the last sample that you will need to type out before your typing dna profile is completed",
   ];
 
   const testString = testStrings[profileAttempt - 1];
 
   //typing dna config
-  const typingCode = tdna.current.getTypingPattern({
+  const typingPattern = tdna.current.getTypingPattern({
     type: 0,
     text: `${testString}`,
     targetId: "typeDna",
   });
+  tdna.current.start();
 
   const inputLength = textValue.length;
   const testStringLength = testString.length;
@@ -75,7 +76,6 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
 
   if (matchedText || inputLength === testStringLength) {
     tdna.current.stop();
-    console.log(typingCode);
   }
 
   //set text highlighing config
@@ -99,10 +99,11 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
 
     const apiRoute = process.env.REACT_APP_REQUEST_URL + `/api/${userId}`;
     axios
-      .post(apiRoute, { user_id: userId, tdnaProfile: typingCode })
+      .post(apiRoute, { userId, typingPattern })
       .then((res) => {
         console.log(res);
         tdna.current.reset();
+        tdna.current.start();
       })
       .catch((err) => console.log(err));
   };
