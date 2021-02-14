@@ -50,6 +50,7 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const classes = useStyles();
   const [textValue, setTextValue] = useState("");
   const [profileAttempt, setProfileAttempt] = useState(1);
+  const [profileError, setProfileError] = useState("");
 
   let tdna = useRef(new TypeDNA());
 
@@ -70,7 +71,7 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   tdna.current.start();
 
   const inputLength = textValue.length;
-  const testStringLength = testString.length;
+  const testStringLength = testString ? testString.length : 0;
   const tooLong = inputLength > testStringLength;
   const matchedText = textValue === testString;
 
@@ -86,26 +87,54 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   });
 
   const handleTyping = (e) => {
+    if (profileError && inputLength === 0) setProfileError("");
     setTextValue(e.target.value);
   };
 
   const userId = localStorage.getItem("userId");
   const token = sessionStorage.getItem("jwt");
   const axios = generateAxios(token);
+  const submissionError = "Failed to record profile. Please try again.";
 
   const handleButton = (e) => {
-    if (profileAttempt === 3) handleClose();
-    setProfileAttempt(profileAttempt + 1);
-
     const apiRoute = process.env.REACT_APP_REQUEST_URL + `/api/${userId}`;
     axios
       .post(apiRoute, { userId, typingPattern })
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
+        tdna.current.stop();
         tdna.current.reset();
         tdna.current.start();
+
+        if (!res.data.statusCode || res.data.statusCode !== 200) {
+          setProfileError(submissionError);
+
+          console.log(profileError);
+          setTextValue("");
+        } else {
+          if (profileAttempt === 3) {
+            //update db typing profile status to true
+            const data = { userId, status: true };
+            axios
+              .patch(`http://localhost:3001/users/${userId}`, data)
+              .then((res) => {
+                console.log("Update Typingdna: ", res.data);
+                handleClose();
+              })
+              .catch((e) => {
+                console.log(e);
+                setProfileError(submissionError);
+              });
+          }
+          if (profileAttempt < 3) setProfileAttempt(profileAttempt + 1);
+          setTextValue("");
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setProfileError(submissionError);
+        setTextValue("");
+      });
   };
 
   return (
@@ -150,13 +179,16 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
                     : classes.failure
                 }
               >
+                {profileError && profileError}
                 {!matchedText && textValue.length === testStringLength
-                  ? "Sentence does not match - "
+                  ? "Sentence does not match"
                   : ""}
-                {tooLong && "too many characters  ||  "}
-                {matchedText
-                  ? "Exact Match - Please submit your profile"
-                  : `${textValue.length} of ${testStringLength}`}
+                {tooLong && "Too many characters"}
+                {
+                  matchedText
+                    ? "Exact Match - Please submit your profile"
+                    : "" /* `${textValue.length} of ${testStringLength}` */
+                }
               </div>
             </Box>
             <Box flexGrow="1">

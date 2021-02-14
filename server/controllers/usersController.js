@@ -45,11 +45,24 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
+  const updateTypeDnaProfile = (id, status) => {
+    const has_recorded_typedna = status;
+
+    return db("users")
+      .update({
+        has_recorded_typedna,
+      })
+      .where({ id })
+      .returning("*")
+      .then((result) => result);
+  };
+
   return {
     getUsers,
     getUserById,
     getUserByEmail,
     createNewUser,
     getUserByStudentNumber,
+    updateTypeDnaProfile,
   };
 };
