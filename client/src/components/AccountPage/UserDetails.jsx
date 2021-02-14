@@ -1,15 +1,12 @@
 import { Box, Button, Divider, Typography, Card } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import generateAxios from "../../helpers/generateAxios";
 import TypeDnaModal from "../TypeDnaModal";
 
-const baseURL = process.env.REACT_APP_REQUEST_URL;
 require("dotenv").config({ path: "../../../.env" });
 
-export default function UserDetails() {
-  const [user, setUser] = useState({});
-
+export default function UserDetails(props) {
+  const { user } = props;
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -17,19 +14,6 @@ export default function UserDetails() {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const userId = localStorage.getItem("userId");
-  const token = sessionStorage.getItem("jwt");
-
-  useEffect(() => {
-    const axios = generateAxios(token);
-    if (userId && token) {
-      const userURL = baseURL + `/users/${userId}`;
-      axios.get(userURL).then(({ data: userRes }) => {
-        setUser(userRes);
-      });
-    }
-  }, [userId, token]);
 
   return (
     <Card>
@@ -45,19 +29,19 @@ export default function UserDetails() {
             <Typography variant="body2" display="inline" color="textSecondary">
               Name:{" "}
             </Typography>
-            {user.name}
+            {user && user.name}
           </Typography>
           <Typography variant="body2">
             <Typography variant="body2" display="inline" color="textSecondary">
               Email:{" "}
             </Typography>
-            {user.email}
+            {user && user.email}
           </Typography>
           <Typography variant="body2">
             <Typography variant="body2" display="inline" color="textSecondary">
               Student Number:{" "}
             </Typography>
-            {user.student_number}
+            {user && user.student_number}
           </Typography>
         </Box>
         <Divider flexItem orientation="vertical" />
@@ -74,7 +58,7 @@ export default function UserDetails() {
             variant="contained"
             color="secondary"
             onClick={handleClickOpen}
-            disabled={user.has_recorded_typedna}
+            disabled={(user && user.has_recorded_typedna) || false}
           >
             Record Your TypeDNA Profile!
           </Button>

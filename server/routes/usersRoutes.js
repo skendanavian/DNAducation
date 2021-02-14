@@ -30,11 +30,25 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsBySt
       .then((result) => {
         if (!result.length) {
           throw new ErrorHandler(404, "No sections found for user")
-        };
+        }
         res.json(result);
       })
       .catch((err) => next(err));
   });
+
+  // get sections by user id, that that person teaches 
+  // router.get(`/:id/sections`, (req, res, next) => {
+  //   const { id } = req.params;
+
+  //   getSectionsByStudent(id)
+  //     .then((result) => {
+  //       if (!result.length) {
+  //         throw new ErrorHandler(404, "No sections found for user")
+  //       }
+  //       res.json(result);
+  //     })
+  //     .catch((err) => next(err));
+  // });
 
   // get all attemmpts by student id 
   router.get(`/:id/attempts`, (req, res, next) => {
@@ -44,7 +58,7 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsBySt
       .then((result) => {
         if (!result.length) {
           throw new ErrorHandler(404, "No attempts found for user")
-        };
+        }
         res.json(result);
       })
       .catch((err) => next(err));

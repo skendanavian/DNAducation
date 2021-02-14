@@ -11,11 +11,12 @@ const baseURL = process.env.REACT_APP_REQUEST_URL;
 const AccountPage = (props) => {
   const { setToken, token, userId } = props;
 
+  const [user, setUser] = useState({});
   const [exams, setExams] = useState([]);
   const [contentView, setContentView] = useState("Account");
   const updateContentView = (view) => setContentView(view);
 
-  // bewlo stored in useRef for good react practice
+  // below stored in useRef for good react practice
   // as value read in useEffect below, eslint complains otherwise
   const initalNavState = useRef([
     [{ text: "Account", navAction: () => updateContentView("Account") }],
@@ -27,11 +28,15 @@ const AccountPage = (props) => {
       const sectionsURL = baseURL + `/users/${userId}/sections`;
       const attemptsURL = baseURL + `/users/${userId}/attempts`;
       const examsURL = baseURL + `/sections/exams`;
+      const userURL = baseURL + `/users/${userId}`;
 
       const axios = generateAxios(token);
 
       const sectionsReq = axios.get(sectionsURL);
       const attemptsReq = axios.get(attemptsURL);
+      axios.get(userURL).then(({ data: userRes }) => {
+        setUser(userRes);
+      });
 
       sectionsReq
         .then(({ data: sections }) => {
@@ -78,7 +83,7 @@ const AccountPage = (props) => {
   };
   return (
     <Nav {...navProps}>
-      <AccountContent contentView={contentView} exams={exams} />
+      <AccountContent user={user} contentView={contentView} exams={exams} />
     </Nav>
   );
 };

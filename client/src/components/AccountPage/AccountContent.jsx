@@ -5,7 +5,7 @@ import UserDetails from "./UserDetails";
 import ExamsContainer from "./ExamsContainer";
 
 export default function AccountContent(props) {
-  const { contentView, exams } = props;
+  const { contentView, exams, user } = props;
   if (!contentView) {
     return <Typography>404 Error</Typography>;
   }
@@ -18,8 +18,10 @@ export default function AccountContent(props) {
 
     return (
       <Box>
-        <UserDetails />
-        <Typography>Unsubmitted Assessments</Typography>
+        <UserDetails user={user} />
+        <Typography variant="h6" color="textPrimary">
+          Unsubmitted Assessments
+        </Typography>
         <ExamsContainer exams={examsToDisplay} />
       </Box>
     );
