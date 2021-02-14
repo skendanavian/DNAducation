@@ -35,7 +35,7 @@ const AccountPage = (props) => {
   }, [token, userId]);
 
   useEffect(() => {
-    if (userId && token) {
+    if (userId && token && user) {
       fetchStudentData(userId, token)
         .then(([{ data: sections }, { data: attempts }, { data: exams }]) => {
           setNavButtons(() => {
@@ -69,6 +69,7 @@ const AccountPage = (props) => {
       if (user && user.is_teacher) {
         fetchTeacherData(userId, token)
           .then(([{ data: sections }, { data: attempts }, { data: exams }]) => {
+            console.table("teacher stuff", sections, attempts, exams);
             setNavButtons((prev) => {
               return [
                 ...prev,
