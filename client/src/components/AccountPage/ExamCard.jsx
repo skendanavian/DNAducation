@@ -7,18 +7,18 @@ import {
   CardHeader,
   CardContent,
   CardActions,
-  Collapse,
   Avatar,
   Typography,
   IconButton,
   Button,
   Divider,
   Dialog,
+  DialogContent,
+  DialogTitle,
 } from "@material-ui/core";
-import Modal from "@material-ui/core/Modal";
 
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import DialogActions from "@material-ui/core/DialogActions";
 
 import AttemptTable from "../AttemptTable";
 import SubjectIcon from "../SubjectIcon";
@@ -46,6 +46,11 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.shortest,
     }),
   },
+  btnGroup: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "1rem",
+  },
   startButton: {
     marginLeft: "auto",
   },
@@ -59,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const statusTag = (status, classes, modal, handleAttemptsClick) => {
+const statusTag = (status, handleAttemptsClick) => {
   const colorRef = {
     Submissions: GREEN,
     Overdue: RED,
@@ -97,11 +102,8 @@ export default function ExamCard(props) {
   const [modal, setModal] = React.useState(false);
 
   const handleAttemptsClick = () => {
-    setModal(!modal);
+    setModal((prev) => !prev);
   };
-  // const handleAttempsCloseClick = () => {
-  //   setModal(!modal);
-  // };
 
   const handleStartExamClick = () => {
     startExam();
@@ -142,7 +144,7 @@ export default function ExamCard(props) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing classes={{ root: classes.cardContent }}>
-        {statusTag(status, classes, handleAttemptsClick)}
+        {statusTag(status, handleAttemptsClick)}
         <Button
           color="secondary"
           variant="contained"
@@ -154,14 +156,23 @@ export default function ExamCard(props) {
         </Button>
       </CardActions>
       <Divider />
-      <Dialog>
+      <Dialog
         open={modal}
         onClose={handleAttemptsClick}
         aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description" >
-        {exam.attempts.length && (
-          <AttemptTable dueTime={exam.dueTime} attempts={exam.attempts} />
-        )}
+        aria-describedby="simple-modal-description"
+      >
+        <DialogTitle>{exam.title} Submissions</DialogTitle>
+        <DialogContent>
+          {exam.attempts.length && (
+            <AttemptTable dueTime={exam.dueTime} attempts={exam.attempts} />
+          )}
+        </DialogContent>
+        <DialogActions className={classes.btnGroup}>
+          <Button onClick={handleAttemptsClick} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
       </Dialog>
     </Card>
   );
