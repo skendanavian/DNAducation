@@ -8,7 +8,7 @@ module.exports = ({
   getUserById,
   getSectionsByStudent,
   getAttemptsByStudent,
-  updateTypeDnaProfile,
+  updateTypingProfile,
 }) => {
   router.get("/", (req, res, next) => {
     getUsers()
@@ -58,9 +58,9 @@ module.exports = ({
 
   // update Typingdna profile to true for user
   router.patch("/:userId", (req, res, next) => {
-    const { userId } = req.params;
-    const { status } = req.body;
-    updateTypeDnaProfile(userId, status)
+    const { userId, status } = req.body;
+    console.log(userId);
+    updateTypingProfile(userId, status)
       .then((result) => {
         res.json(result);
       })

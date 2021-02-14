@@ -45,14 +45,14 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
-  const updateTypeDnaProfile = (id, status) => {
+  const updateTypingProfile = (id, status) => {
     const has_recorded_typedna = status;
 
     return db("users")
       .update({
         has_recorded_typedna,
       })
-      .where({ id })
+      .where("id", "=", id)
       .returning("*")
       .then((result) => result);
   };
@@ -63,6 +63,6 @@ module.exports = (db) => {
     getUserByEmail,
     createNewUser,
     getUserByStudentNumber,
-    updateTypeDnaProfile,
+    updateTypingProfile,
   };
 };
