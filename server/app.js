@@ -26,20 +26,30 @@ const usersRouter = require("./routes/usersRoutes");
 const examsRouter = require("./routes/examsRoutes");
 const attemptsRouter = require("./routes/attemptsRoutes");
 const sectionsRouter = require("./routes/sectionsRoutes");
+const apiRouter = require("./routes/apiRoutes");
 
 const usersController = require("./controllers/usersController")(db);
 const sectionsController = require("./controllers/sectionsController")(db);
 const examsController = require("./controllers/examsController")(db);
 const attemptsController = require("./controllers/attemptsController")(db);
-
-
+const apiController = require("./controllers/apiController")(db);
 
 // Routes setup
 app.use("/", indexRouter(usersController));
-app.use("/users", authMiddleware, usersRouter({...usersController, ...sectionsController, ...attemptsController}));
+app.use(
+  "/users",
+  authMiddleware,
+  usersRouter({
+    ...usersController,
+    ...sectionsController,
+    ...attemptsController,
+    ...apiController,
+  })
+);
 app.use("/exams", examsRouter(examsController));
 app.use("/attempts", attemptsRouter(attemptsController));
 app.use("/sections", sectionsRouter(sectionsController));
+app.use("/api", apiRouter(apiController));
 
 // const Router404 = require("./routes/404Route");
 // app.use("*", Router404);
