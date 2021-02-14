@@ -25,7 +25,7 @@ module.exports = (db) => {
 // WHERE teacher_user_id = 10
 
 const getSectionsByTeacher = (id) => {
-  console.log('looking for teacher sections of', id);
+  console.log('sectionsController, teacher sections of', id);
   return db
   .select(
     "sections.id as section_id",
@@ -50,7 +50,7 @@ const getSectionsByTeacher = (id) => {
 // WHERE user_id = 4;
 
 const getSectionsByStudent = (id) => {
-  console.log('looking for student sections of', id);
+  console.log('sectionsController, student sections of', id);
   return db
   .select(
     "sections.id as section_id",

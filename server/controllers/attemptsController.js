@@ -13,6 +13,21 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
+  const getAttemptsByTeacher = (teacherId) => {
+    return db
+      .select("*")
+      .from("exam_attempts")
+      .join(
+        "section_students",
+        "section_students_id",
+        "=",
+        "section_students.id"
+      )
+      .join("sections", 'section_id', '=', 'sections.id')
+      .where({ 'teacher_user_id': teacherId })
+      .then((result) => result);
+  };
+
   const getAttemptById = (id) => {
     return db
       .select("*")
@@ -75,6 +90,7 @@ module.exports = (db) => {
 
   return {
     getAttemptsByStudent,
+    getAttemptsByTeacher,
     getAttemptById,
     createAttempt,
     updateAttempt,

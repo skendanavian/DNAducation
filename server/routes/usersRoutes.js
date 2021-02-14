@@ -3,7 +3,7 @@ const router = express.Router();
 const regex = require("../helpers/regex");
 const { ErrorHandler } = require("../helpers/errorsHelper");
 
-module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsByStudent, getSectionsByTeacher  }) => {
+module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsByStudent, getSectionsByTeacher, getAttemptsByTeacher, }) => {
   router.get("/", (req, res, next) => {
     getUsers()
       .then((users) => {
@@ -22,56 +22,70 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsBySt
       .catch((err) => next(err));
   });
 
-  // get sections by student id
+  // get sections by user id, as a student
   router.get(`/:id/sections`, (req, res, next) => {
     const { id } = req.params;
+
+    console.log('--------------------------------------------');
+    console.log(`userRoutes:: get student sections for ${id}`);
 
     getSectionsByStudent(id)
       .then((result) => {
         if (!result.length) {
-          throw new ErrorHandler(404, "No sections found for user")
+          console.log('No sections found for user');
         }
         res.json(result);
       })
       .catch((err) => next(err));
+
   });
 
-  // get sections by user id, that that person teaches 
-  router.get(`/:id/sections`, (req, res, next) => {
-    const { id } = req.params;
-    // const { teacher } = req.query;
-
-    console.log(':::::::', req);
-
-    if(!teacher) {
-      getSectionsByStudent(id)
-        .then((result) => {
-          if (!result.length) {
-            throw new ErrorHandler(404, "No sections found for user")
-          }
-          res.json(result);
-        })
-        .catch((err) => next(err));
-    } else {
-      getSectionsByTeacher(id)
-      .then((result) => {
-        if (!result.length) {
-          throw new ErrorHandler(404, "No sections found for teacher")
-        }
-        res.json(result);
-      })
-      .catch((err) => next(err));
-    }
-  });
-
-  // get all attemmpts by student id 
+  // get all attempts by student id 
   router.get(`/:id/attempts`, (req, res, next) => {
     const { id } = req.params;
+
+    console.log('--------------------------------------------');
+    console.log(`userRoutes:: get student attempts for ${id}`);
 
     getAttemptsByStudent(id)
       .then((result) => {
         if (!result.length) {
-          throw new ErrorHandler(404, "No attempts found for user")
+          console.log('No attempts found for user');
+        }
+        res.json(result);
+      })
+      .catch((err) => next(err));
+  });
+
+  // get sections by user id, as a teacher
+  router.get(`/teacher/:id/sections`, (req, res, next) => {
+    const { id } = req.params;
+
+    console.log('--------------------------------------------');
+    console.log(`userRoutes:: get teacher sections for ${id}`);
+
+    getSectionsByTeacher(id)
+      .then((result) => {
+        if (!result.length) {
+          console.log('No sections found for teacher');
+        }
+        res.json(result);
+      })
+      .catch((err) => next(err));
+
+  });
+
+  // get all attemmpts by teacher id 
+  router.get(`/teacher/:id/attempts`, (req, res, next) => {
+    const { id } = req.params;
+
+    console.log('--------------------------------------------');
+    console.log(`userRoutes:: get teacher attempts for ${id}`);
+
+    getAttemptsByTeacher(id)
+      .then((result) => {
+        if (!result.length) {
+          console.log('No attempts found for teacher');
         }
         res.json(result);
       })
