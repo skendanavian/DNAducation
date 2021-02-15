@@ -11,6 +11,7 @@ import Box from "@material-ui/core/Box";
 import TypeDNA from "../typeDna/typingdna";
 import highlightWords from "highlight-words";
 import generateAxios from "../helpers/generateAxios";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   success: {
-    color: "#8CDD81",
+    color: "#5cb85c",
     textAlign: "center",
   },
   failure: {
@@ -43,6 +44,11 @@ const useStyles = makeStyles((theme) => ({
 
   highlight: {
     backgroundColor: "#fdc500",
+  },
+  title: {
+    textAlign: "center",
+    color: "#e4b100",
+    marginBottom: "0.5rem",
   },
 }));
 
@@ -67,18 +73,16 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
     text: `${testString}`,
     targetId: "typeDna",
   });
-  // tdna.start();
 
   const inputLength = textValue.length;
   const testStringLength = testString ? testString.length : 0;
   const tooLong = inputLength > testStringLength;
   const matchedText = textValue === testString;
 
-  if (matchedText || inputLength === testStringLength) {
-    tdna.stop();
-  }
+  // if (matchedText || inputLength === testStringLength) {
+  //   // tdna.stop();
+  // }
 
-  //set text highlighing config
   let chunks = highlightWords({
     text: testString,
     query: textValue,
@@ -105,18 +109,13 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
         tdna.reset();
         tdna.start();
 
-        if (
-          !res.data.statusCode ||
-          res.data.statusCode !== 200 ||
-          !res.data.enrollment
-        ) {
+        if (!res.data.statusCode || res.data.statusCode !== 200) {
           setProfileError(submissionError);
-
           console.log(profileError);
           setTextValue("");
         } else {
+          /* Updating Typing Profile Flag For User In DB */
           if (profileAttempt === 3) {
-            //update db typing profile status to true
             const data = { userId, status: true };
             axios
               .patch(`http://localhost:3001/users/${userId}`, data)
@@ -142,9 +141,6 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
 
   return (
     <div>
-      <Button variant="contained" color="secondary" onClick={handleClickOpen}>
-        Record Your TypeDNA Profile
-      </Button>
       <Dialog
         className={classes.root}
         open={open}
@@ -164,6 +160,9 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
             margin="auto"
           >
             <Box flexGrow="1">
+              <Typography
+                className={classes.title}
+              >{`Step ${profileAttempt} of 3`}</Typography>
               <DialogContentText color="primary">
                 {chunks.map(({ text, match, key }) =>
                   match ? (
@@ -187,11 +186,7 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
                   ? "Sentence does not match"
                   : ""}
                 {tooLong && "Too many characters"}
-                {
-                  matchedText
-                    ? "Exact Match - Please submit your profile"
-                    : "" /* `${textValue.length} of ${testStringLength}` */
-                }
+                {matchedText ? "Exact Match - Please submit your profile" : ""}
               </div>
             </Box>
             <Box flexGrow="1">

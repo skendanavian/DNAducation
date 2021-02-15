@@ -2,13 +2,14 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
-import generateAxios from "../helpers/generateAxios";
-import { formatExamQuestions } from "../helpers/formatExamQuestions";
+import TypeDNA from "../typeDna/typingdna";
+
 import {
   calculateAnswerConfidence,
   calculateExamConfidence,
 } from "../helpers/calculateConfidence";
-import TypeDNA from "../typeDna/typingdna";
+import generateAxios from "../helpers/generateAxios";
+import { formatExamQuestions } from "../helpers/formatExamQuestions";
 
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -42,15 +43,12 @@ const useStyles = makeStyles((theme) => ({
     width: "80vw",
     margin: "1rem auto",
   },
+  error: {
+    color: "#Df2935",
+  },
 }));
 
-export default function Question({
-  examId,
-  setToken,
-  setExamId,
-  userId,
-  token,
-}) {
+export default function Question({ examId, userId, token }) {
   const history = useHistory();
   const classes = useStyles();
 
@@ -59,6 +57,7 @@ export default function Question({
   const [questionObject, setQuestionObject] = useState({});
   const [attemptId, setAttemptId] = useState("");
   const [confidenceArray, setConfidenceArray] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
   const axios = generateAxios(token);
@@ -93,14 +92,13 @@ export default function Question({
     }
   }, [axios, baseURL, examId, userId]);
 
-  // Set TypingDNA config
+  //Initiate TypeDNA Listener
   let tdna = new TypeDNA();
   const typingPattern = tdna.getTypingPattern({
     type: 0,
     text: `${answerText}`,
     targetId: "typeDnaAnswer",
   });
-  tdna.start();
 
   const apiRoute = baseURL + `/api/${userId}`;
   const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
@@ -149,13 +147,11 @@ export default function Question({
                 time_submitted: date.toISOString(),
               })
               .then((res) => {
-                // Increment total in DB
                 const incrementSubmissionURL =
                   baseURL + `/exams/${questionObject.examId}`;
                 tdna.reset();
                 tdna.start();
                 return axios.patch(incrementSubmissionURL);
-                //reset and start tdna here
               })
               .then((res) => {
                 history.push("/account");
@@ -166,7 +162,12 @@ export default function Question({
           setQuestionIndex(questionIndex + 1);
           return;
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          setErrorMessage(
+            "There was a problem submitting this question. Please try again"
+          );
+        });
     });
   };
 
@@ -211,6 +212,9 @@ export default function Question({
             className={`${classes.centerText} ${classes.question}`}
           >
             {currentQ.question}
+          </Typography>
+          <Typography className={classes.error}>
+            {errorMessage && errorMessage}
           </Typography>
           <form
             onSubmit={(e) => handleSubmit(e)}
