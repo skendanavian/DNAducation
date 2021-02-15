@@ -58,8 +58,6 @@ module.exports = ({
       .then((result) => {
         if (!result.length) {
           throw new ErrorHandler(404, "No attempts found for user");
-<<<<<<< HEAD
-=======
         }
         res.json(result);
       })
@@ -77,15 +75,12 @@ module.exports = ({
       .then((result) => {
         if (!result.length) {
           console.log("No sections found for teacher");
->>>>>>> 31fc20522f2b0564834b1e10482a562a100802ff
         }
         res.json(result);
       })
       .catch((err) => next(err));
   });
 
-<<<<<<< HEAD
-=======
   //get all attemmpts by teacher id
   router.get(`/teacher/:id/attempts`, (req, res, next) => {
     const { id } = req.params;
@@ -103,7 +98,6 @@ module.exports = ({
       .catch((err) => next(err));
   });
 
->>>>>>> 31fc20522f2b0564834b1e10482a562a100802ff
   // update Typingdna profile to true for user
   router.patch("/:userId", (req, res, next) => {
     const { userId, status } = req.body;
