@@ -79,10 +79,6 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const tooLong = inputLength > testStringLength;
   const matchedText = textValue === testString;
 
-  // if (matchedText || inputLength === testStringLength) {
-  //   // tdna.stop();
-  // }
-
   let chunks = highlightWords({
     text: testString,
     query: textValue,
