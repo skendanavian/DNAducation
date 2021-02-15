@@ -1,12 +1,14 @@
 import { Box, Button, Divider, Typography, Card } from "@material-ui/core";
 import { useState } from "react";
 
+import AddIcon from "@material-ui/icons/Add";
+
 import TypeDnaModal from "../TypeDnaModal";
 
 require("dotenv").config({ path: "../../../.env" });
 
 export default function UserDetails(props) {
-  const { user } = props;
+  const { user, type, createSection } = props;
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -25,24 +27,30 @@ export default function UserDetails(props) {
         margin="1rem"
       >
         <Box marginRight="2rem" minWidth="50%" overflow="hidden">
-          <Typography variant="body2">
-            <Typography variant="body2" display="inline" color="textSecondary">
+          <Box>
+            <Typography display="inline" variant="body2" color="textSecondary">
               Name:{" "}
             </Typography>
-            {user && user.name}
-          </Typography>
-          <Typography variant="body2">
+            <Typography display="inline" variant="body2">
+              {user && user.name}
+            </Typography>
+          </Box>
+          <Box>
             <Typography variant="body2" display="inline" color="textSecondary">
               Email:{" "}
             </Typography>
-            {user && user.email}
-          </Typography>
-          <Typography variant="body2">
+            <Typography display="inline" variant="body2">
+              {user && user.email}
+            </Typography>
+          </Box>
+          <Box>
             <Typography variant="body2" display="inline" color="textSecondary">
               Student Number:{" "}
             </Typography>
-            {user && user.student_number}
-          </Typography>
+            <Typography display="inline" variant="body2">
+              {user && user.student_number}
+            </Typography>
+          </Box>
         </Box>
         <Divider flexItem orientation="vertical" />
 
@@ -63,7 +71,6 @@ export default function UserDetails(props) {
             Record Your TypeDNA Profile!
           </Button>
         </Box>
-
         {open && (
           <TypeDnaModal
             open
@@ -72,6 +79,30 @@ export default function UserDetails(props) {
           />
         )}
       </Box>
+      {type === "Teacher" && (
+        <>
+          <Divider />
+          <Box display="flex" m={1} justifyContent="flex-end">
+            <Button
+              onClick={createSection}
+              size="small"
+              startIcon={<AddIcon />}
+            >
+              Create Section
+            </Button>
+            <Box ml={1}>
+              <Button
+                onClick={createSection}
+                size="small"
+                variant="contained"
+                startIcon={<AddIcon />}
+              >
+                Create Class
+              </Button>
+            </Box>
+          </Box>
+        </>
+      )}
     </Card>
   );
 }
