@@ -62,6 +62,8 @@ export default function Login({ setToken, setUserId }) {
     e.preventDefault();
 
     const axios = generateAxios();
+    localStorage.removeItem("userId");
+    sessionStorage.removeItem("jwt");
 
     axios
       .post("http://localhost:3001/login", loginForm)
