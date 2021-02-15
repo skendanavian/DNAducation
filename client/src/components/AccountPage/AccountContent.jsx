@@ -46,7 +46,12 @@ export default function AccountContent(props) {
         <Typography variant="overline" color="textPrimary">
           {`${type === "Student" ? "Unsubmitted" : "Unmarked"} Assessments`}
         </Typography>
-        <ExamsContainer type={type} exams={examsToDisplay} />
+        <ExamsContainer
+          setExamId={setExamId}
+          user={user}
+          type={type}
+          exams={examsToDisplay}
+        />
       </Box>
     );
   } else {
@@ -66,6 +71,7 @@ export default function AccountContent(props) {
           setExamId={setExamId}
           type={type}
           exams={examsToDisplay}
+          user={user}
         />
       </Box>
     );
