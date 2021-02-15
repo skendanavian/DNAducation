@@ -29,16 +29,13 @@ const getSectionsByTeacher = (id) => {
   return db
   .select(
     "sections.id as section_id",
-    "user_id as student_id",
     "classes.id as class_id",
     "title",
     "description",
     "code",
     "teacher_user_id")
   .from("sections")
-  .join("section_students", 'section_id', '=','sections.id' )
-  .join("users", "user_id", "=", "users.id")
-  .join("classes", "class_id", "=", "classes.id")
+  .join("classes", "class_id", "=", "classes  .id")
   .where({'teacher_user_id': id})
   .then((result) => result);
 };
@@ -71,6 +68,10 @@ const getSectionsByStudent = (id) => {
 
 
 const getExamsBySections = (sectionIds) => {
+  if(!sectionIds.length) {
+    console.log('sectionsController, exams by sections requested with ' + sectionIds);
+    return []
+  }
   return db
   .select(
     "sections.id as section_id",
@@ -88,6 +89,5 @@ const getExamsBySections = (sectionIds) => {
    getSectionsByTeacher,
    getSectionsByStudent,
    getExamsBySections,
-   getSectionsByTeacher,
   };
 };
