@@ -24,7 +24,9 @@ export function fetchStudentData(userId, token) {
   return sectionsReq
   .then(({ data: sections }) => {
     const sectionIds = sections.map((sec) => sec.section_id);
-    const examsReq = axios.get(examsURL(userId), { params: { sectionIds } });
+    let examsReq;
+    if(!sectionIds.length) examsReq = new Promise((res) => res({data:[]}));
+    else examsReq = axios.get(examsURL(userId), { params: { sectionIds } }); 
     return Promise.all([sectionsReq, attemptsReq, examsReq]);
   })
 }
@@ -38,7 +40,9 @@ export function fetchTeacherData(userId, token) {
   return sectionsReq
   .then(({ data: sections }) => {
     const sectionIds = sections.map((sec) => sec.section_id);
-    const examsReq = axios.get(examsURL(userId), { params: { sectionIds } });
+    let examsReq;
+    if(!sectionIds.length) examsReq = new Promise((res) => res({data:[]}));
+    else examsReq = axios.get(examsURL(userId), { params: { sectionIds } }); 
     return Promise.all([sectionsReq, attemptsReq, examsReq]);
   })
 }
