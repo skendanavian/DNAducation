@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -53,21 +53,21 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const [profileError, setProfileError] = useState("");
 
   const testStrings = [
-    "Please type out this line to begin setting up your typing dna profile.",
-    "Here is another sentence that will be used to record your typing characteristics.",
-    "This is the last sample that you will need to type out before your typing dna profile is complete.",
+    "Please type out this line to begin setting up your typing dna profile",
+    "Here is another sentence that will be used to record your typing characteristics",
+    "This is the last sample that you will need to type out before your typing dna profile is complete",
   ];
 
   const testString = testStrings[profileAttempt - 1];
 
   //typing dna config
-  let tdna = useRef(new TypeDNA());
-  const typingPattern = tdna.current.getTypingPattern({
+  let tdna = new TypeDNA();
+  const typingPattern = tdna.getTypingPattern({
     type: 0,
     text: `${testString}`,
     targetId: "typeDna",
   });
-  tdna.current.start();
+  // tdna.start();
 
   const inputLength = textValue.length;
   const testStringLength = testString ? testString.length : 0;
@@ -75,7 +75,7 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const matchedText = textValue === testString;
 
   if (matchedText || inputLength === testStringLength) {
-    tdna.current.stop();
+    tdna.stop();
   }
 
   //set text highlighing config
@@ -101,9 +101,9 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
       .post(apiRoute, { userId, typingPattern })
       .then((res) => {
         console.log(res.data);
-        tdna.current.stop();
-        tdna.current.reset();
-        tdna.current.start();
+        tdna.stop();
+        tdna.reset();
+        tdna.start();
 
         if (
           !res.data.statusCode ||
