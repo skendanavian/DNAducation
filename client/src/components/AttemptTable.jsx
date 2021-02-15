@@ -7,8 +7,10 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import LaunchIcon from "@material-ui/icons/Launch";
 
 import { datesAreInOrder, toReadable } from "../helpers/dateHelpers";
+import { IconButton } from "@material-ui/core";
 
 const useStyles = makeStyles({
   table: {
@@ -17,7 +19,7 @@ const useStyles = makeStyles({
 });
 
 export default function AttemptTable(props) {
-  const { attempts, dueDate } = props;
+  const { attempts, dueDate, type } = props;
 
   const classes = useStyles();
 
@@ -26,30 +28,39 @@ export default function AttemptTable(props) {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Date:</TableCell>
+            <TableCell>Submitted:</TableCell>
             <TableCell align="right">Status:</TableCell>
             <TableCell align="right">Mark:</TableCell>
+            <TableCell align="right">Open:</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {attempts &&
-            attempts.map((row) => {
+            attempts.map((row, index) => {
               let submissionStatus;
-              if (row.submitted_at) {
-                submissionStatus = datesAreInOrder(row.submitted_at, dueDate)
+              if (row.time_submitted) {
+                submissionStatus = datesAreInOrder(row.time_submitted, dueDate)
                   ? "On time"
                   : "Late";
               } else {
                 submissionStatus = "Not submitted";
               }
+              console.log(row);
               return (
-                <TableRow key={row.created_at}>
+                <TableRow key={`${row.created_at}${index}`}>
                   <TableCell component="th" scope="row">
-                    {toReadable(row.created_at)}
+                    {toReadable(row.time_submitted)}
                   </TableCell>
                   <TableCell align="right">{submissionStatus}</TableCell>
                   <TableCell align="right">
-                    {row.average_mark || "Not marked"}
+                    {row.marks_earned || "Not marked"}
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      onClick={() => console.log("Opening attempt: ", row.id)}
+                    >
+                      <LaunchIcon color="primary" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               );
