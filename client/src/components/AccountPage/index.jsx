@@ -161,7 +161,7 @@ const AccountPage = (props) => {
   }, [userId, token, user]);
 
   const navProps = {
-    buttonDefs: navButtons,
+    navButtons,
     setToken,
     pageTitle: "🧬 DNAducation",
   };
