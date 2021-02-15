@@ -66,56 +66,19 @@ module.exports = ({
     getAttemptsByStudent(id)
       .then((result) => {
         if (!result.length) {
-<<<<<<< HEAD
-          console.log('No attempts found for user');
-=======
           throw new ErrorHandler(404, "No attempts found for user");
->>>>>>> main
         }
         res.json(result);
       })
       .catch((err) => next(err));
   });
 
-<<<<<<< HEAD
-  // get sections by user id, as a teacher
-  router.get(`/teacher/:id/sections`, (req, res, next) => {
-    const { id } = req.params;
-
-    console.log('--------------------------------------------');
-    console.log(`userRoutes:: get teacher sections for ${id}`);
-
-    getSectionsByTeacher(id)
-      .then((result) => {
-        if (!result.length) {
-          console.log('No sections found for teacher');
-        }
-        res.json(result);
-      })
-      .catch((err) => next(err));
-
-  });
-
-  // get all attemmpts by teacher id 
-  router.get(`/teacher/:id/attempts`, (req, res, next) => {
-    const { id } = req.params;
-
-    console.log('--------------------------------------------');
-    console.log(`userRoutes:: get teacher attempts for ${id}`);
-
-    getAttemptsByTeacher(id)
-      .then((result) => {
-        if (!result.length) {
-          console.log('No attempts found for teacher');
-        }
-=======
   // update Typingdna profile to true for user
   router.patch("/:userId", (req, res, next) => {
     const { userId, status } = req.body;
     console.log(userId);
     updateTypingProfile(userId, status)
       .then((result) => {
->>>>>>> main
         res.json(result);
       })
       .catch((err) => next(err));
