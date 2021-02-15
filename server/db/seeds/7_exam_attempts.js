@@ -1,5 +1,5 @@
 const faker = require("faker");
-const {exam_attempts, exams} = require('../constants/seedConstants');
+const {exam_attempts, exams } = require('../constants/seedConstants');
 
 const daysFromNow = (d => {
   return new Date(Date.now() + 1000 * 60 * 60 * 24 * d);
@@ -16,16 +16,22 @@ const createFakeExamAttemps = (exams, attempts) => {
   const rows = [];
   const attemptsPerExam = Math.floor(attempts / exams);
 
-  const [started, submitted] = getStartAndSubmitDatesDaysFromNow(-250, 30)
+  
   
   for (let i = 1; i <= exams; i++) {
     for(let j = 0; j < attemptsPerExam; j++) {
+      
+      const [startedTime, submittedTime] = getStartAndSubmitDatesDaysFromNow(-250, 30);
+      const wasSubmitted = Math.random() > 0.3;
+      const wasMarked = Math.random() > 0.5;
+
       rows.push({
         section_students_id: i + j,
         exam_id: i,
-        average_confidence: faker.random.number({min: 0, max: 100}),
-        time_started: started,
-        time_submitted: Math.random() > 0.3 ? submitted : null,
+        marks_earned: (wasSubmitted && wasMarked) ? faker.random.number({min:3, max: 33}) : null,
+        average_confidence: wasSubmitted ? faker.random.number({min: 0, max: 100}) : null,
+        time_started: startedTime,
+        time_submitted: wasSubmitted ? submittedTime : null,
         
       });
     }
