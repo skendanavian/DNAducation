@@ -3,6 +3,7 @@ exports.up = function (knex) {
     table.increments("id").unsigned().primary();
     table.integer("section_students_id").references('id').inTable('section_students').notNullable().onUpdate('CASCADE').onDelete('CASCADE');
     table.integer("exam_id").references('id').inTable('exams').notNullable().onUpdate('CASCADE').onDelete('CASCADE');
+    table.integer("marks_earned").nullable();
     table.integer("average_confidence").nullable();
     table.timestamp("time_submitted").nullable();
     table.timestamp("time_started").notNullable();
