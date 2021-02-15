@@ -52,8 +52,6 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const [profileAttempt, setProfileAttempt] = useState(1);
   const [profileError, setProfileError] = useState("");
 
-  let tdna = useRef(new TypeDNA());
-
   const testStrings = [
     "Please type out this line to begin setting up your typing dna profile.",
     "Here is another sentence that will be used to record your typing characteristics.",
@@ -63,6 +61,7 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const testString = testStrings[profileAttempt - 1];
 
   //typing dna config
+  let tdna = useRef(new TypeDNA());
   const typingPattern = tdna.current.getTypingPattern({
     type: 0,
     text: `${testString}`,
@@ -106,7 +105,11 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
         tdna.current.reset();
         tdna.current.start();
 
-        if (!res.data.statusCode || res.data.statusCode !== 200) {
+        if (
+          !res.data.statusCode ||
+          res.data.statusCode !== 200 ||
+          !res.data.enrollment
+        ) {
           setProfileError(submissionError);
 
           console.log(profileError);

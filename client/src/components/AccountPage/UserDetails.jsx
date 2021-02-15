@@ -29,7 +29,7 @@ export default function UserDetails() {
         setUser(userRes);
       });
     }
-  }, [userId, token]);
+  }, [userId, token, open]);
 
   return (
     <Card>

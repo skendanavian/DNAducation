@@ -4,6 +4,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import generateAxios from "../helpers/generateAxios";
 import { formatExamQuestions } from "../helpers/formatExamQuestions";
+import {
+  calculateAnswerConfidence,
+  calculateExamConfidence,
+} from "../helpers/calculateConfidence";
+import TypeDNA from "../typeDna/typingdna";
 
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -53,6 +58,7 @@ export default function Question({
   const [answerText, setAnswerText] = useState("");
   const [questionObject, setQuestionObject] = useState({});
   const [attemptId, setAttemptId] = useState("");
+  const [confidenceGroup, setConfidenceGroup] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const axios = generateAxios(token);
@@ -87,49 +93,84 @@ export default function Question({
     }
   }, [axios, baseURL, examId, userId]);
 
+  // Set TypingDNA config
+  let tdna = new TypeDNA();
+  const typingPattern = tdna.getTypingPattern({
+    type: 0,
+    text: `${answerText}`,
+    targetId: "typeDnaAnswer",
+  });
+  tdna.start();
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    tdna.stop();
 
+    const apiRoute = baseURL + `/api/${userId}`;
     const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
-
     const exam_question_id = currentQ.questionId;
 
     //Submit individual answers to DB
-    // **Confidence Level Currently Hard Coded
-    axios
-      .post(submitAnswerUrl, {
-        exam_question_id,
-        exam_attempt_id: attemptId,
-        answer: answerText,
-        confidence_level: 75,
-      })
-      .then((res) => {
-        if (currentQ.questionNumber === questionObject.questions.length) {
-          //Submit Full Exam Attempt Update on last question
-          const submitExamUrl = baseURL + `/attempts/${attemptId}`;
-          const date = new Date(Date.now());
-          return axios
-            .patch(submitExamUrl, {
-              id: attemptId,
-              average_confidence: 75,
-              time_submitted: date.toISOString(),
-            })
-            .then((res) => {
-              // Increment total in DB
-              const incrementSubmissionURL =
-                baseURL + `/exams/${questionObject.examId}`;
-              return axios.patch(incrementSubmissionURL);
-            })
-            .then((res) => {
-              history.push("/account");
-              return;
-            });
-        }
-        setAnswerText("");
-        setQuestionIndex(questionIndex + 1);
-        return;
-      })
-      .catch((err) => console.log(err));
+    // Confidence Level Currently Hard Coded
+
+    //post to api
+    //receive response with confidence_level numbers
+    // send to helper to do stuff to get a confidence level 0 or 1
+
+    axios.post(apiRoute, { userId, typingPattern }).then((res) => {
+      console.log(res.data);
+
+      const { highConfidence, result, action, statusCode } = res.data;
+      let confidenceValue;
+      console.log({ action });
+      console.log(action.includes("verify"));
+      if (!action.includes("verify") || statusCode !== 200) {
+        // Error -> value of 0 signals to discard entry in average
+        confidenceValue = 0;
+      } else {
+        confidenceValue = calculateAnswerConfidence(result, highConfidence);
+      }
+      console.log(confidenceValue);
+      console.log(typingPattern);
+
+      return axios
+        .post(submitAnswerUrl, {
+          exam_question_id,
+          exam_attempt_id: attemptId,
+          answer: answerText,
+          confidence_level: confidenceValue,
+        })
+        .then((res) => {
+          if (currentQ.questionNumber === questionObject.questions.length) {
+            //Submit Full Exam Attempt and Update DB on last question
+            const submitExamUrl = baseURL + `/attempts/${attemptId}`;
+            const date = new Date(Date.now());
+            return axios
+              .patch(submitExamUrl, {
+                id: attemptId,
+                average_confidence: 75,
+                time_submitted: date.toISOString(),
+              })
+              .then((res) => {
+                // Increment total in DB
+                const incrementSubmissionURL =
+                  baseURL + `/exams/${questionObject.examId}`;
+                return axios.patch(incrementSubmissionURL);
+                //reset and start tdna here
+                tdna.reset();
+                tdna.start();
+              })
+              .then((res) => {
+                history.push("/account");
+                return;
+              });
+          }
+          setAnswerText("");
+          setQuestionIndex(questionIndex + 1);
+          return;
+        })
+        .catch((err) => console.log(err));
+    });
   };
 
   return (
@@ -188,6 +229,9 @@ export default function Question({
               required
               onChange={(e) => {
                 setAnswerText(e.target.value);
+              }}
+              InputProps={{
+                id: "typeDnaAnswer",
               }}
             ></TextField>
 
