@@ -23,7 +23,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import SubjectIcon from "../SubjectIcon";
 import { LIGHT_GRAY } from "../../constants/colors";
 
-const drawerWidth = 180;
+const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "none",
     },
   },
@@ -76,13 +76,13 @@ export default function Nav(props) {
       <Toolbar />
       <div className={classes.drawerContainer}>
         {buttonDefs &&
-          buttonDefs.map((listSection, index) => {
+          Object.values(buttonDefs).map((listSection, index) => {
             return (
-              <>
-                {index > 0 && <Divider />}
-                <List key={index}>
+              <Box key={`B${index}`}>
+                {index > 0 && listSection.length > 0 && <Divider />}
+                <List>
                   {listSection.map((button, index) => {
-                    const { text, navAction } = button;
+                    const { text, navAction, type } = button;
                     return (
                       <ListItem
                         button
@@ -90,14 +90,14 @@ export default function Nav(props) {
                         onClick={navAction}
                       >
                         <ListItemIcon>
-                          <SubjectIcon {...{ text }} />
+                          <SubjectIcon {...{ text, type }} />
                         </ListItemIcon>
                         <ListItemText primary={text} />
                       </ListItem>
                     );
                   })}
                 </List>
-              </>
+              </Box>
             );
           })}
       </div>
@@ -121,13 +121,18 @@ export default function Nav(props) {
             {pageTitle}
           </Typography>
           <Box marginLeft="auto">
-            <Button variant="contained" onClick={logout} color="secondary">
+            <Button
+              variant="contained"
+              onClick={logout}
+              disableElevation
+              color="primary"
+            >
               {"Logout"}
             </Button>
           </Box>
         </Toolbar>
       </AppBar>
-      <Hidden xsDown implementation="css">
+      <Hidden smDown implementation="css">
         <Drawer
           className={classes.drawer}
           variant="permanent"
@@ -138,7 +143,7 @@ export default function Nav(props) {
           {drawer}
         </Drawer>
       </Hidden>
-      <Hidden smUp implementation="css">
+      <Hidden lgUp implementation="css">
         <Drawer
           className={classes.drawer}
           variant="temporary"
