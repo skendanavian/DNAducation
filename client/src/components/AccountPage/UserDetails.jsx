@@ -68,7 +68,9 @@ export default function UserDetails(props) {
             onClick={handleClickOpen}
             disabled={(user && user.has_recorded_typedna) || false}
           >
-            Record Your TypeDNA Profile!
+            {user && !user.has_recorded_typedna
+              ? `Record Your Typing Profile!`
+              : `Typing Profile Completed`}
           </Button>
         </Box>
         {open && (
