@@ -11,7 +11,6 @@ import {
   CardActions,
   Avatar,
   Typography,
-  IconButton,
   Button,
   Divider,
   Dialog,
@@ -19,7 +18,6 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import TooltipMenu from "./TooltipMenu";
@@ -113,15 +111,14 @@ const statusTag = ({
 };
 
 export default function ExamCard(props) {
-  const { exam, hasRecordedProfile, type, setExamId } = props;
+  const { exam, user, type, setExamId } = props;
   const classes = useStyles();
   const history = useHistory();
   const [attemptsModal, setAttemptsModal] = useState(false);
-  const [menu, setMenu] = useState(false);
   // const [examModal, setExamModal] = useState(false);
 
   const token = sessionStorage.getItem("jwt");
-  const userId = localStorage.getItem("jwt");
+  const userId = localStorage.getItem("userId");
 
   const handleAttemptsClick = () => {
     setAttemptsModal((prev) => !prev);
@@ -134,10 +131,6 @@ export default function ExamCard(props) {
     } else {
       console.log("tried to start an exam with storage that didnt exist");
     }
-  };
-
-  const handleMenuClick = () => {
-    setMenu(!menu);
   };
 
   const isPast = dateIsPast(exam.due_time);
@@ -188,7 +181,7 @@ export default function ExamCard(props) {
             variant="contained"
             classes={{ root: classes.startButton }}
             onClick={handleStartExamClick}
-            disabled={!hasRecordedProfile}
+            disabled={!(user && user.has_recorded_typedna)}
           >
             START
           </Button>
