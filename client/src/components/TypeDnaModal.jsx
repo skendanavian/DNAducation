@@ -1,16 +1,18 @@
 import React from "react";
-import { useState, useRef } from "react";
+import { useState } from "react";
+
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import TypeDNA from "../typeDna/typingdna";
 import highlightWords from "highlight-words";
 import generateAxios from "../helpers/generateAxios";
+import { Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   success: {
-    color: "#8CDD81",
+    color: "#5cb85c",
     textAlign: "center",
   },
   failure: {
@@ -44,41 +46,40 @@ const useStyles = makeStyles((theme) => ({
   highlight: {
     backgroundColor: "#fdc500",
   },
+  title: {
+    textAlign: "center",
+    color: "#e4b100",
+    marginBottom: "0.5rem",
+  },
 }));
 
 export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const classes = useStyles();
   const [textValue, setTextValue] = useState("");
   const [profileAttempt, setProfileAttempt] = useState(1);
-
-  let tdna = useRef(new TypeDNA());
+  const [profileError, setProfileError] = useState("");
 
   const testStrings = [
-    "Type out this line to begin setting up your typing dna profile",
+    "Please type out this line to begin setting up your typing dna profile",
     "Here is another sentence that will be used to record your typing characteristics",
-    "This is the last sample that you will need to type out before your typing dna profile is completed",
+    "This is the last sample that you will need to type out before your typing dna profile is complete",
   ];
 
   const testString = testStrings[profileAttempt - 1];
 
   //typing dna config
-  const typingPattern = tdna.current.getTypingPattern({
+  let tdna = new TypeDNA();
+  const typingPattern = tdna.getTypingPattern({
     type: 0,
     text: `${testString}`,
     targetId: "typeDna",
   });
-  tdna.current.start();
 
   const inputLength = textValue.length;
-  const testStringLength = testString.length;
+  const testStringLength = testString ? testString.length : 0;
   const tooLong = inputLength > testStringLength;
   const matchedText = textValue === testString;
 
-  if (matchedText || inputLength === testStringLength) {
-    tdna.current.stop();
-  }
-
-  //set text highlighing config
   let chunks = highlightWords({
     text: testString,
     query: textValue,
@@ -86,33 +87,57 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   });
 
   const handleTyping = (e) => {
+    if (profileError && inputLength === 0) setProfileError("");
     setTextValue(e.target.value);
   };
 
   const userId = localStorage.getItem("userId");
   const token = sessionStorage.getItem("jwt");
   const axios = generateAxios(token);
+  const submissionError = "Failed to record profile. Please try again.";
 
   const handleButton = (e) => {
-    if (profileAttempt === 3) handleClose();
-    setProfileAttempt(profileAttempt + 1);
-
     const apiRoute = process.env.REACT_APP_REQUEST_URL + `/api/${userId}`;
     axios
       .post(apiRoute, { userId, typingPattern })
       .then((res) => {
-        console.log(res);
-        tdna.current.reset();
-        tdna.current.start();
+        console.log(res.data);
+        tdna.stop();
+        tdna.reset();
+        tdna.start();
+
+        if (!res.data.statusCode || res.data.statusCode !== 200) {
+          setProfileError(submissionError);
+          console.log(profileError);
+          setTextValue("");
+        } else {
+          /* Updating Typing Profile Flag For User In DB */
+          if (profileAttempt === 3) {
+            const data = { userId, status: true };
+            axios
+              .patch(`http://localhost:3001/users/${userId}`, data)
+              .then((res) => {
+                console.log("Update Typingdna: ", res.data);
+                handleClose();
+              })
+              .catch((e) => {
+                console.log(e);
+                setProfileError(submissionError);
+              });
+          }
+          if (profileAttempt < 3) setProfileAttempt(profileAttempt + 1);
+          setTextValue("");
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setProfileError(submissionError);
+        setTextValue("");
+      });
   };
 
   return (
     <div>
-      <Button variant="contained" color="secondary" onClick={handleClickOpen}>
-        Record Your TypeDNA Profile
-      </Button>
       <Dialog
         className={classes.root}
         open={open}
@@ -132,6 +157,9 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
             margin="auto"
           >
             <Box flexGrow="1">
+              <Typography
+                className={classes.title}
+              >{`Step ${profileAttempt} of 3`}</Typography>
               <DialogContentText color="primary">
                 {chunks.map(({ text, match, key }) =>
                   match ? (
@@ -150,13 +178,12 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
                     : classes.failure
                 }
               >
+                {profileError && profileError}
                 {!matchedText && textValue.length === testStringLength
-                  ? "Sentence does not match - "
+                  ? "Sentence does not match"
                   : ""}
-                {tooLong && "too many characters  ||  "}
-                {matchedText
-                  ? "Exact Match - Please submit your profile"
-                  : `${textValue.length} of ${testStringLength}`}
+                {tooLong && "Too many characters"}
+                {matchedText ? "Exact Match - Please submit your profile" : ""}
               </div>
             </Box>
             <Box flexGrow="1">

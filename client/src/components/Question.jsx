@@ -2,6 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
+import TypeDNA from "../typeDna/typingdna";
+
+import {
+  calculateAnswerConfidence,
+  calculateExamConfidence,
+} from "../helpers/calculateConfidence";
 import generateAxios from "../helpers/generateAxios";
 import { formatExamQuestions } from "../helpers/formatExamQuestions";
 
@@ -37,15 +43,12 @@ const useStyles = makeStyles((theme) => ({
     width: "80vw",
     margin: "1rem auto",
   },
+  error: {
+    color: "#Df2935",
+  },
 }));
 
-export default function Question({
-  examId,
-  setToken,
-  setExamId,
-  userId,
-  token,
-}) {
+export default function Question({ examId, userId, token }) {
   const history = useHistory();
   const classes = useStyles();
 
@@ -53,6 +56,8 @@ export default function Question({
   const [answerText, setAnswerText] = useState("");
   const [questionObject, setQuestionObject] = useState({});
   const [attemptId, setAttemptId] = useState("");
+  const [confidenceArray, setConfidenceArray] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
   const axios = generateAxios(token);
@@ -87,49 +92,83 @@ export default function Question({
     }
   }, [axios, baseURL, examId, userId]);
 
+  //Initiate TypeDNA Listener
+  let tdna = new TypeDNA();
+  const typingPattern = tdna.getTypingPattern({
+    type: 0,
+    text: `${answerText}`,
+    targetId: "typeDnaAnswer",
+  });
+
+  const apiRoute = baseURL + `/api/${userId}`;
+  const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
+  const exam_question_id = currentQ.questionId;
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    tdna.stop();
 
-    const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
+    axios.post(apiRoute, { userId, typingPattern }).then((res) => {
+      console.log(res.data);
 
-    const exam_question_id = currentQ.questionId;
+      const { highConfidence, result, action, statusCode } = res.data;
+      let confidenceValue;
+      console.log({ action });
+      console.log(action.includes("verify"));
+      if (!action.includes("verify") || statusCode !== 200) {
+        // Error case: values of 0 will be thrown out when calculating average
+        confidenceValue = 0;
+      } else {
+        confidenceValue = calculateAnswerConfidence(result, highConfidence);
+      }
+      console.log(confidenceValue);
+      console.log(typingPattern);
+      setConfidenceArray((prev) => [...prev, confidenceValue]);
 
-    //Submit individual answers to DB
-    // **Confidence Level Currently Hard Coded
-    axios
-      .post(submitAnswerUrl, {
-        exam_question_id,
-        exam_attempt_id: attemptId,
-        answer: answerText,
-        confidence_level: 75,
-      })
-      .then((res) => {
-        if (currentQ.questionNumber === questionObject.questions.length) {
-          //Submit Full Exam Attempt Update on last question
-          const submitExamUrl = baseURL + `/attempts/${attemptId}`;
-          const date = new Date(Date.now());
-          return axios
-            .patch(submitExamUrl, {
-              id: attemptId,
-              average_confidence: 75,
-              time_submitted: date.toISOString(),
-            })
-            .then((res) => {
-              // Increment total in DB
-              const incrementSubmissionURL =
-                baseURL + `/exams/${questionObject.examId}`;
-              return axios.patch(incrementSubmissionURL);
-            })
-            .then((res) => {
-              history.push("/account");
-              return;
-            });
-        }
-        setAnswerText("");
-        setQuestionIndex(questionIndex + 1);
-        return;
-      })
-      .catch((err) => console.log(err));
+      return axios
+        .post(submitAnswerUrl, {
+          exam_question_id,
+          exam_attempt_id: attemptId,
+          answer: answerText,
+          confidence_level: confidenceValue,
+        })
+        .then((res) => {
+          // Update exam attempt with avg confidence
+          if (currentQ.questionNumber === questionObject.questions.length) {
+            const submitExamUrl = baseURL + `/attempts/${attemptId}`;
+            const date = new Date(Date.now());
+            const confidencePercentage = calculateExamConfidence(
+              confidenceArray
+            );
+            return axios
+              .patch(submitExamUrl, {
+                id: attemptId,
+                average_confidence: confidencePercentage,
+                time_submitted: date.toISOString(),
+              })
+              .then((res) => {
+                const incrementSubmissionURL =
+                  baseURL + `/exams/${questionObject.examId}`;
+                tdna.reset();
+                tdna.start();
+                return axios.patch(incrementSubmissionURL);
+              })
+              .then((res) => {
+                history.push("/account");
+                return;
+              });
+          }
+          setAnswerText("");
+          setQuestionIndex(questionIndex + 1);
+          return;
+        })
+        .catch((err) => {
+          console.log(err);
+          setErrorMessage(
+            "There was a problem submitting this question. Please try again"
+          );
+        });
+    });
   };
 
   return (
@@ -174,6 +213,9 @@ export default function Question({
           >
             {currentQ.question}
           </Typography>
+          <Typography className={classes.error}>
+            {errorMessage && errorMessage}
+          </Typography>
           <form
             onSubmit={(e) => handleSubmit(e)}
             className={classes.questionContainer}
@@ -188,6 +230,9 @@ export default function Question({
               required
               onChange={(e) => {
                 setAnswerText(e.target.value);
+              }}
+              InputProps={{
+                id: "typeDnaAnswer",
               }}
             ></TextField>
 

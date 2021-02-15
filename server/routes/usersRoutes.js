@@ -3,7 +3,15 @@ const router = express.Router();
 const regex = require("../helpers/regex");
 const { ErrorHandler } = require("../helpers/errorsHelper");
 
-module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsByStudent, getSectionsByTeacher, getAttemptsByTeacher, }) => {
+module.exports = ({
+  getUsers,
+  getUserById,
+  getSectionsByStudent,
+  getAttemptsByStudent,
+  getSectionsByTeacher,
+  getAttemptsByTeacher,
+  updateTypingProfile,
+}) => {
   router.get("/", (req, res, next) => {
     getUsers()
       .then((users) => {
@@ -32,7 +40,11 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsBySt
     getSectionsByStudent(id)
       .then((result) => {
         if (!result.length) {
+<<<<<<< HEAD
           console.log('No sections found for user');
+=======
+          throw new ErrorHandler(404, "No sections found for user");
+>>>>>>> main
         }
         res.json(result);
       })
@@ -40,7 +52,11 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsBySt
 
   });
 
+<<<<<<< HEAD
   // get all attempts by student id 
+=======
+  // get all attemmpts by student id
+>>>>>>> main
   router.get(`/:id/attempts`, (req, res, next) => {
     const { id } = req.params;
 
@@ -50,13 +66,18 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsBySt
     getAttemptsByStudent(id)
       .then((result) => {
         if (!result.length) {
+<<<<<<< HEAD
           console.log('No attempts found for user');
+=======
+          throw new ErrorHandler(404, "No attempts found for user");
+>>>>>>> main
         }
         res.json(result);
       })
       .catch((err) => next(err));
   });
 
+<<<<<<< HEAD
   // get sections by user id, as a teacher
   router.get(`/teacher/:id/sections`, (req, res, next) => {
     const { id } = req.params;
@@ -87,6 +108,14 @@ module.exports = ({ getUsers, getUserById, getSectionsByStudent, getAttemptsBySt
         if (!result.length) {
           console.log('No attempts found for teacher');
         }
+=======
+  // update Typingdna profile to true for user
+  router.patch("/:userId", (req, res, next) => {
+    const { userId, status } = req.body;
+    console.log(userId);
+    updateTypingProfile(userId, status)
+      .then((result) => {
+>>>>>>> main
         res.json(result);
       })
       .catch((err) => next(err));

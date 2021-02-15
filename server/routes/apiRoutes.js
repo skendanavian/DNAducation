@@ -19,17 +19,25 @@ module.exports = ({}) => {
 
     const extendedId = `000000${userId}`;
 
-    typingDnaClient.auto(extendedId, typingPattern, function (error, result) {
-      if (error) {
-        console.error(error);
-        next(error);
+    typingDnaClient.auto(
+      extendedId,
+      typingPattern,
+
+      function (error, result) {
+        console.log(result);
+        if (error) {
+          next(error);
+        }
+        if (!result.statusCode || result.statusCode !== 200) {
+          console.log(result);
+          res.json(result);
+          next(error);
+        } else {
+          console.log(result);
+          res.send(result);
+        }
       }
-      // TODO -> call db if it is an exam answer or last attempt of making a profile
-      // Might want to split this logic up into different routes
-      res.json(result);
-      console.log(result);
-      next();
-    });
+    );
   });
 
   return router;
