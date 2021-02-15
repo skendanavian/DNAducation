@@ -116,7 +116,7 @@ export default function Question({ examId, userId, token }) {
       console.log({ action });
       console.log(action.includes("verify"));
       if (!action.includes("verify") || statusCode !== 200) {
-        // Error -> value of 0 signals to discard entry in average
+        // Error case: values of 0 will be thrown out when calculating average
         confidenceValue = 0;
       } else {
         confidenceValue = calculateAnswerConfidence(result, highConfidence);
