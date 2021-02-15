@@ -8,13 +8,15 @@ import TypeDnaModal from "../TypeDnaModal";
 require("dotenv").config({ path: "../../../.env" });
 
 export default function UserDetails(props) {
-  const { user, type, createSection } = props;
+  const { user, type, createSection, setTdnaOpen } = props;
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
+    setTdnaOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    setTdnaOpen(false);
   };
 
   return (

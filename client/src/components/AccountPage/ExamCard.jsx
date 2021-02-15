@@ -1,5 +1,7 @@
 import React from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
 import clsx from "clsx";
 import {
   Box,
@@ -111,17 +113,27 @@ const statusTag = ({
 };
 
 export default function ExamCard(props) {
-  const { exam, startExam, hasRecordedProfile, type } = props;
+  const { exam, hasRecordedProfile, type, setExamId } = props;
   const classes = useStyles();
-  const [modal, setModal] = React.useState(false);
-  const [menu, setMenu] = React.useState(false);
+  const history = useHistory();
+  const [attemptsModal, setAttemptsModal] = useState(false);
+  const [menu, setMenu] = useState(false);
+  // const [examModal, setExamModal] = useState(false);
+
+  const token = sessionStorage.getItem("jwt");
+  const userId = localStorage.getItem("jwt");
 
   const handleAttemptsClick = () => {
-    setModal((prev) => !prev);
+    setAttemptsModal((prev) => !prev);
   };
 
   const handleStartExamClick = () => {
-    startExam();
+    if (exam && token && userId) {
+      setExamId(exam.id);
+      history.push("/exam");
+    } else {
+      console.log("tried to start an exam with storage that didnt exist");
+    }
   };
 
   const handleMenuClick = () => {
@@ -184,7 +196,7 @@ export default function ExamCard(props) {
       </CardActions>
       <Divider />
       <Dialog
-        open={modal}
+        open={attemptsModal}
         onClose={handleAttemptsClick}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
