@@ -55,9 +55,9 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   let tdna = useRef(new TypeDNA());
 
   const testStrings = [
-    "Type out this line to begin setting up your typing dna profile",
-    "Here is another sentence that will be used to record your typing characteristics",
-    "This is the last sample that you will need to type out before your typing dna profile is completed",
+    "Please type out this line to begin setting up your typing dna profile.",
+    "Here is another sentence that will be used to record your typing characteristics.",
+    "This is the last sample that you will need to type out before your typing dna profile is complete.",
   ];
 
   const testString = testStrings[profileAttempt - 1];

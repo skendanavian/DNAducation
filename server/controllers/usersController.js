@@ -49,10 +49,10 @@ module.exports = (db) => {
     const has_recorded_typedna = status;
 
     return db("users")
+      .where({ id })
       .update({
         has_recorded_typedna,
       })
-      .where("id", "=", id)
       .returning("*")
       .then((result) => result);
   };
