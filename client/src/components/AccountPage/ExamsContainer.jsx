@@ -4,7 +4,9 @@ import { Typography, Box } from "@material-ui/core";
 import ExamCard from "./ExamCard";
 
 export default function ExamsContainer(props) {
-  const { exams, type, setExamId } = props;
+  const { exams, type, setExamId, user } = props;
+
+  console.log(user);
 
   if (!exams.length) {
     return <Typography>No exams!</Typography>;
@@ -23,6 +25,7 @@ export default function ExamsContainer(props) {
             key={`${exam.title}${index}`}
             type={type}
             exam={exam}
+            user={user}
           />
         );
       })}
