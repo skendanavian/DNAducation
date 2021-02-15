@@ -4,12 +4,12 @@ const calculateAnswerConfidence = (matchValue, confidenceValue) => {
   let score;
 
   switch (confidenceGroup) {
-    //no match, highly confident
-    case "00":
+    //no match, high confidence
+    case "01":
       score = 1;
       break;
     //no match, low confidence
-    case "01":
+    case "00":
       score = 2;
       break;
     // match, low confidence
