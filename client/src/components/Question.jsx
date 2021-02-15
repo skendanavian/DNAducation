@@ -58,7 +58,7 @@ export default function Question({
   const [answerText, setAnswerText] = useState("");
   const [questionObject, setQuestionObject] = useState({});
   const [attemptId, setAttemptId] = useState("");
-  const [confidenceGroup, setConfidenceGroup] = useState([]);
+  const [confidenceArray, setConfidenceArray] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const axios = generateAxios(token);
@@ -102,20 +102,13 @@ export default function Question({
   });
   tdna.start();
 
+  const apiRoute = baseURL + `/api/${userId}`;
+  const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
+  const exam_question_id = currentQ.questionId;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     tdna.stop();
-
-    const apiRoute = baseURL + `/api/${userId}`;
-    const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
-    const exam_question_id = currentQ.questionId;
-
-    //Submit individual answers to DB
-    // Confidence Level Currently Hard Coded
-
-    //post to api
-    //receive response with confidence_level numbers
-    // send to helper to do stuff to get a confidence level 0 or 1
 
     axios.post(apiRoute, { userId, typingPattern }).then((res) => {
       console.log(res.data);
@@ -132,6 +125,7 @@ export default function Question({
       }
       console.log(confidenceValue);
       console.log(typingPattern);
+      setConfidenceArray((prev) => [...prev, confidenceValue]);
 
       return axios
         .post(submitAnswerUrl, {
@@ -141,24 +135,27 @@ export default function Question({
           confidence_level: confidenceValue,
         })
         .then((res) => {
+          // Update exam attempt with avg confidence
           if (currentQ.questionNumber === questionObject.questions.length) {
-            //Submit Full Exam Attempt and Update DB on last question
             const submitExamUrl = baseURL + `/attempts/${attemptId}`;
             const date = new Date(Date.now());
+            const confidencePercentage = calculateExamConfidence(
+              confidenceArray
+            );
             return axios
               .patch(submitExamUrl, {
                 id: attemptId,
-                average_confidence: 75,
+                average_confidence: confidencePercentage,
                 time_submitted: date.toISOString(),
               })
               .then((res) => {
                 // Increment total in DB
                 const incrementSubmissionURL =
                   baseURL + `/exams/${questionObject.examId}`;
-                return axios.patch(incrementSubmissionURL);
-                //reset and start tdna here
                 tdna.reset();
                 tdna.start();
+                return axios.patch(incrementSubmissionURL);
+                //reset and start tdna here
               })
               .then((res) => {
                 history.push("/account");
