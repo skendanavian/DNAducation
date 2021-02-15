@@ -4,39 +4,65 @@ import SectionDetails from "./SectionDetails";
 import UserDetails from "./UserDetails";
 import ExamsContainer from "./ExamsContainer";
 
+// display the following exams for the following views
+// student account -> latest unsubmitted
+// teacher account -> latest unmarked
+// student code -> latest from section
+// teacher code ->  latest from section
+
+const examFilter = ({ type, view, exams }) => {
+  if (!exams) return [];
+  let toDisplay;
+  const examsOfType = type === "Student" ? exams.student : exams.teacher;
+
+  if (view === "Account" && type === "Student") {
+    toDisplay = (exam) => !exam.attempts.length;
+  } else if (view === "Account" && type === "Teacher") {
+    toDisplay = (exam) => exam.attempts.find((att) => !att.marks_earned);
+  } else {
+    toDisplay = (exam) => exam.section.section_id === view;
+  }
+  const examsToDisplay = examsOfType.filter(toDisplay);
+  return examsToDisplay;
+};
+
 export default function AccountContent(props) {
-  const { contentView, exams, user } = props;
+  const { contentView, exams, user, sections } = props;
   if (!contentView) {
     return <Typography>404 Error</Typography>;
   }
+  const { type, view } = contentView;
 
-  if (contentView === "Account") {
-    // display unsubmitted exams
-    const examsToDisplay = exams.filter((exam, index) => {
-      return !exam.attempts.length;
-    });
+  if (view === "Loading") {
+    return <Typography>...Loading</Typography>;
+  }
 
+  const examsToDisplay = examFilter({ type, view, exams });
+
+  if (view === "Account") {
     return (
       <Box>
-        <UserDetails user={user} />
-        <Typography variant="h6" color="textPrimary">
-          Unsubmitted Assessments
+        <UserDetails type={type} user={user} />
+        <Typography variant="overline" color="textPrimary">
+          {`${type === "Student" ? "Unsubmitted" : "Unmarked"} Assessments`}
         </Typography>
-        <ExamsContainer exams={examsToDisplay} />
+        <ExamsContainer type={type} exams={examsToDisplay} />
       </Box>
     );
   } else {
-    // if view not account, view is a code
+    // if view not account, view is a section id
     // display exams from that section
-    const examsToDisplay = exams.filter((exam) => {
-      return exam.section.code === contentView;
-    });
-
+    const sectionsOfType =
+      type === "Student" ? sections.student : sections.teacher;
+    console.log({ sectionsOfType, view });
+    const sectionDetails = sectionsOfType.find(
+      (sec) => sec.section_id === view
+    );
     return (
       <Box>
-        <SectionDetails details={examsToDisplay[0].section} />
-        <Typography variant="h6">All Assessments</Typography>
-        <ExamsContainer exams={examsToDisplay} />
+        <SectionDetails type={type} user={user} details={sectionDetails} />
+        <Typography variant="overline">All Assessments</Typography>
+        <ExamsContainer type={type} exams={examsToDisplay} />
       </Box>
     );
   }
