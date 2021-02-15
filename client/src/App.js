@@ -38,7 +38,6 @@ function App() {
 
   // Can then be accessed as prop by exam view (currently defaulting to 1 for testing)
   const [examId, setExamId] = useState(1);
-
   const passToken = token || sessionStorage.getItem("jwt");
   const passUserId = userId || localStorage.getItem("userId");
 
@@ -68,6 +67,7 @@ function App() {
                 userId={passUserId}
                 setToken={setToken}
                 setUserId={setUserId}
+                setExamId={setExamId}
               />
             ) : (
               <Redirect to="/register" />

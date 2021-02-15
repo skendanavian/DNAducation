@@ -27,7 +27,7 @@ const examFilter = ({ type, view, exams }) => {
 };
 
 export default function AccountContent(props) {
-  const { contentView, exams, user, sections } = props;
+  const { contentView, exams, user, sections, setExamId, setTdnaOpen } = props;
   if (!contentView) {
     return <Typography>404 Error</Typography>;
   }
@@ -42,7 +42,7 @@ export default function AccountContent(props) {
   if (view === "Account") {
     return (
       <Box>
-        <UserDetails type={type} user={user} />
+        <UserDetails type={type} user={user} setTdnaOpen={setTdnaOpen} />
         <Typography variant="overline" color="textPrimary">
           {`${type === "Student" ? "Unsubmitted" : "Unmarked"} Assessments`}
         </Typography>
@@ -62,7 +62,11 @@ export default function AccountContent(props) {
       <Box>
         <SectionDetails type={type} user={user} details={sectionDetails} />
         <Typography variant="overline">All Assessments</Typography>
-        <ExamsContainer type={type} exams={examsToDisplay} />
+        <ExamsContainer
+          setExamId={setExamId}
+          type={type}
+          exams={examsToDisplay}
+        />
       </Box>
     );
   }

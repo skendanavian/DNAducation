@@ -13,7 +13,7 @@ import sectionNamer from "../../helpers/sectionNamer";
 require("dotenv").config({ path: "../../../.env" });
 
 const AccountPage = (props) => {
-  const { setToken, token, userId } = props;
+  const { setToken, token, userId, setExamId } = props;
 
   const [user, setUser] = useState({});
   const [sections, setSections] = useState({
@@ -28,6 +28,7 @@ const AccountPage = (props) => {
     type: null,
     view: "Loading",
   });
+  const [tdnaOpen, setTdnaOpen] = useState(false);
   const updateContentView = ({ type, view }) => {
     setContentView({ type, view });
   };
@@ -58,7 +59,7 @@ const AccountPage = (props) => {
         }));
       });
     }
-  }, [token, userId]);
+  }, [token, userId, tdnaOpen]);
 
   useEffect(() => {
     if (userId && token && user) {
@@ -169,6 +170,8 @@ const AccountPage = (props) => {
     sections,
     contentView,
     exams,
+    setExamId,
+    setTdnaOpen,
   };
   return (
     <Nav {...navProps}>
