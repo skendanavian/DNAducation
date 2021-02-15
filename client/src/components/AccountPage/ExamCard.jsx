@@ -20,6 +20,7 @@ import {
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import DialogActions from "@material-ui/core/DialogActions";
 
+import TooltipMenu from "./TooltipMenu";
 import AttemptTable from "../AttemptTable";
 import SubjectIcon from "../SubjectIcon";
 import {
@@ -64,17 +65,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const statusTag = (status, handleAttemptsClick) => {
+// shows, Upcoming, overdue, or submissions button
+const statusTag = ({
+  type,
+  status,
+  handleAttemptsClick,
+  createExam,
+  editExam,
+  deleteExam,
+}) => {
   const colorRef = {
     Submissions: GREEN,
     Overdue: RED,
     Upcoming: SECONDARY,
   };
 
-  if (status === "Submissions") {
+  if (status === "Submissions" || type === "Teacher") {
     return (
-      <Button onClick={handleAttemptsClick} variant="text" size="small">
-        See Submissions
+      <Button
+        disabled={status !== "Submissions"}
+        onClick={handleAttemptsClick}
+        variant="text"
+        size="small"
+      >
+        {status === "Submissions" ? status : "No submissions yet"}
       </Button>
     );
   } else {
@@ -97,9 +111,10 @@ const statusTag = (status, handleAttemptsClick) => {
 };
 
 export default function ExamCard(props) {
-  const { exam, startExam, hasRecordedProfile } = props;
+  const { exam, startExam, hasRecordedProfile, type } = props;
   const classes = useStyles();
   const [modal, setModal] = React.useState(false);
+  const [menu, setMenu] = React.useState(false);
 
   const handleAttemptsClick = () => {
     setModal((prev) => !prev);
@@ -107,6 +122,10 @@ export default function ExamCard(props) {
 
   const handleStartExamClick = () => {
     startExam();
+  };
+
+  const handleMenuClick = () => {
+    setMenu(!menu);
   };
 
   const isPast = dateIsPast(exam.due_time);
@@ -130,30 +149,38 @@ export default function ExamCard(props) {
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          type === "Teacher" && (
+            <TooltipMenu
+              editExam={() => {
+                console.log(`editting: ${exam.id}`);
+              }}
+              deleteExam={() => {
+                console.log(`deleting: ${exam.id}`);
+              }}
+            />
+          )
         }
         title={`${exam.section.code} - ${exam.title}`}
         subheader={`Due ${inTime}`}
       />
-      {}
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {exam && exam.description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing classes={{ root: classes.cardContent }}>
-        {statusTag(status, handleAttemptsClick)}
-        <Button
-          color="secondary"
-          variant="contained"
-          classes={{ root: classes.startButton }}
-          onClick={handleStartExamClick}
-          disabled={!hasRecordedProfile}
-        >
-          START
-        </Button>
+        {statusTag({ type, status, handleAttemptsClick })}
+        {type === "Student" && (
+          <Button
+            color="secondary"
+            variant="contained"
+            classes={{ root: classes.startButton }}
+            onClick={handleStartExamClick}
+            disabled={!hasRecordedProfile}
+          >
+            START
+          </Button>
+        )}
       </CardActions>
       <Divider />
       <Dialog
@@ -165,7 +192,11 @@ export default function ExamCard(props) {
         <DialogTitle>{exam.title} Submissions</DialogTitle>
         <DialogContent>
           {exam.attempts.length && (
-            <AttemptTable dueTime={exam.dueTime} attempts={exam.attempts} />
+            <AttemptTable
+              type={type}
+              dueTime={exam.dueTime}
+              attempts={exam.attempts}
+            />
           )}
         </DialogContent>
         <DialogActions className={classes.btnGroup}>

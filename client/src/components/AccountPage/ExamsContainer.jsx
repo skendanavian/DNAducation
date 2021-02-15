@@ -4,7 +4,7 @@ import { Typography, Box } from "@material-ui/core";
 import ExamCard from "./ExamCard";
 
 export default function ExamsContainer(props) {
-  const { exams } = props;
+  const { exams, type } = props;
 
   if (!exams.length) {
     return <Typography>No exams!</Typography>;
@@ -16,8 +16,10 @@ export default function ExamsContainer(props) {
       gridTemplateColumns="repeat(auto-fill, minmax(360px, 1fr))"
       gridGap="1rem"
     >
-      {exams.map((exam) => {
-        return <ExamCard key={exam.title} exam={exam} />;
+      {exams.map((exam, index) => {
+        return (
+          <ExamCard key={`${exam.title}${index}`} type={type} exam={exam} />
+        );
       })}
     </Box>
   );
