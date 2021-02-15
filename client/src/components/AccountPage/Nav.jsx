@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Nav(props) {
-  const { buttonDefs, pageTitle, setToken } = props;
+  const { navButtons, pageTitle, setToken } = props;
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
@@ -69,14 +69,15 @@ export default function Nav(props) {
   const logout = () => {
     setToken("");
     sessionStorage.removeItem("jwt");
+    localStorage.removeItem("userId");
     history.push("/login");
   };
   const drawer = (
     <>
       <Toolbar />
       <div className={classes.drawerContainer}>
-        {buttonDefs &&
-          Object.values(buttonDefs).map((listSection, index) => {
+        {navButtons &&
+          Object.values(navButtons).map((listSection, index) => {
             return (
               <Box key={`B${index}`}>
                 {index > 0 && listSection.length > 0 && <Divider />}
