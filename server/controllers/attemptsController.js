@@ -23,8 +23,8 @@ module.exports = (db) => {
         "=",
         "section_students.id"
       )
-      .join("sections", 'section_id', '=', 'sections.id')
-      .where({ 'teacher_user_id': teacherId })
+      .join("sections", "section_id", "=", "sections.id")
+      .where({ teacher_user_id: teacherId })
       .then((result) => result);
   };
 
