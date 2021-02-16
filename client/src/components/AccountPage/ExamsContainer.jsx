@@ -9,7 +9,7 @@ export default function ExamsContainer(props) {
   console.log(user);
 
   if (!exams.length) {
-    return <Typography>No exams!</Typography>;
+    return <Typography>Nothing Here...</Typography>;
   }
 
   return (
