@@ -1,6 +1,6 @@
 import { Box, Typography, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { toReadable } from "../../helpers/dateHelpers";
 
@@ -25,57 +25,73 @@ export default function CreateExam(props) {
   const { title, teacher_user_id, code, description, section_id } = details;
   const classes = useStyles();
 
-  const [questionCount, setQuestionCount] = useState(1);
+  // const [questionCount, setQuestionCount] = useState(1);
   const [examDetails, setExamDetails] = useState({
     title: "",
     desc: "",
     dueDate: "",
   });
-  const [questions, setQuestions] = useState([]);
-
-  console.log({ type });
-  console.log({ details });
-  console.log({ user });
-  // console.log(user.name);
+  const [questions, setQuestions] = useState([{ question: "", mark: "10" }]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("form submitted");
   };
 
-  const handleInput = (e) => {
+  const handleInput = (e, index) => {
     if (e.target.name === "examDetails") {
       setExamDetails({
         ...examDetails,
         [e.target.id]: [e.target.value],
       });
       console.table(examDetails);
-    }
-    // console.log(e.target.id);
-    console.log(e.target.value);
-    console.log(e.target.id);
+    } else {
+      const updateItem = { ...questions[index], [e.target.id]: e.target.value };
+      const updatedArray = [...questions];
+      updatedArray[index] = updateItem;
 
-    console.log("text field inputs");
+      //Can use this for removing items
+      // const updatedQuestions = [
+      //   ...questions.slice(0, index),
+      //   updateItem,
+      //   ...questions.slice(index),
+      // ];
+
+      setQuestions(updatedArray);
+      console.log({ questions });
+    }
   };
 
   const addQuestion = (e) => {
-    console.log(e);
-    console.log("Add question clicked");
+    // setQuestionCount((prev) => prev + 1);
+    // console.log({ questionCount });
+    setQuestions((prev) => [...prev, { question: "", mark: "0" }]);
   };
 
-  const questionPanels = questions ? (
-    questions.map((e, index) => {
-      return (
-        <CreateQuestion
-          key={index + 1}
-          handeleInput={handleInput}
-          questionData={e}
-        />
-      );
-    })
-  ) : (
-    <CreateQuestion key={1} handeleInput={handleInput} questions={questions} />
-  );
+  const removeQuestion = (e, index) => {
+    // const updatedQuestions = [
+    //   ...questions.slice(0, index),
+
+    //   ...questions.slice(index + 1),
+    // ];
+    const updatedQuestions = [...questions];
+    updatedQuestions.splice(index, 1);
+    console.log(e);
+    setQuestions(updatedQuestions);
+  };
+
+  useEffect(() => {}, [questions]);
+
+  const questionPanels = questions.map((e, index) => {
+    return (
+      <CreateQuestion
+        questionNumber={index + 1}
+        handleInput={handleInput}
+        removeQuestion={removeQuestion}
+        questionData={e}
+      />
+    );
+  });
 
   return (
     <Card>

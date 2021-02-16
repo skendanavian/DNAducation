@@ -40,10 +40,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CreateQuestion({
-  handleSubmit,
+  questionNumber,
   handleInput,
   questionData,
-  key,
+  removeQuestion,
+  index,
 }) {
   const classes = useStyles();
   const { question, mark } = questionData;
@@ -55,43 +56,48 @@ export default function CreateQuestion({
       <Card className={classes.questionCard}>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h6" color="primary">
-            Question {key}
+            Question {questionNumber}
           </Typography>
           <TextField
+            props
             className={classes.date}
+            id="mark"
+            type="number"
+            label="Marks"
             variant="outlined"
             required
-            type="number"
-            id="mark"
-            label="Marks"
-            value=""
+            // value={mark}
             name="marks"
             InputProps={{ inputProps: { min: 0, max: 100, width: "50%" } }}
             autoFocus
+            onChange={(e) => handleInput(e, index)}
           />
         </Box>
         <TextField
           className={classes.question}
+          id="question"
+          type="text"
+          label="Exam Question"
+          name="question"
           rows={5}
           width="100%"
           variant="outlined"
           margin="normal"
+          placeholder={question}
           required
           multiline
           fullWidth
           placeholder="Type Question Here"
-          value=""
-          type="text"
-          id="title"
-          label="Exam Question"
-          name="title"
+          // value={question}
           autoFocus
+          onChange={(e) => handleInput(e, index)}
         />
         <Box display="flex" justifyContent="flex-end">
           <IconButton
             aria-label="delete"
             className={classes.margin}
             className={classes.deleteColor}
+            onClick={(e) => removeQuestion(e, index)}
           >
             <DeleteIcon />
           </IconButton>

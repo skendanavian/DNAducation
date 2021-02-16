@@ -1,18 +1,7 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Typography,
-  Card,
-  TextField,
-} from "@material-ui/core";
+import { Box, TextField } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/styles";
-import { useState } from "react";
-
-import AddIcon from "@material-ui/icons/Add";
-
-require("dotenv").config({ path: "../../../.env" });
+// require("dotenv").config({ path: "../../../.env" });
 
 const useStyles = makeStyles((theme) => ({
   dateField: {
@@ -23,7 +12,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ExamDetails({ handleInput, examDetails }) {
   const classes = useStyles();
-  const todayDate = Date.now();
 
   return (
     <Box>
