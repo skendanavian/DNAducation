@@ -21,45 +21,48 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ExamDetails(props) {
+export default function ExamDetails({ handleInput, examDetails }) {
   const classes = useStyles();
-
   const todayDate = Date.now();
 
   return (
     <Box>
-      <form /* onSubmit={submitLogin} */ className={classes.form}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="title"
-          label="Exam Title"
-          name="title"
-          autoFocus
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          name="description"
-          label="Exam Description"
-          id="description"
-          // rows={300}
-        />
-        <TextField
-          id="date"
-          label="Due Date"
-          type="date"
-          fullWidth
-          className={classes.dateField}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-      </form>
+      <TextField
+        id="title"
+        value={examDetails.title}
+        label="Exam Title"
+        name="examDetails"
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        autoFocus
+        onChange={handleInput}
+      />
+      <TextField
+        id="desc"
+        value={examDetails.desc}
+        name="examDetails"
+        label="Exam Description"
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        onChange={handleInput}
+      />
+      <TextField
+        id="dueDate"
+        value={examDetails.date}
+        label="Due Date"
+        name="examDetails"
+        type="date"
+        fullWidth
+        className={classes.dateField}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        onChange={handleInput}
+      />
     </Box>
   );
 }

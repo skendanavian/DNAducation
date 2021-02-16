@@ -39,8 +39,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CreateQuestion(props) {
+export default function CreateQuestion({
+  handleSubmit,
+  handleInput,
+  questionData,
+  key,
+}) {
   const classes = useStyles();
+  const { question, mark } = questionData;
 
   const todayDate = Date.now();
 
@@ -49,7 +55,7 @@ export default function CreateQuestion(props) {
       <Card className={classes.questionCard}>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h6" color="primary">
-            Question 1
+            Question {key}
           </Typography>
           <TextField
             className={classes.date}
@@ -58,7 +64,7 @@ export default function CreateQuestion(props) {
             type="number"
             id="mark"
             label="Marks"
-            value="10"
+            value=""
             name="marks"
             InputProps={{ inputProps: { min: 0, max: 100, width: "50%" } }}
             autoFocus

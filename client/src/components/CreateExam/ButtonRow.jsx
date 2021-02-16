@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonRow(props) {
+export default function ButtonRow({ handleSubmit }) {
   const classes = useStyles();
 
   return (
@@ -41,10 +41,12 @@ export default function ButtonRow(props) {
         color="secondary"
         marginRight="1rem"
         startIcon={<AddIcon />}
+        onClick={() => handleSubmit()}
       >
         Add Question
       </Button>
       <Button
+        type="submit"
         size="small"
         variant="contained"
         color="secondary"
