@@ -9,6 +9,7 @@ import {
 import { useState, useEffect } from "react";
 
 import AddIcon from "@material-ui/icons/Add";
+import SchoolIcon from "@material-ui/icons/School";
 
 import SectionForm from "./SectionForm";
 import ClassForm from "./ClassForm";
@@ -129,19 +130,30 @@ export default function UserDetails(props) {
         {type === "Teacher" && (
           <>
             <Divider />
-            <Box display="flex" m={1} justifyContent="flex-end">
-              <Button
-                onClick={handleSectionClick}
-                size="small"
-                startIcon={<AddIcon />}
-              >
-                Create Section
-              </Button>
-              <Box ml={1}>
+            <Box
+              display="flex"
+              m={1}
+              alignItems="center"
+              justifyContent="flex-end"
+            >
+              <Box mr="auto" ml={2} display="flex" alignItems="center">
+                <SchoolIcon color="primary" />
+              </Box>
+              <Box minWidth="180px">
+                <Button
+                  onClick={handleSectionClick}
+                  size="small"
+                  variant={form === "Section" ? "contained" : "text"}
+                  startIcon={<AddIcon />}
+                >
+                  Create Section
+                </Button>
+              </Box>
+              <Box ml={1} minWidth="180px">
                 <Button
                   onClick={handleClassClick}
                   size="small"
-                  variant="contained"
+                  variant={form === "Class" ? "contained" : "text"}
                   startIcon={<AddIcon />}
                 >
                   Create Class
