@@ -66,7 +66,7 @@ export default function AccountContent(props) {
     );
     return (
       <>
-        {/* {
+        {
           <Box>
             <SectionDetails
               type={type}
@@ -82,15 +82,15 @@ export default function AccountContent(props) {
               user={user}
             />
           </Box>
-        } */}
-        {/* {view === "createExam" && ( */}
-        <CreateExam
-          type={type}
-          details={sectionDetails}
-          user={user}
-          token
-        ></CreateExam>
-        {/* )} */}
+        }
+        {view === "createExam" && (
+          <CreateExam
+            type={type}
+            details={sectionDetails}
+            user={user}
+            token
+          ></CreateExam>
+        )}
       </>
     );
   }
