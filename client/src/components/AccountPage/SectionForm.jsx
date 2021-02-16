@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SectionForm(props) {
-  const { user, classes, setTdnaOpen } = props;
+  const { user, classes, setTdnaOpen, isCreate } = props;
   const styles = useStyles();
 
   const token = sessionStorage.getItem("jwt");
@@ -43,7 +43,34 @@ export default function SectionForm(props) {
     setStudentNumbers(e.target.value);
   };
 
-  const submitHandler = (e) => {
+  const createSubmitHandler = (e) => {
+    e.preventDefault();
+
+    const splitNumbers = studentNumbers.split(",");
+    const validateSNs = splitNumbers.every((sn) => {
+      return new RegExp(/^[0-9]{6}$/).test(sn);
+    });
+
+    if (!validateSNs) {
+      setError("Syntax Error in Student Numbers");
+      setStudentNumberError(true);
+    } else {
+      setError("");
+      setStudentNumberError(false);
+      axios
+        .post("/sections", {
+          classId: classCode,
+          studentNumbers: splitNumbers,
+          userId: user.id,
+        })
+        .then((rows) => {
+          setTdnaOpen((prev) => !prev);
+        })
+        .catch((err) => setError(err.message));
+    }
+  };
+
+  const editSubmitHandler = (e) => {
     e.preventDefault();
 
     const splitNumbers = studentNumbers.split(",");
@@ -73,7 +100,7 @@ export default function SectionForm(props) {
   return (
     <Card>
       <Box display="flex" height="168px" flexDirection="column" m={2}>
-        <form onSubmit={submitHandler}>
+        <form onSubmit={isCreate ? createSubmitHandler : editSubmitHandler}>
           <Box mb={2} display="flex">
             <Box width="100%">
               <TextField
@@ -99,23 +126,25 @@ export default function SectionForm(props) {
               justifyContent="space-between"
               alignItems="flex-end"
             >
-              <TextField
-                select
-                label="Class"
-                required
-                value={classCode}
-                onChange={handleClass}
-              >
-                {classes &&
-                  classes.map((cl) => {
-                    const { id, code } = cl;
-                    return (
-                      <MenuItem key={`${id}${code}`} value={id}>
-                        {code}
-                      </MenuItem>
-                    );
-                  })}
-              </TextField>
+              {isCreate && (
+                <TextField
+                  select
+                  label="Class"
+                  required
+                  value={classCode}
+                  onChange={handleClass}
+                >
+                  {classes &&
+                    classes.map((cl) => {
+                      const { id, code } = cl;
+                      return (
+                        <MenuItem key={`${id}${code}`} value={id}>
+                          {code}
+                        </MenuItem>
+                      );
+                    })}
+                </TextField>
+              )}
               <Typography
                 classes={{ root: styles.error }}
                 variant="body2"

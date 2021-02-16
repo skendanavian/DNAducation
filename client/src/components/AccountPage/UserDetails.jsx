@@ -171,6 +171,7 @@ export default function UserDetails(props) {
           <Collapse in={form === "Section"}>
             {
               <SectionForm
+                isCreate
                 setTdnaOpen={setTdnaOpen}
                 user={user}
                 classes={classes}
