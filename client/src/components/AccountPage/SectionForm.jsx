@@ -30,6 +30,7 @@ export default function SectionForm(props) {
   const [classCode, setClassCode] = useState("");
   const [studentNumbers, setStudentNumbers] = useState([]);
 
+  const [studentNumbersError, setStudentNumberError] = useState(false);
   const [error, setError] = useState("");
 
   const axios = generateAxios(token);
@@ -52,8 +53,10 @@ export default function SectionForm(props) {
 
     if (!validateSNs) {
       setError("Syntax Error in Student Numbers");
+      setStudentNumberError(true);
     } else {
       setError("");
+      setStudentNumberError(false);
       axios
         .post("/sections", {
           classId: classCode,
@@ -83,6 +86,7 @@ export default function SectionForm(props) {
                 fullWidth
                 rows={4}
                 rowsMax={4}
+                error={studentNumbersError}
                 margin="dense"
                 onChange={handleStudentNumbers}
               />
