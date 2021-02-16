@@ -8,7 +8,7 @@ const baseURL = process.env.REACT_APP_REQUEST_URL;
 require("dotenv").config({ path: "../../../.env" });
 
 export default function SectionDetails(props) {
-  const { details, type, user, createExam, editSection } = props;
+  const { details, type, user, createExam, editSection, view } = props;
 
   const { title, teacher_user_id, code, description } = details;
 
@@ -80,6 +80,17 @@ export default function SectionDetails(props) {
                 Create Exam
               </Button>
             </Box>
+            {/* <Box ml={1}>
+              <Button
+                size="small"
+                startIcon={<AddIcon />}
+                variant="contained"
+                color="secondary"
+                onClick={createExam}
+              >
+                Add Question{" "}
+              </Button>
+            </Box> */}
           </Box>
         </>
       )}

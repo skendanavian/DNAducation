@@ -3,6 +3,7 @@ import { Box, Typography } from "@material-ui/core";
 import SectionDetails from "./SectionDetails";
 import UserDetails from "./UserDetails";
 import ExamsContainer from "./ExamsContainer";
+import CreateExam from "../CreateExam/CreateExam";
 
 // display the following exams for the following views
 // student account -> latest unsubmitted
@@ -64,16 +65,28 @@ export default function AccountContent(props) {
       (sec) => sec.section_id === view
     );
     return (
-      <Box>
-        <SectionDetails type={type} user={user} details={sectionDetails} />
-        <Typography variant="overline">All Assessments</Typography>
-        <ExamsContainer
-          setExamId={setExamId}
+      <>
+        {/* <Box>
+          <SectionDetails
+            type={type}
+            user={user}
+            details={sectionDetails}
+            view={view}
+          />
+          <Typography variant="overline">All Assessments</Typography>
+          <ExamsContainer
+            setExamId={setExamId}
+            type={type}
+            exams={examsToDisplay}
+            user={user}
+          />
+        </Box> */}
+        <CreateExam
           type={type}
-          exams={examsToDisplay}
+          details={sectionDetails}
           user={user}
-        />
-      </Box>
+        ></CreateExam>
+      </>
     );
   }
 }
