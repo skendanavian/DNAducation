@@ -4,12 +4,10 @@ const { ErrorHandler } = require("../helpers/errorsHelper");
 
 module.exports = ({
   getSections,
-  createSection,
-  getSectionsByTeacher,
-  getSectionsByStudent,
-  getExamsBySections
+  getUserIdsFromStudentNumbers,
+  createSectionWithStudentIds,
+  getExamsBySections,
 }) => {
-
   // get all sections
   router.get("/", (req, res, next) => {
     getSections()
@@ -21,9 +19,23 @@ module.exports = ({
 
   // create section
   router.post("/", (req, res, next) => {
-    createSection(req.body)
-      .then((sections) => {
-        res.json(sections);
+    console.log(req.body);
+    const {
+      classId: class_id,
+      userId: teacher_user_id,
+      studentNumbers,
+    } = req.body;
+
+    getUserIdsFromStudentNumbers(studentNumbers)
+      .then((studentIds) => {
+        return createSectionWithStudentIds({
+          class_id,
+          teacher_user_id,
+          studentIds,
+        });
+      })
+      .then((sectionStudents) => {
+        res.json(sectionStudents);
       })
       .catch((err) => next(err));
   });
