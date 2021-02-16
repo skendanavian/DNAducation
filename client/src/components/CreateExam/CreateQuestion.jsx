@@ -83,7 +83,7 @@ export default function CreateQuestion({
           width="100%"
           variant="outlined"
           margin="normal"
-          placeholder={question}
+          // placeholder={question}
           required
           multiline
           fullWidth

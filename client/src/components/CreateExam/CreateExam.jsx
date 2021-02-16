@@ -25,16 +25,16 @@ export default function CreateExam(props) {
   const { title, teacher_user_id, code, description, section_id } = details;
   const classes = useStyles();
 
-  // const [questionCount, setQuestionCount] = useState(1);
+  const [questions, setQuestions] = useState([{ question: "", mark: "10" }]);
   const [examDetails, setExamDetails] = useState({
     title: "",
     desc: "",
     dueDate: "",
   });
-  const [questions, setQuestions] = useState([{ question: "", mark: "10" }]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(e.target.value);
     console.log("form submitted");
   };
 
@@ -44,39 +44,22 @@ export default function CreateExam(props) {
         ...examDetails,
         [e.target.id]: [e.target.value],
       });
-      console.table(examDetails);
     } else {
       const updateItem = { ...questions[index], [e.target.id]: e.target.value };
       const updatedArray = [...questions];
       updatedArray[index] = updateItem;
-
-      //Can use this for removing items
-      // const updatedQuestions = [
-      //   ...questions.slice(0, index),
-      //   updateItem,
-      //   ...questions.slice(index),
-      // ];
-
       setQuestions(updatedArray);
-      console.log({ questions });
+      // console.log({ questions });
     }
   };
 
   const addQuestion = (e) => {
-    // setQuestionCount((prev) => prev + 1);
-    // console.log({ questionCount });
     setQuestions((prev) => [...prev, { question: "", mark: "0" }]);
   };
 
   const removeQuestion = (e, index) => {
-    // const updatedQuestions = [
-    //   ...questions.slice(0, index),
-
-    //   ...questions.slice(index + 1),
-    // ];
     const updatedQuestions = [...questions];
     updatedQuestions.splice(index, 1);
-    console.log(e);
     setQuestions(updatedQuestions);
   };
 
