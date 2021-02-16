@@ -37,11 +37,15 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   question: {
-    margin: "1.2rem",
+    maxWidth: "70vw",
+    margin: "1rem auto",
+    fontSize: "1.2rem",
+    color: "black",
   },
   answerField: {
-    width: "80vw",
-    margin: "1rem auto",
+    width: "70vw",
+    margin: "0.5rem auto",
+    fontSize: "1.2rem",
   },
   error: {
     color: "#Df2935",
@@ -56,9 +60,9 @@ export default function Question({ examId, userId, token }) {
   const [answerText, setAnswerText] = useState("");
   const [questionObject, setQuestionObject] = useState({});
   const [attemptId, setAttemptId] = useState("");
-  const [confidenceArray, setConfidenceArray] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [confidenceArray, setConfidenceArray] = useState([]);
 
   const axios = generateAxios(token);
   const baseURL = process.env.REACT_APP_REQUEST_URL;
@@ -206,11 +210,7 @@ export default function Question({ examId, userId, token }) {
               {currentQ.markValue} marks
             </Typography>
           </Typography>
-          <Typography
-            variant="h6"
-            color="primary"
-            className={`${classes.centerText} ${classes.question}`}
-          >
+          <Typography className={`${classes.centerText} ${classes.question}`}>
             {currentQ.question}
           </Typography>
           <Typography className={classes.error}>
@@ -226,7 +226,7 @@ export default function Question({ examId, userId, token }) {
               placeholder="Write Answer Here....."
               value={answerText}
               multiline
-              rows={25}
+              rows={15}
               required
               onChange={(e) => {
                 setAnswerText(e.target.value);

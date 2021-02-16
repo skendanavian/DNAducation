@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     color: "#FFFBFE",
     backgroundColor: "#00296b",
+    transform: "scale(0.8)",
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -98,9 +99,11 @@ export default function Login({ setToken, setUserId }) {
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
+
           <Typography color="primary" component="h1" variant="h5">
-            Sign in
+            🧬 DNAducation{" "}
           </Typography>
+
           <form onSubmit={submitLogin} className={classes.form}>
             <TextField
               variant="outlined"
@@ -139,7 +142,7 @@ export default function Login({ setToken, setUserId }) {
             </Button>
             <Box display="flex" justifyContent="center">
               <Link href="/register" variant="body2">
-                <Typography variant="body1">
+                <Typography variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Typography>
               </Link>

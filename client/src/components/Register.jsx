@@ -26,25 +26,30 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
   },
   paper: {
-    marginTop: theme.spacing(5),
+    marginTop: theme.spacing(2),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     borderRadius: "0.5rem",
     backgroundColor: "rgba(255,255,255,1)",
+    padding: "1rem",
   },
   avatar: {
-    margin: theme.spacing(2),
+    margin: theme.spacing(1),
     color: "#FFFBFE",
     backgroundColor: "#00296b",
+    transform: "scale(0.8)",
   },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
-    padding: theme.spacing(1.5, 4),
+    padding: theme.spacing(1, 4),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  regContainer: {
+    maxWidth: "70vw",
   },
 }));
 
@@ -88,17 +93,24 @@ export default function Register({ setToken }) {
 
   return (
     <div className={classes.root}>
-      <Container component="main" maxWidth="xs">
+      <Container
+        component="main"
+        // maxWidth="xs"
+        className={classes.regContainer}
+      >
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign Up
+
+          <Typography color="primary" component="h1" variant="h5">
+            🧬 DNAducation{" "}
           </Typography>
+
           <form onSubmit={submitRegistration} className={classes.form}>
             <TextField
+              className={classes.name}
               variant="outlined"
               margin="normal"
               required
@@ -111,6 +123,7 @@ export default function Register({ setToken }) {
               inputProps={{ maxLength: 30 }}
             />
             <TextField
+              className={classes.name}
               variant="outlined"
               margin="normal"
               required
@@ -122,6 +135,7 @@ export default function Register({ setToken }) {
               onChange={handleInput}
               inputProps={{ maxLength: 40 }}
             />
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -174,7 +188,7 @@ export default function Register({ setToken }) {
             </Button>
             <Box display="flex" justifyContent="center">
               <Link href="/login" variant="body2">
-                <Typography variant="body1">
+                <Typography variant="body2">
                   {"Already have an account? Login"}
                 </Typography>
               </Link>
