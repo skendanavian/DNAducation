@@ -18,8 +18,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CreateExam(props) {
-  const { type, details, user } = props;
-  const { title, teacher_user_id, code, section_id } = details;
+  const { details, user } = props;
+  const { title, code, section_id } = details;
   const classes = useStyles();
 
   const [questions, setQuestions] = useState([{ question: "", mark: "" }]);
@@ -84,7 +84,6 @@ export default function CreateExam(props) {
   return (
     <Card>
       <Box
-        mr="2em"
         minWidth="50%"
         padding="1em"
         display="flex"
@@ -92,11 +91,7 @@ export default function CreateExam(props) {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Box
-          alignItems="center"
-          display="flex"
-          flexDirection="column" /* className={classes.btnContainer} */
-        >
+        <Box alignItems="center" display="flex" flexDirection="column">
           <Typography variant="h6" color="primary">
             {title}
           </Typography>
@@ -116,7 +111,6 @@ export default function CreateExam(props) {
         <Box>
           <form onSubmit={handleSubmit}>
             <ExamDetails handleInput={handleInput} examDetails={examDetails} />
-            {/* <CreateQuestion handeleInput={handleInput} questions={questions} /> */}
             {questions && questionPanels}
             <ButtonRow handleSubmit={addQuestion} />
           </form>

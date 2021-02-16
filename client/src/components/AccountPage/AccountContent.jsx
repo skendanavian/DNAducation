@@ -66,26 +66,30 @@ export default function AccountContent(props) {
     );
     return (
       <>
-        {/* <Box>
-          <SectionDetails
+        {
+          <Box>
+            <SectionDetails
+              type={type}
+              user={user}
+              details={sectionDetails}
+              view={view}
+            />
+            <Typography variant="overline">All Assessments</Typography>
+            <ExamsContainer
+              setExamId={setExamId}
+              type={type}
+              exams={examsToDisplay}
+              user={user}
+            />
+          </Box>
+        }
+        {view === "createExam" && (
+          <CreateExam
             type={type}
-            user={user}
             details={sectionDetails}
-            view={view}
-          />
-          <Typography variant="overline">All Assessments</Typography>
-          <ExamsContainer
-            setExamId={setExamId}
-            type={type}
-            exams={examsToDisplay}
             user={user}
-          />
-        </Box> */}
-        <CreateExam
-          type={type}
-          details={sectionDetails}
-          user={user}
-        ></CreateExam>
+          ></CreateExam>
+        )}
       </>
     );
   }
