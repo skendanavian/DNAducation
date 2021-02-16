@@ -142,7 +142,7 @@ export default function ClassForm(props) {
               display="flex"
               flexDirection="column"
               justifyContent="flex-end"
-              maxWidth="160px"
+              maxWidth="90px"
             >
               <Typography
                 classes={{ root: styles.error }}
