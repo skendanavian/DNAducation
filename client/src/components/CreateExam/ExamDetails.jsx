@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ExamDetails({ handleInput, examDetails }) {
   const classes = useStyles();
 
-  console.log(examDetails.date);
   return (
     <Box>
       <TextField

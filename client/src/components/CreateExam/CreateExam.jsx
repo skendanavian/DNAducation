@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     margin: "auto",
   },
+  success: {
+    color: "#5cb85c",
+    margin: "5rem",
+  },
 }));
 
 export default function CreateExam(props) {
@@ -34,16 +38,17 @@ export default function CreateExam(props) {
     desc: "",
     date: "",
   });
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [error, setError] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const examData = { questions, examDetails, section_id };
-    console.table(examData);
+    console.table("Exam Data to submit:  ", examData);
 
     createExamAndQuestions(examDetails, questions, section_id, token)
       .then((res) => {
-        console.log(res.data);
+        console.log("Create Exam Response: ", res.data);
         setError(false);
         setExamDetails({
           title: "",
@@ -51,8 +56,13 @@ export default function CreateExam(props) {
           date: "",
         });
         setQuestions([{ question: "", mark: "10" }]);
+        setSubmitSuccess(true);
+        setTimeout(() => {
+          setSubmitSuccess(false);
+          clearTimeout();
+        }, 3000);
 
-        //change view here
+        // set view here
       })
       .catch((err) => {
         setError(true);
@@ -62,8 +72,6 @@ export default function CreateExam(props) {
 
   const handleInput = (e, index) => {
     if (e.target.name === "examDetails") {
-      console.log(e.target.value);
-
       setExamDetails({
         ...examDetails,
         [e.target.id]: e.target.value,
@@ -73,7 +81,6 @@ export default function CreateExam(props) {
       const copy = [...questions];
       copy[index] = updateItem;
       setQuestions(copy);
-      console.table(questions);
     }
   };
 
@@ -128,6 +135,7 @@ export default function CreateExam(props) {
             </Typography>
           </Box>
         </Box>
+
         {error && (
           <Box display="flex" justifyContent="center">
             <Typography variant="h7" color="primary" className={classes.error}>
@@ -135,24 +143,40 @@ export default function CreateExam(props) {
             </Typography>
           </Box>
         )}
-        <Box>
-          <form onSubmit={handleSubmit}>
-            <ExamDetails handleInput={handleInput} examDetails={examDetails} />
-            {questions && questionPanels}
-            {error && (
-              <Box display="flex" justifyContent="center">
-                <Typography
-                  variant="h7"
-                  color="primary"
-                  className={classes.error}
-                >
-                  Sorry, there was a problem when submitting. Please try again.
-                </Typography>
-              </Box>
-            )}
-            <ButtonRow handleSubmit={addQuestion} />
-          </form>
-        </Box>
+
+        {submitSuccess && (
+          <Box className={classes.success}>
+            {" "}
+            <Typography variant="h6">
+              Thanks! We have created your exam!
+            </Typography>
+          </Box>
+        )}
+
+        {!submitSuccess && (
+          <Box>
+            <form onSubmit={handleSubmit}>
+              <ExamDetails
+                handleInput={handleInput}
+                examDetails={examDetails}
+              />
+              {questions && questionPanels}
+              {error && (
+                <Box display="flex" justifyContent="center">
+                  <Typography
+                    variant="h7"
+                    color="primary"
+                    className={classes.error}
+                  >
+                    Sorry, there was a problem when submitting. Please try
+                    again.
+                  </Typography>
+                </Box>
+              )}
+              <ButtonRow handleSubmit={addQuestion} />
+            </form>
+          </Box>
+        )}
       </Box>
     </Card>
   );
