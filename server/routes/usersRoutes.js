@@ -40,7 +40,7 @@ module.exports = ({
     getSectionsByStudent(id)
       .then((result) => {
         if (!result.length) {
-          throw new ErrorHandler(404, "No sections found for user");
+          console.log("No sections found for user");
         }
         res.json(result);
       })
@@ -57,7 +57,7 @@ module.exports = ({
     getAttemptsByStudent(id)
       .then((result) => {
         if (!result.length) {
-          throw new ErrorHandler(404, "No attempts found for user");
+          console.log("No attempts found for user");
         }
         res.json(result);
       })
