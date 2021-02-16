@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
   questionCard: {
     padding: "1rem",
     backgroundColor: "#f5f5f5",
+    margin: "1rem",
   },
   question: {
     width: "100%",
@@ -41,8 +42,6 @@ export default function CreateQuestion({
 }) {
   const classes = useStyles();
   const { question, mark } = questionData;
-
-  const todayDate = Date.now();
 
   return (
     <Box>
