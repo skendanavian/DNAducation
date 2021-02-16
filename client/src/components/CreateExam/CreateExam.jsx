@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import ExamDetails from "./ExamDetails";
 import CreateQuestion from "./CreateQuestion";
 import ButtonRow from "./ButtonRow";
+import createExamAndQuestions from "../../helpers/createExamHelpers";
 
 require("dotenv").config({ path: "../../../.env" });
 
@@ -18,35 +19,43 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CreateExam(props) {
-  const { details, user } = props;
+  const { details, user, token } = props;
   const { title, code, section_id } = details;
   const classes = useStyles();
-
+  const date = new Date();
   const [questions, setQuestions] = useState([{ question: "", mark: "" }]);
   const [examDetails, setExamDetails] = useState({
     title: "",
     desc: "",
-    dueDate: "",
+    date: "",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const examData = { questions, examDetails, section_id, class_id: code };
+    const examData = { questions, examDetails, section_id };
     console.table(examData);
+
+    createExamAndQuestions(examDetails, questions, section_id, token).then(
+      (res) => {
+        console.log(res.data);
+      }
+    );
 
     setExamDetails({
       title: "",
       desc: "",
-      dueDate: "",
+      date: "",
     });
     setQuestions([{ question: "", mark: "10" }]);
   };
 
   const handleInput = (e, index) => {
     if (e.target.name === "examDetails") {
+      console.log(e.target.value);
+
       setExamDetails({
         ...examDetails,
-        [e.target.id]: [e.target.value],
+        [e.target.id]: e.target.value,
       });
     } else {
       const updateItem = { ...questions[index], [e.target.id]: e.target.value };

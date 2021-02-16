@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ExamDetails({ handleInput, examDetails }) {
   const classes = useStyles();
 
+  console.log(examDetails.date);
   return (
     <Box>
       <TextField
@@ -39,11 +40,11 @@ export default function ExamDetails({ handleInput, examDetails }) {
         onChange={handleInput}
       />
       <TextField
-        id="dueDate"
+        id="date"
         value={examDetails.date}
         label="Due Date"
         name="examDetails"
-        type="date"
+        type="datetime-local"
         fullWidth
         className={classes.dateField}
         InputLabelProps={{

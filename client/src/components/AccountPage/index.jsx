@@ -171,6 +171,7 @@ const AccountPage = (props) => {
     contentView,
     exams,
     setExamId,
+    token,
     setTdnaOpen,
   };
   return (

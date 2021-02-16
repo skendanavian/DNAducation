@@ -11,7 +11,7 @@ import CreateExam from "../CreateExam/CreateExam";
 // student code -> latest from section
 // teacher code ->  latest from section
 
-const examFilter = ({ type, view, exams }) => {
+const examFilter = ({ type, view, exams, token }) => {
   if (!exams) return [];
   let toDisplay;
   const examsOfType = type === "Student" ? exams.student : exams.teacher;
@@ -83,13 +83,14 @@ export default function AccountContent(props) {
             />
           </Box>
         }
-        {view === "createExam" && (
-          <CreateExam
-            type={type}
-            details={sectionDetails}
-            user={user}
-          ></CreateExam>
-        )}
+        {/* {view === "createExam" && ( */}
+        <CreateExam
+          type={type}
+          details={sectionDetails}
+          user={user}
+          token
+        ></CreateExam>
+        {/* )} */}
       </>
     );
   }

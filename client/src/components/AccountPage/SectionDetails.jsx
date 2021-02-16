@@ -8,7 +8,7 @@ const baseURL = process.env.REACT_APP_REQUEST_URL;
 require("dotenv").config({ path: "../../../.env" });
 
 export default function SectionDetails(props) {
-  const { details, type, user, createExam, editSection, view } = props;
+  const { details, type, user, createExam, editSection } = props;
 
   const { title, teacher_user_id, code, description } = details;
 
