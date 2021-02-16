@@ -67,11 +67,13 @@ export default function ClassForm(props) {
         description,
       })
       .then((res) => {
+        const { data: classRes } = res;
         setCodeError(false);
         setError("");
-        setClasses((prev) => [...prev, { code, title, description }]);
+        setClasses((prev) => [...prev, { code, id: classRes[0].id }]);
       })
       .catch((err) => {
+        console.error(err);
         if (err.message && err.message.search(409)) {
           setError(`Error: Code and subject must be unique`);
         } else {
@@ -128,7 +130,6 @@ export default function ClassForm(props) {
               id="description"
               label="Description"
               variant="outlined"
-              required
               multiline
               rows={3}
               maxrows={3}
@@ -141,7 +142,7 @@ export default function ClassForm(props) {
               display="flex"
               flexDirection="column"
               justifyContent="flex-end"
-              width="100px"
+              maxWidth="160px"
             >
               <Typography
                 classes={{ root: styles.error }}
