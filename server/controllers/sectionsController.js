@@ -7,14 +7,34 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
-  const createSection = (data) => {
-    const { class_id, teacher_user_id } = data;
-    return db("classes")
+  const getUserIdsFromStudentNumbers = (studentNumbers) => {
+    if (!studentNumbers.length) {
+      return new Promise((res) => res([]));
+    }
+    return db
+      .select("id")
+      .from("users")
+      .whereIn("student_number", studentNumbers)
+      .orderBy("id")
+      .then((result) => result);
+  };
+
+  const createSectionWithStudentIds = (data) => {
+    const { class_id, teacher_user_id, studentIds } = data;
+
+    return db("sections")
       .insert({
         class_id,
         teacher_user_id,
       })
       .returning("*")
+      .then((result) => {
+        const { id: section_id } = result[0];
+        console.log(result);
+        const rows = studentIds.map((si) => ({ user_id: si.id, section_id }));
+        console.log(rows);
+        return db("section_students").insert(rows).returning("*");
+      })
       .then((result) => result);
   };
 
@@ -36,7 +56,9 @@ module.exports = (db) => {
       )
       .from("sections")
       .join("classes", "class_id", "=", "classes  .id")
-      .where({ teacher_user_id: id })
+      .where({
+        teacher_user_id: id,
+      })
       .then((result) => result);
   };
 
@@ -62,7 +84,9 @@ module.exports = (db) => {
       .join("section_students", "section_id", "=", "sections.id")
       .join("users", "user_id", "=", "users.id")
       .join("classes", "class_id", "=", "classes.id")
-      .where({ user_id: id })
+      .where({
+        user_id: id,
+      })
       .then((result) => result);
   };
 
@@ -84,7 +108,8 @@ module.exports = (db) => {
 
   return {
     getSections,
-    createSection,
+    createSectionWithStudentIds,
+    getUserIdsFromStudentNumbers,
     getSectionsByTeacher,
     getSectionsByStudent,
     getExamsBySections,

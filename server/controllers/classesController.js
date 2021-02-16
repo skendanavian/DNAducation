@@ -38,7 +38,7 @@ module.exports = (db) => {
 
   return {
     getClasses,
-    getClassById
+    getClassById,
     createClass,
     getClassesByTeacher
   };
