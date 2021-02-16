@@ -1,19 +1,12 @@
 import {
   Box,
-  Button,
-  Divider,
   Typography,
   Card,
   TextField,
-  TextareaAutosize,
   IconButton,
 } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/styles";
-import { useState } from "react";
-import ButtonRow from "./ButtonRow";
-import AddIcon from "@material-ui/icons/Add";
-import SaveIcon from "@material-ui/icons/Save";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 require("dotenv").config({ path: "../../../.env" });
@@ -66,7 +59,7 @@ export default function CreateQuestion({
             label="Marks"
             variant="outlined"
             required
-            // value={mark}
+            value={mark}
             name="marks"
             InputProps={{ inputProps: { min: 0, max: 100, width: "50%" } }}
             autoFocus
@@ -83,7 +76,7 @@ export default function CreateQuestion({
           width="100%"
           variant="outlined"
           margin="normal"
-          // placeholder={question}
+          value={question}
           required
           multiline
           fullWidth

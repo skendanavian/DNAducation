@@ -1,9 +1,6 @@
 import { Box, Typography, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import { useState, useEffect, useRef } from "react";
-
-import { toReadable } from "../../helpers/dateHelpers";
-
+import { useState, useEffect } from "react";
 import ExamDetails from "./ExamDetails";
 import CreateQuestion from "./CreateQuestion";
 import ButtonRow from "./ButtonRow";
@@ -22,10 +19,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CreateExam(props) {
   const { type, details, user } = props;
-  const { title, teacher_user_id, code, description, section_id } = details;
+  const { title, teacher_user_id, code, section_id } = details;
   const classes = useStyles();
 
-  const [questions, setQuestions] = useState([{ question: "", mark: "10" }]);
+  const [questions, setQuestions] = useState([{ question: "", mark: "" }]);
   const [examDetails, setExamDetails] = useState({
     title: "",
     desc: "",
@@ -34,8 +31,15 @@ export default function CreateExam(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target.value);
-    console.log("form submitted");
+    const examData = { questions, examDetails, section_id, class_id: code };
+    console.table(examData);
+
+    setExamDetails({
+      title: "",
+      desc: "",
+      dueDate: "",
+    });
+    setQuestions([{ question: "", mark: "10" }]);
   };
 
   const handleInput = (e, index) => {
@@ -46,10 +50,10 @@ export default function CreateExam(props) {
       });
     } else {
       const updateItem = { ...questions[index], [e.target.id]: e.target.value };
-      const updatedArray = [...questions];
-      updatedArray[index] = updateItem;
-      setQuestions(updatedArray);
-      // console.log({ questions });
+      const copy = [...questions];
+      copy[index] = updateItem;
+      setQuestions(copy);
+      console.table(questions);
     }
   };
 
@@ -68,6 +72,7 @@ export default function CreateExam(props) {
   const questionPanels = questions.map((e, index) => {
     return (
       <CreateQuestion
+        index={index}
         questionNumber={index + 1}
         handleInput={handleInput}
         removeQuestion={removeQuestion}
@@ -112,7 +117,7 @@ export default function CreateExam(props) {
           <form onSubmit={handleSubmit}>
             <ExamDetails handleInput={handleInput} examDetails={examDetails} />
             {/* <CreateQuestion handeleInput={handleInput} questions={questions} /> */}
-            {questionPanels}
+            {questions && questionPanels}
             <ButtonRow handleSubmit={addQuestion} />
           </form>
         </Box>
