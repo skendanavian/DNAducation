@@ -14,18 +14,24 @@ const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "12ch",
+      width: "18ch",
     },
+  },
+  error: {
+    fontSize: "0.8rem",
   },
 }));
 
 export default function SectionForm(props) {
-  const { user, classes } = props;
+  const { user, classes, setTdnaOpen } = props;
+  console.log(classes);
   const styles = useStyles();
 
   const token = sessionStorage.getItem("jwt");
   const [classCode, setClassCode] = useState("");
   const [studentNumbers, setStudentNumbers] = useState([]);
+
+  const [error, setError] = useState("");
 
   const axios = generateAxios(token);
 
@@ -39,7 +45,27 @@ export default function SectionForm(props) {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    axios.post("/sections", { classCode, studentNumbers, userId: user.id });
+
+    const splitNumbers = studentNumbers.split(",");
+    const validateSNs = splitNumbers.every((sn) => {
+      return new RegExp(/^[0-9]{6}$/).test(sn);
+    });
+
+    if (!validateSNs) {
+      setError("Syntax Error in Student Numbers");
+    } else {
+      setError("");
+      axios
+        .post("/sections", {
+          classId: classCode,
+          studentNumbers: splitNumbers,
+          userId: user.id,
+        })
+        .then((rows) => {
+          setTdnaOpen((prev) => !prev);
+        })
+        .catch((err) => setError(err.message));
+    }
   };
 
   return (
@@ -73,6 +99,7 @@ export default function SectionForm(props) {
               <TextField
                 select
                 label="Class"
+                required
                 value={classCode}
                 onChange={handleClass}
               >
@@ -86,6 +113,13 @@ export default function SectionForm(props) {
                     );
                   })}
               </TextField>
+              <Typography
+                classes={{ root: styles.error }}
+                variant="body2"
+                color="error"
+              >
+                {error}
+              </Typography>
               <Box>
                 <Button variant="contained" color="primary" type="submit">
                   Submit
