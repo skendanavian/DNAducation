@@ -44,7 +44,9 @@ export default function AccountContent(props) {
       <Box>
         <UserDetails type={type} user={user} setTdnaOpen={setTdnaOpen} />
         <Typography variant="overline" color="textPrimary">
-          {`${type === "Student" ? "Unsubmitted" : "Unmarked"} Assessments`}
+          {type === "Student"
+            ? "Unsubmitted Assessments"
+            : "Unmarked Submissions"}
         </Typography>
         <ExamsContainer
           setExamId={setExamId}
