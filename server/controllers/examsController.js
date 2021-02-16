@@ -55,6 +55,19 @@ module.exports = (db) => {
   //     .orderBy("id")
   //     .then((result) => result);
   // };
+  const createExam = (data) => {
+    const { title, description, section_id, due_time } = data;
+
+    return db("exams")
+      .insert({
+        title,
+        section_id,
+        description,
+        due_time,
+      })
+      .returning("*")
+      .then((result) => result);
+  };
 
   const createClass = (data) => {
     const { title, code, description } = data;
@@ -67,8 +80,14 @@ module.exports = (db) => {
       .returning("*")
       .then((result) => result);
   };
+
   const setQuestionsByExam = (exam_id, questions) => {
-    const rows = questions.map((q) => ({ exam_id, ...q }));
+    const rows = questions.map((q, index) => ({
+      exam_id,
+      question_number: 5,
+      mark_value: q.mark,
+      question: q.question,
+    }));
 
     return db("exam_questions")
       .insert(rows)
@@ -99,5 +118,6 @@ module.exports = (db) => {
     incrementSubmissionCount,
     setQuestionsByExam,
     deleteQuestionsByExam,
+    createExam,
   };
 };

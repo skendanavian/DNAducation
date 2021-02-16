@@ -9,6 +9,7 @@ module.exports = ({
   incrementSubmissionCount,
   setQuestionsByExam,
   deleteQuestionsByExam,
+  createExam,
 }) => {
   // get all exams
   router.get("/", (req, res, next) => {
@@ -21,7 +22,8 @@ module.exports = ({
 
   // create exam
   router.post("/", (req, res, next) => {
-    getExams()
+    console.log(req.body);
+    createExam(req.body)
       .then((exams) => {
         res.json(exams);
       })
@@ -64,6 +66,7 @@ module.exports = ({
   router.post(`/:examId/questions`, (req, res, next) => {
     const { examId } = req.params;
     const { questions } = req.body;
+    console.log(examId);
 
     setQuestionsByExam(examId, questions)
       .then((result) => {
