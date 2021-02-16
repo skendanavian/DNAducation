@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SectionForm(props) {
   const { user, classes, setTdnaOpen } = props;
-  console.log(classes);
   const styles = useStyles();
 
   const token = sessionStorage.getItem("jwt");

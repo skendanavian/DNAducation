@@ -45,7 +45,6 @@ module.exports = ({
     const { sectionIds } = req.query;
     getExamsBySections(sectionIds)
       .then((result) => {
-        if (!result.length) throw new ErrorHandler(404, "Not found");
         res.json(result);
       })
       .catch((err) => next(err));
