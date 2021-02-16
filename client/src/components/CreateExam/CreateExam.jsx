@@ -16,6 +16,11 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     margin: "2rem auto",
   },
+  error: {
+    color: "#Df2935",
+    textAlign: "center",
+    margin: "auto",
+  },
 }));
 
 export default function CreateExam(props) {
@@ -29,24 +34,30 @@ export default function CreateExam(props) {
     desc: "",
     date: "",
   });
+  const [error, setError] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const examData = { questions, examDetails, section_id };
     console.table(examData);
 
-    createExamAndQuestions(examDetails, questions, section_id, token).then(
-      (res) => {
+    createExamAndQuestions(examDetails, questions, section_id, token)
+      .then((res) => {
         console.log(res.data);
-      }
-    );
+        setError(false);
+        setExamDetails({
+          title: "",
+          desc: "",
+          date: "",
+        });
+        setQuestions([{ question: "", mark: "10" }]);
 
-    setExamDetails({
-      title: "",
-      desc: "",
-      date: "",
-    });
-    setQuestions([{ question: "", mark: "10" }]);
+        //change view here
+      })
+      .catch((err) => {
+        setError(true);
+        console.log(err);
+      });
   };
 
   const handleInput = (e, index) => {
@@ -117,10 +128,28 @@ export default function CreateExam(props) {
             </Typography>
           </Box>
         </Box>
+        {error && (
+          <Box display="flex" justifyContent="center">
+            <Typography variant="h7" color="primary" className={classes.error}>
+              Sorry, there was a problem when submitting. Please try again.
+            </Typography>
+          </Box>
+        )}
         <Box>
           <form onSubmit={handleSubmit}>
             <ExamDetails handleInput={handleInput} examDetails={examDetails} />
             {questions && questionPanels}
+            {error && (
+              <Box display="flex" justifyContent="center">
+                <Typography
+                  variant="h7"
+                  color="primary"
+                  className={classes.error}
+                >
+                  Sorry, there was a problem when submitting. Please try again.
+                </Typography>
+              </Box>
+            )}
             <ButtonRow handleSubmit={addQuestion} />
           </form>
         </Box>

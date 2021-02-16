@@ -14,7 +14,7 @@ export default function createExamAndQuestions(
 
   const { desc: description, title, date: due_time } = examDetails;
 
-  const examData = {
+  const details = {
     section_id,
     questions,
     due_time,
@@ -22,9 +22,14 @@ export default function createExamAndQuestions(
     description,
   };
 
-  console.log(examData);
+  console.log(details);
 
-  return axios
-    .post(`${baseURL}/exams`, examData)
-    .then((res) => console.log(res.data));
+  return axios.post(`${baseURL}/exams`, details).then((res) => {
+    const examId = res.data[0].id;
+    console.log({ examId });
+
+    return axios.post(`${baseURL}/exams/${examId}/questions`, {
+      questions,
+    });
+  });
 }
