@@ -6,8 +6,6 @@ import ExamCard from "./ExamCard";
 export default function ExamsContainer(props) {
   const { exams, type, setExamId, user } = props;
 
-  console.log(user);
-
   if (!exams.length) {
     return <Typography>Nothing Here...</Typography>;
   }
