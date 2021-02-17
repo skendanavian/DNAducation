@@ -87,18 +87,36 @@ module.exports = (db) => {
       })
       .then((result) => result);
   };
+  // this runs when creating an exam attempt
   // .select("*", "exams.id as exam_id", "user.id as user_id")
   const getSectionStudentId = (data) => {
     const { user_id, exam_id } = data;
-    console.log(":::::::", data);
+
+    // get section id from exam id
     return db
-      .select("*")
-      .from("section_students")
-      .join("users", "user_id", "=", "users.id")
-      .join("sections", "sections.id", "=", "section_students.section_id")
-      .join("exams", "sections.id", "=", "exams.section_id")
-      .where({ user_id, "exams.id": exam_id })
-      .then((result) => result);
+      .select("section_id")
+      .from("exams")
+      .where({ id: exam_id })
+      .then((result) => {
+        console.log(result);
+        const section_id = result[0] && result[0].section_id;
+        return db
+          .select("id")
+          .from("section_students")
+          .where({ user_id, section_id });
+      })
+      .then((result) => {
+        console.log(result);
+        return result;
+      });
+
+    // return db
+    //   .select("*")
+    //   .from("section_students")
+    //   .join("sections", "sections.id", "=", "section_students.section_id")
+    //   .join("exams", "sections.id", "=", "exams.section_id")
+    //   .where({ user_id, "exams.id": exam_id })
+    //   .then((result) => result);
   };
 
   return {
