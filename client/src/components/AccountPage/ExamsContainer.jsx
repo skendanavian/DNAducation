@@ -4,7 +4,7 @@ import { Typography, Box } from "@material-ui/core";
 import ExamCard from "./ExamCard";
 
 export default function ExamsContainer(props) {
-  const { exams, type, setExamId, user } = props;
+  const { exams, type, setExamId, user, updateContentView } = props;
 
   if (!exams.length) {
     return <Typography>Nothing Here...</Typography>;
@@ -24,6 +24,7 @@ export default function ExamsContainer(props) {
             type={type}
             exam={exam}
             user={user}
+            updateContentView={updateContentView}
           />
         );
       })}
