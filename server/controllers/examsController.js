@@ -84,7 +84,7 @@ module.exports = (db) => {
   const setQuestionsByExam = (exam_id, questions) => {
     const rows = questions.map((q, index) => ({
       exam_id,
-      question_number: 5,
+      question_number: index + 1,
       mark_value: q.mark,
       question: q.question,
     }));
