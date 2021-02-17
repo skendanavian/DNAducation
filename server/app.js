@@ -49,7 +49,7 @@ app.use(
   })
 );
 app.use("/exams", examsRouter(examsController));
-app.use("/attempts", attemptsRouter(attemptsController));
+app.use("/attempts", attemptsRouter({...attemptsController, ...examsController}));
 app.use("/sections", sectionsRouter(sectionsController));
 app.use("/classes", classesRouter(classesController));
 app.use("/api", apiRouter(apiController));
