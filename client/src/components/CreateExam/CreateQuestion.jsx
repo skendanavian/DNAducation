@@ -51,7 +51,6 @@ export default function CreateQuestion({
             Question {questionNumber}
           </Typography>
           <TextField
-            props
             className={classes.date}
             id="mark"
             type="number"
