@@ -28,11 +28,11 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
-  const getAttemptById = (id) => {
+  const getAttemptById = (attemptId) => {
     return db
       .select("*")
       .from("exam_attempts")
-      .where({ id })
+      .where({ id: attemptId })
       .then((result) => result);
   };
 
