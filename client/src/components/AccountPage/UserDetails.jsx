@@ -15,9 +15,7 @@ import SectionForm from "./SectionForm";
 import ClassForm from "./ClassForm";
 import TypeDnaModal from "../TypeDnaModal";
 
-import generateAxios from "../../helpers/generateAxios";
-
-require("dotenv").config({ path: "../../../.env" });
+import { fetchClasses } from "../../helpers/dataFetchers";
 
 export default function UserDetails(props) {
   const { user, type, setTdnaOpen } = props;
@@ -27,10 +25,11 @@ export default function UserDetails(props) {
   const [classes, setClasses] = useState([]);
 
   useEffect(() => {
-    const axios = generateAxios();
-    axios.get("/classes").then(({ data: classes }) => {
-      setClasses(classes.map((cl) => ({ id: cl.id, code: cl.code })));
-    });
+    fetchClasses()
+      .then(({ data: classes }) => {
+        setClasses(classes.map((cl) => ({ id: cl.id, code: cl.code })));
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   const handleClickOpen = () => {
