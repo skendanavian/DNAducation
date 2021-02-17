@@ -19,7 +19,7 @@ module.exports = ({
 
   // create section
   router.post("/", (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     const {
       classId: class_id,
       userId: teacher_user_id,
