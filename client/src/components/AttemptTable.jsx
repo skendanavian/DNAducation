@@ -45,7 +45,6 @@ export default function AttemptTable(props) {
               } else {
                 submissionStatus = "Not submitted";
               }
-              console.log(row);
               return (
                 <TableRow key={`${row.created_at}${index}`}>
                   <TableCell component="th" scope="row">
