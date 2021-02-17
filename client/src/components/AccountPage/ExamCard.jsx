@@ -122,7 +122,8 @@ const statusTag = ({
 };
 
 export default function ExamCard(props) {
-  const { exam, user, type, setExamId } = props;
+  const { exam, user, type, setExamId, updateContentView } = props;
+  console.log(exam);
   const classes = useStyles();
   const history = useHistory();
   const [attemptsModal, setAttemptsModal] = useState(false);
@@ -229,6 +230,7 @@ export default function ExamCard(props) {
               type={type}
               dueTime={exam.dueTime}
               attempts={exam.attempts}
+              updateContentView={updateContentView}
             />
           )}
         </DialogContent>

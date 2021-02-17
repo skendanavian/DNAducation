@@ -4,6 +4,7 @@ import SectionDetails from "./SectionDetails";
 import UserDetails from "./UserDetails";
 import ExamsContainer from "./ExamsContainer";
 import CreateExam from "../CreateExam/CreateExam";
+import AttemptView from "./AttemptView";
 
 // display the following exams for the following views
 // student account -> latest unsubmitted
@@ -40,7 +41,7 @@ export default function AccountContent(props) {
   if (!contentView) {
     return <Typography>404 Error</Typography>;
   }
-  const { type, view, sectionId } = contentView;
+  const { type, view, sectionId, attemptId } = contentView;
 
   if (view === "Loading") {
     return <Typography>...Loading</Typography>;
@@ -67,6 +68,7 @@ export default function AccountContent(props) {
           user={user}
           type={type}
           exams={examsToDisplay}
+          updateContentView={updateContentView}
         />
       </Box>
     );
@@ -79,6 +81,12 @@ export default function AccountContent(props) {
         token
         updateContentView={updateContentView}
       ></CreateExam>
+    );
+  } else if (view === "Attempt") {
+    return (
+      <Box>
+        <AttemptView attemptId={attemptId}></AttemptView>
+      </Box>
     );
   } else {
     // if view not account, view is a section id
@@ -104,6 +112,7 @@ export default function AccountContent(props) {
           type={type}
           exams={examsToDisplay}
           user={user}
+          updateContentView={updateContentView}
         />
       </Box>
     );
