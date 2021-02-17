@@ -19,9 +19,18 @@ const useStyles = makeStyles({
 });
 
 export default function AttemptTable(props) {
-  const { attempts, dueDate, type } = props;
-
+  const { attempts, dueDate, type, updateContentView } = props;
+  console.log(props);
   const classes = useStyles();
+
+  const clickAttemptHandler = (attemptId) => {
+    updateContentView({
+      view: "Attempt",
+      type: "Teacher",
+      sectionId: null,
+      attemptId,
+    });
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -56,7 +65,7 @@ export default function AttemptTable(props) {
                   </TableCell>
                   <TableCell align="right">
                     <IconButton
-                      onClick={() => console.log("Opening attempt: ", row.id)}
+                      onClick={() => clickAttemptHandler(row.exam_attempt_id)}
                     >
                       <LaunchIcon color="primary" />
                     </IconButton>
