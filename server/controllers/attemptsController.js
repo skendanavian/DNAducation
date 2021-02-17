@@ -1,7 +1,14 @@
 module.exports = (db) => {
   const getAttemptsByStudent = (user_id) => {
     return db
-      .select("*")
+      .select(
+        "exam_attempts.id as exam_attempt_id",
+        "section_students_id",
+        "exam_id",
+        "average_confidence",
+        "time_submitted",
+        "time_started"
+      )
       .from("exam_attempts")
       .join(
         "section_students",
@@ -14,18 +21,31 @@ module.exports = (db) => {
   };
 
   const getAttemptsByTeacher = (teacherId) => {
-    return db
-      .select("*")
-      .from("exam_attempts")
-      .join(
-        "section_students",
-        "section_students_id",
-        "=",
-        "section_students.id"
-      )
-      .join("sections", "section_id", "=", "sections.id")
-      .where({ teacher_user_id: teacherId })
-      .then((result) => result);
+    return (
+      db
+
+        // get all sectionsIds for a teacher
+        // get all section_students fro those sections
+        // get all exam_attempts for those sectioon_students
+        .select(
+          "exam_attempts.id as exam_attempt_id",
+          "section_students_id",
+          "exam_id",
+          "average_confidence",
+          "time_submitted",
+          "time_started"
+        )
+        .from("exam_attempts")
+        .join(
+          "section_students",
+          "section_students_id",
+          "=",
+          "section_students.id"
+        )
+        .join("sections", "section_id", "=", "sections.id")
+        .where({ teacher_user_id: teacherId })
+        .then((result) => result)
+    );
   };
 
   const getAttemptById = (attemptId) => {
@@ -57,6 +77,22 @@ module.exports = (db) => {
         time_submitted,
       })
       .returning("*")
+      .then((result) => result);
+  };
+
+  const getAnswersByAttemptId = (attemptId) => {
+    return db
+      .select("*")
+      .from("exam_answers")
+      .where({ exam_attempt_id: attemptId })
+      .then((result) => result);
+  };
+
+  const getQuestionsbyIds = (questionIds) => {
+    return db
+      .select("*")
+      .from("exam_questions")
+      .whereIn("id", questionIds)
       .then((result) => result);
   };
 
@@ -128,5 +164,7 @@ module.exports = (db) => {
     setExamAttemptAnswer,
     submitMarkForAnswer,
     getSectionStudentId,
+    getAnswersByAttemptId,
+    getQuestionsbyIds,
   };
 };

@@ -11,6 +11,9 @@ module.exports = ({
   setExamAttemptAnswer,
   submitMarkForAnswer,
   getSectionStudentId,
+  getAnswersByAttemptId,
+  getExamById,
+  getQuestionsbyIds
 }) => {
   // router.get("/", (req, res, next) => {
   //   getUsers()
@@ -20,12 +23,41 @@ module.exports = ({
   //     .catch((err) => next(err));
   // });
 
-  router.get(`/:id`, (req, res, next) => {
-    const { id } = req.params;
-    getAttemptById(id)
+  /**
+   * gets all info for displaying an attempt
+   */
+  router.get(`/:attemptId`, (req, res, next) => {
+    const { attemptId } = req.params;
+    const attemptReq = getAttemptById(attemptId);
+    const answersReq = getAnswersByAttemptId(attemptId);
+
+    Promise.all([attemptReq, answersReq])
+      .then((result) => {
+        const attempt = result[0][0];
+        const answers = result[1];
+
+        const examReq = getExamById(attempt.exam_id);
+
+        const questionIds = answers.map((ans) => ans.exam_question_id);
+        const questionsReq = getQuestionsbyIds(questionIds);
+
+        return Promise.all([attemptReq, answersReq, examReq, questionsReq]);
+      })
       .then((result) => {
         if (!result.length) throw new ErrorHandler(404, "Not found");
-        res.json(result[0]);
+
+        const attempt = result[0][0];
+        const answers = result[1]; 
+        const exam = result[2][0]; 
+        const questions = result[3]; 
+
+        if(!attempt) throw new ErrorHandler(404, "No Attempt Found")
+        /** if(!answers) do nothing, its okay to have no answers
+         * for an attempt, could be viewing an unsubmitted attempt as a student 
+         */  
+        if(!exam) throw new ErrorHandler(404, "No Exam Found for attempt")
+        if(!questions.length) throw new ErrorHandler(404, "No questions found for answers")
+        res.json(result);
       })
       .catch((err) => next(err));
   });
