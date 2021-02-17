@@ -78,3 +78,11 @@ export function postSection(sectionDetails) {
 
   return axios.post(sectionsURL, sectionDetails);
 }
+
+export function getAttemptData(attemptId) {
+  const attemptsURL = `${baseURL}/attempts/${attemptId}`;
+
+  const axios = generateAxios();
+
+  return axios.get(attemptsURL);
+}
