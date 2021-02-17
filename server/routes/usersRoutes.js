@@ -34,9 +34,6 @@ module.exports = ({
   router.get(`/:id/sections`, (req, res, next) => {
     const { id } = req.params;
 
-    console.log("--------------------------------------------");
-    console.log(`userRoutes:: get student sections for ${id}`);
-
     getSectionsByStudent(id)
       .then((result) => {
         if (!result.length) {
@@ -50,9 +47,6 @@ module.exports = ({
   // get all attemmpts by student id
   router.get(`/:id/attempts`, (req, res, next) => {
     const { id } = req.params;
-
-    console.log("--------------------------------------------");
-    console.log(`userRoutes:: get student attempts for ${id}`);
 
     getAttemptsByStudent(id)
       .then((result) => {
@@ -68,9 +62,6 @@ module.exports = ({
   router.get(`/teacher/:id/sections`, (req, res, next) => {
     const { id } = req.params;
 
-    console.log("--------------------------------------------");
-    console.log(`userRoutes:: get teacher sections for ${id}`);
-
     getSectionsByTeacher(id)
       .then((result) => {
         if (!result.length) {
@@ -85,9 +76,6 @@ module.exports = ({
   router.get(`/teacher/:id/attempts`, (req, res, next) => {
     const { id } = req.params;
 
-    console.log("--------------------------------------------");
-    console.log(`userRoutes:: get teacher attempts for ${id}`);
-
     getAttemptsByTeacher(id)
       .then((result) => {
         if (!result.length) {
@@ -101,7 +89,7 @@ module.exports = ({
   // update Typingdna profile to true for user
   router.patch("/:userId", (req, res, next) => {
     const { userId, status } = req.body;
-    console.log(userId);
+    // console.log(userId);
     updateTypingProfile(userId, status)
       .then((result) => {
         res.json(result);
