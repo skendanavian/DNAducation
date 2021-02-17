@@ -201,18 +201,18 @@ export default function ExamCard(props) {
             START
           </Button>
         )}
-        {type === "Teacher" && (
+        {/* {type === "Teacher" && (
           <Typography
             className={classes.counter}
             variant="b2"
             color="primary"
             alignItems="flex-end"
-            display="inline-block"
-            marginLeft="20rem"
+            // display="inline"
+            // marginLeft="20rem"
           >
             12 of 30
           </Typography>
-        )}
+        )} */}
       </CardActions>
       <Divider />
       <Dialog
