@@ -70,3 +70,11 @@ export function postClass(classDetails) {
 
   return axios.post(classesURL, classDetails);
 }
+
+export function postSection(classDetails) {
+  const classesURL = `${baseURL}/sections`;
+
+  const axios = generateAxios();
+
+  return axios.post(classesURL, classDetails);
+}
