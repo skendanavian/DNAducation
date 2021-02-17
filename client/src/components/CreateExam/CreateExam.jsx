@@ -63,6 +63,7 @@ export default function CreateExam(props) {
             type: "Teacher",
             view: "Section",
             sectionId: section_id,
+            attemptId: null,
           });
           clearTimeout(t);
         }, 2000);

@@ -85,6 +85,7 @@ export default function SectionDetails(props) {
                     type: "Teacher",
                     view: "createExam",
                     sectionId,
+                    attemptId: null,
                   })
                 }
               >

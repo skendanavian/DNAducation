@@ -30,8 +30,9 @@ const AccountPage = (props) => {
     sectionId: null,
   });
   const [tdnaOpen, setTdnaOpen] = useState(false);
-  const updateContentView = ({ type, view, sectionId }) => {
-    setContentView({ type, view, sectionId });
+  const updateContentView = ({ type, view, sectionId, attemptId }) => {
+    console.table({ type, view, sectionId, attemptId });
+    setContentView({ type, view, sectionId, attemptId });
   };
 
   // below stored in useRef for good react practice
@@ -47,14 +48,25 @@ const AccountPage = (props) => {
       fetchUserData(userId, token).then(({ data: user }) => {
         setUser(user);
         const type = user.is_teacher ? "Teacher" : "Student";
-        updateContentView({ type, view: "Account" });
+        updateContentView({
+          type,
+          view: "Account",
+          sectionId: null,
+          attemptId: null,
+        });
         setNavButtons((prev) => ({
           ...prev,
           meta: [
             {
               text: "Account",
               type,
-              navAction: () => updateContentView({ type, view: "Account" }),
+              navAction: () =>
+                updateContentView({
+                  type,
+                  view: "Account",
+                  sectionId: null,
+                  attemptId: null,
+                }),
             },
           ],
         }));
@@ -84,7 +96,12 @@ const AccountPage = (props) => {
                     text: code,
                     type,
                     navAction: () =>
-                      updateContentView({ type, sectionId, view: "Section" }),
+                      updateContentView({
+                        type,
+                        sectionId,
+                        view: "Section",
+                        attemptId: null,
+                      }),
                   };
                 }),
               };
@@ -139,6 +156,7 @@ const AccountPage = (props) => {
                       updateContentView({
                         type,
                         sectionId,
+                        attemptId: null,
                         view: "Section",
                       }),
                   };
