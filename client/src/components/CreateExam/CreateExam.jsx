@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CreateExam(props) {
-  const { details, user, token } = props;
+  const { details, user, token, updateContentView } = props;
   const { title, code, section_id } = details;
   const classes = useStyles();
   const date = new Date();
@@ -57,12 +57,15 @@ export default function CreateExam(props) {
         });
         setQuestions([{ question: "", mark: "10" }]);
         setSubmitSuccess(true);
-        setTimeout(() => {
+        const t = setTimeout(() => {
           setSubmitSuccess(false);
-          clearTimeout();
-        }, 3000);
-
-        // set view here
+          updateContentView({
+            type: "Teacher",
+            view: "Section",
+            sectionId: section_id,
+          });
+          clearTimeout(t);
+        }, 2000);
       })
       .catch((err) => {
         setError(true);
@@ -100,6 +103,7 @@ export default function CreateExam(props) {
     return (
       <CreateQuestion
         index={index}
+        key={index}
         questionNumber={index + 1}
         handleInput={handleInput}
         removeQuestion={removeQuestion}

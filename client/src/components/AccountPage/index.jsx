@@ -27,10 +27,11 @@ const AccountPage = (props) => {
   const [contentView, setContentView] = useState({
     type: null,
     view: "Loading",
+    sectionId: null,
   });
   const [tdnaOpen, setTdnaOpen] = useState(false);
-  const updateContentView = ({ type, view }) => {
-    setContentView({ type, view });
+  const updateContentView = ({ type, view, sectionId }) => {
+    setContentView({ type, view, sectionId });
   };
 
   // below stored in useRef for good react practice
@@ -77,13 +78,13 @@ const AccountPage = (props) => {
               return {
                 ...prev,
                 studentSections: sections.map((sec) => {
-                  const { code, section_id } = sec;
+                  const { code, section_id: sectionId } = sec;
                   const type = "Student";
                   return {
                     text: code,
                     type,
                     navAction: () =>
-                      updateContentView({ type, view: section_id }),
+                      updateContentView({ type, sectionId, view: "Section" }),
                   };
                 }),
               };
@@ -125,13 +126,17 @@ const AccountPage = (props) => {
                 return {
                   ...prev,
                   teacherSections: sections.map((sec) => {
-                    const { code, section_id } = sec;
+                    const { code, section_id: sectionId } = sec;
                     const type = "Teacher";
                     return {
                       text: `${code} ${namer.getName(code)}`,
                       type,
                       navAction: () =>
-                        updateContentView({ type, view: section_id }),
+                        updateContentView({
+                          type,
+                          sectionId,
+                          view: "Section",
+                        }),
                     };
                   }),
                 };
@@ -169,6 +174,7 @@ const AccountPage = (props) => {
     user,
     sections,
     contentView,
+    updateContentView,
     exams,
     setExamId,
     token,

@@ -23,7 +23,7 @@ const TooltipMenu = (props) => {
   };
 
   const handleEdit = (event) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorEl(null);
     editExam();
   };
 
@@ -36,6 +36,7 @@ const TooltipMenu = (props) => {
     <div>
       <IconButton
         // className={downloadMenuClasses.button}
+        color="secondary"
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleOpen}

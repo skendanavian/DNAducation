@@ -26,7 +26,6 @@ export default function ButtonRow({ handleSubmit }) {
         size="small"
         variant="contained"
         color="secondary"
-        marginRight="1rem"
         startIcon={<AddIcon />}
         onClick={() => handleSubmit()}
       >

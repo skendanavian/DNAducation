@@ -11,7 +11,7 @@ import CreateExam from "../CreateExam/CreateExam";
 // student code -> latest from section
 // teacher code ->  latest from section
 
-const examFilter = ({ type, view, exams, token }) => {
+const examFilter = ({ type, view, exams, token, sectionId }) => {
   if (!exams) return [];
   let toDisplay;
   const examsOfType = type === "Student" ? exams.student : exams.teacher;
@@ -21,24 +21,40 @@ const examFilter = ({ type, view, exams, token }) => {
   } else if (view === "Account" && type === "Teacher") {
     toDisplay = (exam) => exam.attempts.find((att) => !att.marks_earned);
   } else {
-    toDisplay = (exam) => exam.section.section_id === view;
+    toDisplay = (exam) => exam.section.section_id === sectionId;
   }
   const examsToDisplay = examsOfType.filter(toDisplay);
   return examsToDisplay;
 };
 
 export default function AccountContent(props) {
-  const { contentView, exams, user, sections, setExamId, setTdnaOpen } = props;
+  const {
+    contentView,
+    updateContentView,
+    exams,
+    user,
+    sections,
+    setExamId,
+    setTdnaOpen,
+  } = props;
   if (!contentView) {
     return <Typography>404 Error</Typography>;
   }
-  const { type, view } = contentView;
+  const { type, view, sectionId } = contentView;
 
   if (view === "Loading") {
     return <Typography>...Loading</Typography>;
   }
+  console.log({ contentView });
+  const sectionsOfType =
+    type === "Student" ? sections.student : sections.teacher;
+  console.log({ sectionsOfType, view, sectionId });
+  const sectionDetails = sectionsOfType.find(
+    (sec) => sec.section_id === sectionId
+  );
+  console.log({ sectionDetails });
 
-  const examsToDisplay = examFilter({ type, view, exams });
+  const examsToDisplay = examFilter({ type, view, sectionId, exams });
 
   if (view === "Account") {
     return (
@@ -57,43 +73,42 @@ export default function AccountContent(props) {
         />
       </Box>
     );
+  } else if (view === "createExam") {
+    return (
+      <CreateExam
+        type={type}
+        details={sectionDetails}
+        user={user}
+        token
+        updateContentView={updateContentView}
+      ></CreateExam>
+    );
   } else {
     // if view not account, view is a section id
     // display exams from that section
-    const sectionsOfType =
-      type === "Student" ? sections.student : sections.teacher;
-    console.log({ sectionsOfType, view });
-    const sectionDetails = sectionsOfType.find(
-      (sec) => sec.section_id === view
-    );
+    // const sectionsOfType =
+    //   type === "Student" ? sections.student : sections.teacher;
+    // console.log({ sectionsOfType, view });
+    // const sectionDetails = sectionsOfType.find(
+    //   (sec) => sec.section_id === view
+    // );
     return (
-      <>
-        {
-          <Box>
-            <SectionDetails
-              type={type}
-              user={user}
-              details={sectionDetails}
-              view={view}
-            />
-            <Typography variant="overline">All Assessments</Typography>
-            <ExamsContainer
-              setExamId={setExamId}
-              type={type}
-              exams={examsToDisplay}
-              user={user}
-            />
-          </Box>
-        }
-        {view === "createExam" && (
-          <CreateExam
-            type={type}
-            details={sectionDetails}
-            user={user}
-            token
-          ></CreateExam>
-        )}
-      </>
+      <Box>
+        <SectionDetails
+          type={type}
+          user={user}
+          details={sectionDetails}
+          view={view}
+          updateContentView={updateContentView}
+        />
+        <Typography variant="overline">All Assessments</Typography>
+        <ExamsContainer
+          setExamId={setExamId}
+          type={type}
+          exams={examsToDisplay}
+          user={user}
+        />
+      </Box>
     );
   }
 }
