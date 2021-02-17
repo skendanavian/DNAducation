@@ -68,6 +68,11 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
+  const markAttempts = (marks) => {
+    return db
+      .where
+  }
+
   const updateAttempt = (data) => {
     const { id, average_confidence, time_submitted } = data;
     return db("exam_attempts")

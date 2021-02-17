@@ -3,6 +3,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
 import { getAttemptData } from "../../helpers/requestHelpers";
+import { TextField } from "@material-ui/core";
 
 export default function AttemptView(props) {
   const { attemptId } = props;
@@ -14,6 +15,7 @@ export default function AttemptView(props) {
     questions: [],
     answers: [],
   });
+  const [marks, setMarks] = useState([]);
 
   useEffect(() => {
     if (attemptId) {
@@ -35,18 +37,37 @@ export default function AttemptView(props) {
     }
   }, [attemptId]);
 
+  if (!attemptData) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  // const markHandler = (markIndex) => {
+  //   setMarks((prev) => {
+  //     // prev[markIndex] = ;
+  //     return prev;
+  //   });
+  // };
+
   const { attempt, exam, questions, answers } = attemptData;
+
+  let displayAttempt = answers.map((answer, index) => {
+    return { a: answer, q: questions[index] };
+  });
+
   return (
     <Box>
       <Typography>Title: {exam && exam.title}</Typography>
       <Typography>Attempt Id:{attempt && attempt.id}</Typography>
-      {questions &&
-        questions.map((q) => {
-          return <Typography>{q.question}</Typography>;
-        })}
-      {answers &&
-        answers.map((ans) => {
-          return <Typography>{ans.answer}</Typography>;
+      {displayAttempt &&
+        displayAttempt.map((dAtt, index) => {
+          return (
+            <Box display="flex" key={dAtt}>
+              <Typography>{dAtt.q.question}</Typography>
+              <Typography>{dAtt.a.answer}</Typography>
+              <TextField value={marks[index]}></TextField>
+              <Typography>Out of: {}</Typography>
+            </Box>
+          );
         })}
     </Box>
   );
