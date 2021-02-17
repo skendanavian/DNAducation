@@ -108,62 +108,65 @@ const AccountPage = (props) => {
         .catch((err) => {
           console.error(err);
         });
-      if (user.is_teacher) {
-        fetchTeacherData(userId, token)
-          .then(([{ data: sections }, { data: attempts }, { data: exams }]) => {
-            if (sections.length) {
-              console.log("teacher sections");
-              console.table(sections);
-              console.log("teacher attempts");
-              console.table(attempts);
-              console.log("teacher exams");
-              console.table(exams);
-              setSections((prev) => ({ ...prev, teacher: sections }));
-              setNavButtons((prev) => {
-                // creates a new letter name, just dependent on the order
-                // restarts a 'A' from a new class
-                const namer = sectionNamer();
-                return {
-                  ...prev,
-                  teacherSections: sections.map((sec) => {
-                    const { code, section_id: sectionId } = sec;
-                    const type = "Teacher";
-                    return {
-                      text: `${code} ${namer.getName(code)}`,
-                      type,
-                      navAction: () =>
-                        updateContentView({
-                          type,
-                          sectionId,
-                          view: "Section",
-                        }),
-                    };
-                  }),
-                };
-              });
-              const examsWithData = exams.map((exam) => {
-                const examSection = sections.find((section) => {
-                  return section.section_id === exam.section_id;
-                });
-                const examAttempts = attempts.filter((attempt) => {
-                  return attempt.exam_id === exam.id && attempt.time_submitted;
-                });
-
-                return {
-                  ...exam,
-                  section: examSection,
-                  attempts: examAttempts,
-                };
-              });
-              setExams((prev) => ({ ...prev, teacher: examsWithData }));
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      }
     }
   }, [userId, token, user]);
+
+  useEffect(() => {
+    if (user && user.is_teacher) {
+      fetchTeacherData(userId, token)
+        .then(([{ data: sections }, { data: attempts }, { data: exams }]) => {
+          if (sections.length) {
+            console.log("teacher sections");
+            console.table(sections);
+            console.log("teacher attempts");
+            console.table(attempts);
+            console.log("teacher exams");
+            console.table(exams);
+            setSections((prev) => ({ ...prev, teacher: sections }));
+            setNavButtons((prev) => {
+              // creates a new letter name, just dependent on the order
+              // restarts a 'A' from a new class
+              const namer = sectionNamer();
+              return {
+                ...prev,
+                teacherSections: sections.map((sec) => {
+                  const { code, section_id: sectionId } = sec;
+                  const type = "Teacher";
+                  return {
+                    text: `${code} ${namer.getName(code)}`,
+                    type,
+                    navAction: () =>
+                      updateContentView({
+                        type,
+                        sectionId,
+                        view: "Section",
+                      }),
+                  };
+                }),
+              };
+            });
+            const examsWithData = exams.map((exam) => {
+              const examSection = sections.find((section) => {
+                return section.section_id === exam.section_id;
+              });
+              const examAttempts = attempts.filter((attempt) => {
+                return attempt.exam_id === exam.id && attempt.time_submitted;
+              });
+
+              return {
+                ...exam,
+                section: examSection,
+                attempts: examAttempts,
+              };
+            });
+            setExams((prev) => ({ ...prev, teacher: examsWithData }));
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [user, token, userId]);
 
   const navProps = {
     navButtons,
