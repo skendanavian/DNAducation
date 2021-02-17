@@ -45,14 +45,11 @@ export default function AccountContent(props) {
   if (view === "Loading") {
     return <Typography>...Loading</Typography>;
   }
-  console.log({ contentView });
   const sectionsOfType =
     type === "Student" ? sections.student : sections.teacher;
-  console.log({ sectionsOfType, view, sectionId });
   const sectionDetails = sectionsOfType.find(
     (sec) => sec.section_id === sectionId
   );
-  console.log({ sectionDetails });
 
   const examsToDisplay = examFilter({ type, view, sectionId, exams });
 

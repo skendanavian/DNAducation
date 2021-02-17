@@ -54,3 +54,27 @@ export function fetchUserData(userId, token) {
 
   return axios.get(userURL);
 }
+
+export function fetchClasses() {
+  const classesURL = `${baseURL}/classes`;
+
+  const axios = generateAxios();
+
+  return axios.get(classesURL);
+}
+
+export function postClass(classDetails) {
+  const classesURL = `${baseURL}/classes`;
+
+  const axios = generateAxios();
+
+  return axios.post(classesURL, classDetails);
+}
+
+export function postSection(sectionDetails) {
+  const sectionsURL = `${baseURL}/sections`;
+
+  const axios = generateAxios();
+
+  return axios.post(sectionsURL, sectionDetails);
+}

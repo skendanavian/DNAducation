@@ -7,7 +7,7 @@ import {
   fetchStudentData,
   fetchTeacherData,
   fetchUserData,
-} from "../../helpers/dataFetchers";
+} from "../../helpers/requestHelpers";
 import sectionNamer from "../../helpers/sectionNamer";
 
 require("dotenv").config({ path: "../../../.env" });

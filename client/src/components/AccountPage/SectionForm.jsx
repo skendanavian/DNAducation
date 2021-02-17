@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 
-import generateAxios from "../../helpers/generateAxios";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
 
 import { makeStyles } from "@material-ui/core/styles";
+
+import { postSection } from "../../helpers/requestHelpers";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,14 +27,11 @@ export default function SectionForm(props) {
   const { user, classes, setTdnaOpen } = props;
   const styles = useStyles();
 
-  const token = sessionStorage.getItem("jwt");
   const [classCode, setClassCode] = useState("");
   const [studentNumbers, setStudentNumbers] = useState([]);
 
   const [studentNumbersError, setStudentNumberError] = useState(false);
   const [error, setError] = useState("");
-
-  const axios = generateAxios(token);
 
   const handleClass = (e) => {
     setClassCode(e.target.value);
@@ -57,12 +55,11 @@ export default function SectionForm(props) {
     } else {
       setError("");
       setStudentNumberError(false);
-      axios
-        .post("/sections", {
-          classId: classCode,
-          studentNumbers: splitNumbers,
-          userId: user.id,
-        })
+      postSection({
+        classId: classCode,
+        studentNumbers: splitNumbers,
+        userId: user.id,
+      })
         .then((rows) => {
           setTdnaOpen((prev) => !prev);
         })
