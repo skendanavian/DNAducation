@@ -30,9 +30,7 @@ module.exports = (db) => {
       .returning("*")
       .then((result) => {
         const { id: section_id } = result[0];
-        console.log(result);
         const rows = studentIds.map((si) => ({ user_id: si.id, section_id }));
-        console.log(rows);
         return db("section_students").insert(rows).returning("*");
       })
       .then((result) => result);
@@ -44,7 +42,6 @@ module.exports = (db) => {
   // WHERE teacher_user_id = 10
 
   const getSectionsByTeacher = (id) => {
-    console.log("sectionsController, teacher sections of", id);
     return db
       .select(
         "sections.id as section_id",
@@ -90,7 +87,6 @@ module.exports = (db) => {
   //   };
 
   const getSectionsByStudent = (id) => {
-    console.log("sectionsController, student sections of", id);
     return db
       .select(
         "sections.id as section_id",
@@ -114,7 +110,7 @@ module.exports = (db) => {
   const getExamsBySections = (sectionIds) => {
     if (!sectionIds.length) {
       console.log(
-        "sectionsController, exams by sections requested with " + sectionIds
+        "sectionsController, exams by sections requested with no sectionIds"
       );
       return [];
     }
