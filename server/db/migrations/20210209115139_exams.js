@@ -4,7 +4,7 @@ exports.up = function (knex) {
     table.integer("section_id").references('id').inTable('sections').notNullable().onUpdate('CASCADE').onDelete('CASCADE');
     table.string("title").notNullable();
     table.string("description").notNullable();
-    table.integer("total_submissions").nullable();
+    table.integer("total_submissions").defaultTo(0);
     table.timestamp("due_time").notNullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
