@@ -22,7 +22,7 @@ module.exports = ({
 
   // create exam
   router.post("/", (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     createExam(req.body)
       .then((exams) => {
         res.json(exams);
@@ -53,7 +53,7 @@ module.exports = ({
   // get all questions for an exam
   router.get(`/:examId/questions`, (req, res, next) => {
     const { examId } = req.params;
-    console.log(examId);
+    // console.log(examId);
     getQuestionsByExam(examId)
       .then((result) => {
         if (!result.length) throw new ErrorHandler(404, "Not found");
@@ -66,7 +66,7 @@ module.exports = ({
   router.post(`/:examId/questions`, (req, res, next) => {
     const { examId } = req.params;
     const { questions } = req.body;
-    console.log(examId);
+    // console.log(examId);
 
     setQuestionsByExam(examId, questions)
       .then((result) => {

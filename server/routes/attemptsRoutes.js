@@ -57,7 +57,7 @@ module.exports = ({
       })
       .then((result) => {
         if (!result.length) throw new ErrorHandler(404, "Not found");
-        console.log(result.fields);
+        // console.log(result.fields);
         res.json(result[0]);
       })
       .catch((err) => next(err));
@@ -65,11 +65,11 @@ module.exports = ({
 
   //Update attempt on final submit
   router.patch(`/:attemptId`, (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     updateAttempt(req.body)
       .then((result) => {
         if (!result.length) throw new ErrorHandler(404, "Not found");
-        console.log(result);
+        // console.log(result);
         res.json(result[0]);
       })
       .catch((err) => next(err));
@@ -79,15 +79,15 @@ module.exports = ({
   router.post(`/:attemptsId/answers`, (req, res, next) => {
     const { attemptsId: exam_attempt_id } = req.params;
 
-    console.log(req.params);
-    console.log(req.data);
+    // console.log(req.params);
+    // console.log(req.data);
 
     const data = { exam_attempt_id, ...req.body };
 
     setExamAttemptAnswer(data)
       .then((result) => {
         if (!result.length) throw new ErrorHandler(404, "Not found");
-        console.log(result);
+        // console.log(result);
         res.json(result[0]);
       })
       .catch((err) => next(err));
