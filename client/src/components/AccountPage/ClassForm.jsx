@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 
-import generateAxios from "../../helpers/generateAxios";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
 
 import { makeStyles } from "@material-ui/core/styles";
+
+import { postClass } from "../../helpers/dataFetchers";
 
 const useStyles = makeStyles((theme) => ({
   select: {
@@ -29,9 +30,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ClassForm(props) {
   const { setClasses, user } = props;
   const styles = useStyles();
-
-  const token = sessionStorage.getItem("jwt");
-  const axios = useRef(generateAxios(token));
 
   const [subject, setSubject] = useState("");
   const [numberCode, setNumberCode] = useState(100);
@@ -60,12 +58,7 @@ export default function ClassForm(props) {
   const submitHandler = (e) => {
     e.preventDefault();
     const code = `${subject} ${numberCode}`;
-    axios.current
-      .post("/classes", {
-        code,
-        title,
-        description,
-      })
+    postClass({ title, description, code })
       .then((res) => {
         const { data: classRes } = res;
         setCodeError(false);
