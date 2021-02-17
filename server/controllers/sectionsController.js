@@ -68,6 +68,27 @@ module.exports = (db) => {
   // JOIN users ON users.id = teacher_user_id
   // WHERE user_id = 4;
 
+  // SELECT section_students.id as ssid FROM section_students
+  // JOIN users on section_students.user_id = users.id
+  // JOIN sections on sections.id = section_students.section_id
+  // JOIN exams on sections.id = exams.section_id
+  // WHERE users.id = 1 AND exams.id = 2;
+
+  //   getSectionStudentId = (data) => {
+  //     const { user_id, exam_id } = data;
+  //     return db
+  //       .raw(
+  //         `
+  // SELECT section_students.id as ssid FROM section_students
+  // JOIN users on section_students.user_id = users.id
+  // JOIN sections on sections.id = section_students.section_id
+  // JOIN exams on sections.id = exams.section_id
+  // WHERE users.id = ${user_Id} AND exams.id = ${exam_Id};
+  // `
+  //       )
+  //       .then((result) => result);
+  //   };
+
   const getSectionsByStudent = (id) => {
     console.log("sectionsController, student sections of", id);
     return db

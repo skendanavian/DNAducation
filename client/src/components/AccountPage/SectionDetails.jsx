@@ -21,7 +21,7 @@ export default function SectionDetails(props) {
 
   const token = sessionStorage.getItem("jwt");
 
-  // will only request user data is this is a student view, uses teacher object if not
+  // will only request user data if this is a student view, uses teacher object if not
   useEffect(() => {
     const axios = generateAxios(token);
     if (type !== "Teacher" && teacher_user_id) {

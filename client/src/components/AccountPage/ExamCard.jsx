@@ -63,6 +63,16 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: PRIMARY,
   },
+  flexRox: {
+    display: "flex !important",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  counter: {
+    marginLeft: "auto",
+    color: "#5cb85c",
+    alignContent: "flex-end",
+  },
 }));
 
 // shows, Upcoming, overdue, or submissions button
@@ -83,6 +93,7 @@ const statusTag = ({
   if (status === "Submissions" || type === "Teacher") {
     return (
       <Button
+        color="primary"
         disabled={status !== "Submissions"}
         onClick={handleAttemptsClick}
         variant="text"
@@ -102,7 +113,7 @@ const statusTag = ({
         m={1}
         borderRadius="100px"
       >
-        <Typography display="inline" variant="subtitle2" color="inherit">
+        <Typography display="block" variant="subtitle2" color="inherit">
           {status}
         </Typography>
       </Box>
@@ -153,28 +164,32 @@ export default function ExamCard(props) {
             <SubjectIcon text={exam.section.code} />
           </Avatar>
         }
-        action={
-          type === "Teacher" && (
-            <TooltipMenu
-              editExam={() => {
-                console.log(`editting: ${exam.id}`);
-              }}
-              deleteExam={() => {
-                console.log(`deleting: ${exam.id}`);
-              }}
-            />
-          )
-        }
+        // action={
+        // type === "Teacher" && (
+        // <TooltipMenu
+        //   editExam={() => {
+        //     console.log(`editting: ${exam.id}`);
+        //   }}
+        //   deleteExam={() => {
+        //     console.log(`deleting: ${exam.id}`);
+        //   }}
+        // />
+        //   )
+        // }
+
         title={`${exam.section.code} - ${exam.title}`}
         subheader={`Due ${inTime}`}
       />
+
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {exam && exam.description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing classes={{ root: classes.cardContent }}>
-        {statusTag({ type, status, handleAttemptsClick })}
+        <Box className={classes.flexRox}>
+          {statusTag({ type, status, handleAttemptsClick })}
+        </Box>
         {type === "Student" && (
           <Button
             color="secondary"
@@ -186,6 +201,18 @@ export default function ExamCard(props) {
             START
           </Button>
         )}
+        {type === "Teacher" && (
+          <Typography
+            className={classes.counter}
+            variant="b2"
+            color="primary"
+            alignItems="flex-end"
+            display="inline-block"
+            marginLeft="20rem"
+          >
+            12 of 30
+          </Typography>
+        )}
       </CardActions>
       <Divider />
       <Dialog
@@ -195,6 +222,7 @@ export default function ExamCard(props) {
         aria-describedby="simple-modal-description"
       >
         <DialogTitle>{exam.title} Submissions</DialogTitle>
+
         <DialogContent>
           {exam.attempts.length && (
             <AttemptTable

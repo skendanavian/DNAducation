@@ -87,6 +87,19 @@ module.exports = (db) => {
       })
       .then((result) => result);
   };
+  // .select("*", "exams.id as exam_id", "user.id as user_id")
+  const getSectionStudentId = (data) => {
+    const { user_id, exam_id } = data;
+    console.log(":::::::", data);
+    return db
+      .select("*")
+      .from("section_students")
+      .join("users", "user_id", "=", "users.id")
+      .join("sections", "sections.id", "=", "section_students.section_id")
+      .join("exams", "sections.id", "=", "exams.section_id")
+      .where({ user_id, "exams.id": exam_id })
+      .then((result) => result);
+  };
 
   return {
     getAttemptsByStudent,
@@ -96,5 +109,6 @@ module.exports = (db) => {
     updateAttempt,
     setExamAttemptAnswer,
     submitMarkForAnswer,
+    getSectionStudentId,
   };
 };

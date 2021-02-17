@@ -10,6 +10,7 @@ module.exports = ({
   updateAttempt,
   setExamAttemptAnswer,
   submitMarkForAnswer,
+  getSectionStudentId,
 }) => {
   // router.get("/", (req, res, next) => {
   //   getUsers()
@@ -32,11 +33,31 @@ module.exports = ({
   //const {section_students_id, exam_id, time_started} = data;
   // const createAttemptTest = {"section_students_id": 2, 'exam_id': 3, "time_started": "2021-02-09 22:58:41.175932+00" }
   router.post(`/`, (req, res, next) => {
-    // const {  } = req.body;
-    createAttempt(req.body)
+    const { user_id, exam_id, time_started } = req.body;
+
+    getSectionStudentId({ user_id, exam_id })
+      .then((result) => {
+        // console.log(":::::::::", result);
+        // console.log(res.fields);
+        if (!result.length)
+          throw new ErrorHandler(
+            403,
+            "User not enrolled in section for attempted exam, your stolen questions are now forfeit"
+          );
+        if (result.length > 1)
+          throw new ErrorHandler(
+            409,
+            "User cannot be in the same section twice"
+          );
+        return createAttempt({
+          section_students_id: result[0].id,
+          exam_id,
+          time_started,
+        });
+      })
       .then((result) => {
         if (!result.length) throw new ErrorHandler(404, "Not found");
-        console.log(result);
+        console.log(result.fields);
         res.json(result[0]);
       })
       .catch((err) => next(err));

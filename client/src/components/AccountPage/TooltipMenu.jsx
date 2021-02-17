@@ -34,15 +34,15 @@ const TooltipMenu = (props) => {
 
   return (
     <div>
-      <IconButton
+      {/* <IconButton
         // className={downloadMenuClasses.button}
         color="secondary"
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleOpen}
-      >
-        <MoreVertIcon />
-      </IconButton>
+      > */}
+      {/* <MoreVertIcon />
+      </IconButton> */}
       <Menu
         id="simple-menu"
         // classes={{ paper: downloadMenuClasses.paper }}

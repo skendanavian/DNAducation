@@ -58,18 +58,19 @@ export default function Question({ examId, userId, token }) {
 
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
-  const [questionObject, setQuestionObject] = useState({});
-  const [attemptId, setAttemptId] = useState("");
+  const [questionObject, setQuestionObject] = useState({ questions: [{}] });
+
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
+
+  // Don't need to be in state
+  const [attemptId, setAttemptId] = useState("");
   const [confidenceArray, setConfidenceArray] = useState([]);
+
+  console.log(questionObject);
 
   const axios = generateAxios(token);
   const baseURL = process.env.REACT_APP_REQUEST_URL;
-
-  const currentQ = Object.keys(questionObject).length
-    ? questionObject.questions[questionIndex]
-    : "";
 
   useEffect(() => {
     if (userId) {
@@ -77,9 +78,12 @@ export default function Question({ examId, userId, token }) {
       const getQuestionsUrl = baseURL + `/exams/${examId}/questions`;
       const date = new Date(Date.now());
 
+      // Need to get section students ID
+      //GET request
+
       axios
         .post(createAttemptUrl, {
-          section_students_id: userId,
+          user_id: userId,
           exam_id: examId,
           time_started: date.toISOString(),
         })
@@ -96,7 +100,7 @@ export default function Question({ examId, userId, token }) {
     }
   }, [axios, baseURL, examId, userId]);
 
-  //Initiate TypeDNA Listener
+  // Initiate TypeDNA Listener
   let tdna = new TypeDNA();
   const typingPattern = tdna.getTypingPattern({
     type: 0,
@@ -104,9 +108,15 @@ export default function Question({ examId, userId, token }) {
     targetId: "typeDnaAnswer",
   });
 
+  // const currentQ = questionObject.questions.length
+  //   ? questionObject.questions[questionIndex]
+  //   : "";
+
+  const currentQ = questionObject.questions[questionIndex];
   const apiRoute = baseURL + `/api/${userId}`;
   const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
-  const exam_question_id = currentQ.questionId;
+  /// look into bug here. Cannot read property id of undefined
+  console.log(currentQ);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -131,7 +141,7 @@ export default function Question({ examId, userId, token }) {
 
       return axios
         .post(submitAnswerUrl, {
-          exam_question_id,
+          exam_question_id: currentQ.questionId,
           exam_attempt_id: attemptId,
           answer: answerText,
           confidence_level: confidenceValue,

@@ -6,6 +6,7 @@ import {
   Card,
   Collapse,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 import { useState, useEffect } from "react";
 
 import AddIcon from "@material-ui/icons/Add";
@@ -23,7 +24,6 @@ export default function UserDetails(props) {
   const { user, type, setTdnaOpen } = props;
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(false);
-
   const [classes, setClasses] = useState([]);
 
   useEffect(() => {
@@ -141,6 +141,7 @@ export default function UserDetails(props) {
               </Box>
               <Box minWidth="180px">
                 <Button
+                  color="primary"
                   onClick={handleSectionClick}
                   size="small"
                   variant={form === "Section" ? "contained" : "text"}
@@ -151,6 +152,7 @@ export default function UserDetails(props) {
               </Box>
               <Box ml={1} minWidth="180px">
                 <Button
+                  color="primary"
                   onClick={handleClassClick}
                   size="small"
                   variant={form === "Class" ? "contained" : "text"}

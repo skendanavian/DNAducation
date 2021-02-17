@@ -35,6 +35,7 @@ const calculateExamConfidence = (array) => {
   const confidencePercentage = Math.ceil(
     (validScoresSum * 100) / (validScores.length * 4)
   );
+  console.log({ confidencePercentage });
 
   return confidencePercentage;
 };
