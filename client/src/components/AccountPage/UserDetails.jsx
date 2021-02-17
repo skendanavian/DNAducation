@@ -15,7 +15,7 @@ import SectionForm from "./SectionForm";
 import ClassForm from "./ClassForm";
 import TypeDnaModal from "../TypeDnaModal";
 
-import { fetchClasses } from "../../helpers/dataFetchers";
+import { fetchClasses } from "../../helpers/requestHelpers";
 
 export default function UserDetails(props) {
   const { user, type, setTdnaOpen } = props;

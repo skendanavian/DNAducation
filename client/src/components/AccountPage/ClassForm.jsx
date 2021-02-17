@@ -8,7 +8,7 @@ import Box from "@material-ui/core/Box";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import { postClass } from "../../helpers/dataFetchers";
+import { postClass } from "../../helpers/requestHelpers";
 
 const useStyles = makeStyles((theme) => ({
   select: {
