@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import TypeDNA from "../typeDna/typingdna";
@@ -19,6 +19,8 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+
+require("dotenv").config({ path: "../../../.env" });
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Question({ examId, userId, token }) {
   const history = useHistory();
   const classes = useStyles();
-
+  const [confidenceArray, setConfidenceArray] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
   const [questionObject, setQuestionObject] = useState({ questions: [{}] });
@@ -63,12 +65,7 @@ export default function Question({ examId, userId, token }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Don't need to be in state
   const [attemptId, setAttemptId] = useState("");
-  const [confidenceArray, setConfidenceArray] = useState([]);
-
-  console.log(questionObject);
-
   const axios = generateAxios(token);
   const baseURL = process.env.REACT_APP_REQUEST_URL;
 
@@ -77,9 +74,6 @@ export default function Question({ examId, userId, token }) {
       const createAttemptUrl = baseURL + "/attempts";
       const getQuestionsUrl = baseURL + `/exams/${examId}/questions`;
       const date = new Date(Date.now());
-
-      // Need to get section students ID
-      //GET request
 
       axios
         .post(createAttemptUrl, {
@@ -93,12 +87,13 @@ export default function Question({ examId, userId, token }) {
         })
         .then((res) => {
           const data = formatExamQuestions(res.data);
+          console.log("setting question object");
           setQuestionObject(data);
           setLoading(false);
         })
         .catch((err) => console.error(err));
     }
-  }, [axios, baseURL, examId, userId]);
+  }, [examId, userId]);
 
   // Initiate TypeDNA Listener
   let tdna = new TypeDNA();
@@ -108,23 +103,25 @@ export default function Question({ examId, userId, token }) {
     targetId: "typeDnaAnswer",
   });
 
-  // const currentQ = questionObject.questions.length
-  //   ? questionObject.questions[questionIndex]
-  //   : "";
+  const currentQ = questionObject.questions.length
+    ? questionObject.questions[questionIndex]
+    : "";
 
-  const currentQ = questionObject.questions[questionIndex];
+  // const currentQ = questionObject.questions[questionIndex];
   const apiRoute = baseURL + `/api/${userId}`;
   const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
   /// look into bug here. Cannot read property id of undefined
-  console.log(currentQ);
+  // console.log(currentQ);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log({ e });
+
     tdna.stop();
 
     axios.post(apiRoute, { userId, typingPattern }).then((res) => {
       console.log(res.data);
-
+      console.log("ConfArray at start of submit", confidenceArray);
       const { highConfidence, result, action, statusCode } = res.data;
       let confidenceValue;
       console.log({ action });
@@ -132,12 +129,33 @@ export default function Question({ examId, userId, token }) {
       if (!action.includes("verify") || statusCode !== 200) {
         // Error case: values of 0 will be thrown out when calculating average
         confidenceValue = 0;
+        console.log("failed response - confidence set to 0");
       } else {
         confidenceValue = calculateAnswerConfidence(result, highConfidence);
+        console.log(
+          `successful typingDNA response, confidence set at ${confidenceValue}`
+        );
       }
+
       console.log(confidenceValue);
       console.log(typingPattern);
+
+      // const prevArray = localStorage.getItem("confArray");
+      // console.log({ prevArray });
+
+      // localStorage.setItem("confArray", [...prevArray, confidenceValue]);
+      // const postArray = localStorage.getItem("confArray");
+
+      // console.log({ postArray });
+      // if (!confidenceArray.length) {
+      //   setConfidenceArray([confidenceValue]);
+      console.log("ConfArray before state update in submit", confidenceArray);
+
+      // } else {
       setConfidenceArray((prev) => [...prev, confidenceValue]);
+      // }
+
+      console.log("ConfArray after state update in submit", confidenceArray);
 
       return axios
         .post(submitAnswerUrl, {
@@ -147,13 +165,14 @@ export default function Question({ examId, userId, token }) {
           confidence_level: confidenceValue,
         })
         .then((res) => {
+          console.log(res);
           // Update exam attempt with avg confidence
           if (currentQ.questionNumber === questionObject.questions.length) {
             const submitExamUrl = baseURL + `/attempts/${attemptId}`;
             const date = new Date(Date.now());
-            const confidencePercentage = calculateExamConfidence(
-              confidenceArray
-            );
+            const confidencePercentage = calculateExamConfidence([
+              ...confidenceArray,
+            ]);
             return axios
               .patch(submitExamUrl, {
                 id: attemptId,
@@ -172,6 +191,9 @@ export default function Question({ examId, userId, token }) {
                 return;
               });
           }
+          // setConfidenceArray((prev) => [...prev, confidenceValue]);
+          console.log("confArray at end", confidenceArray);
+
           setAnswerText("");
           setQuestionIndex(questionIndex + 1);
           return;
@@ -183,6 +205,10 @@ export default function Question({ examId, userId, token }) {
           );
         });
     });
+  };
+
+  const handleChange = (e) => {
+    setAnswerText(e.target.value);
   };
 
   return (
@@ -238,9 +264,7 @@ export default function Question({ examId, userId, token }) {
               multiline
               rows={15}
               required
-              onChange={(e) => {
-                setAnswerText(e.target.value);
-              }}
+              onChange={handleChange}
               InputProps={{
                 id: "typeDnaAnswer",
               }}

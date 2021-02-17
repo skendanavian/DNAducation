@@ -28,6 +28,7 @@ const calculateAnswerConfidence = (matchValue, confidenceValue) => {
   return score;
 };
 const calculateExamConfidence = (array) => {
+  console.log("array coming into avg confidence func", array);
   const validScores = array.filter((e) => e !== 0);
 
   const validScoresSum = validScores.reduce((a, b) => a + b, 0);
@@ -36,6 +37,7 @@ const calculateExamConfidence = (array) => {
     (validScoresSum * 100) / (validScores.length * 4)
   );
   console.log({ confidencePercentage });
+  console.log("conf percentage from avgConf func", confidencePercentage);
 
   return confidencePercentage;
 };
