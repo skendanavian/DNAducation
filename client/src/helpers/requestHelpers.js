@@ -71,10 +71,10 @@ export function postClass(classDetails) {
   return axios.post(classesURL, classDetails);
 }
 
-export function postSection(classDetails) {
-  const classesURL = `${baseURL}/sections`;
+export function postSection(sectionDetails) {
+  const sectionsURL = `${baseURL}/sections`;
 
   const axios = generateAxios();
 
-  return axios.post(classesURL, classDetails);
+  return axios.post(sectionsURL, sectionDetails);
 }
