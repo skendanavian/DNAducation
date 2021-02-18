@@ -10,7 +10,6 @@ import {
 } from "../helpers/calculateConfidence";
 import generateAxios from "../helpers/generateAxios";
 import { formatExamQuestions } from "../helpers/formatExamQuestions";
-
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -19,6 +18,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,25 +30,27 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    marginTop: "2rem",
-    margin: "auto",
+    marginTop: "1.2rem",
   },
   centerText: {
     textAlign: "center",
   },
   question: {
     maxWidth: "70vw",
-    margin: "1rem auto",
+    margin: "1.2rem auto",
     fontSize: "1.2rem",
     color: "black",
   },
   answerField: {
-    width: "70vw",
+    width: "60vw",
     margin: "0.5rem auto",
-    fontSize: "1.2rem",
+    fontSize: "1.1rem",
   },
   error: {
     color: "#Df2935",
+  },
+  markValue: {
+    padding: "0.5rem",
   },
 }));
 
@@ -211,10 +213,12 @@ export default function Question({ examId, userId, token }) {
             className={classes.centerText}
           >
             Question {currentQ.questionNumber}
-            <Typography color="secondary">
+            <Typography className={classes.markValue} color="primary">
               {currentQ.markValue} marks
             </Typography>
+            <Divider />
           </Typography>
+
           <Typography className={`${classes.centerText} ${classes.question}`}>
             {currentQ.question}
           </Typography>
@@ -231,7 +235,7 @@ export default function Question({ examId, userId, token }) {
               placeholder="Write Answer Here....."
               value={answerText}
               multiline
-              rows={15}
+              rows={13}
               required
               onChange={(e) => {
                 setAnswerText(e.target.value);
