@@ -14,7 +14,6 @@ import { IconButton } from "@material-ui/core";
 
 const useStyles = makeStyles({
   table: {
-    // minWidth: 650,
     backgroundColor: "#f5f5f5",
   },
 });

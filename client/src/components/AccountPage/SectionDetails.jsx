@@ -44,7 +44,9 @@ export default function SectionDetails(props) {
           <Typography color="textSecondary" variant="body2">
             {code}
           </Typography>
-          <Typography variant="h6">{title}</Typography>
+          <Typography variant="h6" color="primary">
+            {title}
+          </Typography>
           <Box>
             <Typography variant="body2" display="inline" color="textSecondary">
               Professor:{" "}

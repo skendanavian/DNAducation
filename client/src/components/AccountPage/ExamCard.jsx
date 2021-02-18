@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
+    color: "#00296B",
   },
   detailsOpened: {
     gridRowStart: 1,
