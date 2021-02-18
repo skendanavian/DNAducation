@@ -85,7 +85,7 @@ export default function AccountContent(props) {
   } else if (view === "Attempt") {
     return (
       <Box>
-        <AttemptView attemptId={attemptId}></AttemptView>
+        <AttemptView token attemptId={attemptId}></AttemptView>
       </Box>
     );
   } else {

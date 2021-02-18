@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import TextField from "@material-ui/core/TextField";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
 
 import { getAttemptData, markAnswers } from "../../helpers/requestHelpers";
-import { Button, TextField } from "@material-ui/core";
 
 export default function AttemptView(props) {
-  const { attemptId } = props;
+  const { attemptId, token } = props;
+  console.log({ props });
   // we need exam, questions, attempt, attempt answers
   const [attemptData, setAttemptData] = useState({
     attempt: {},
@@ -43,21 +46,33 @@ export default function AttemptView(props) {
     return <Typography>Loading...</Typography>;
   }
 
-  const submitHandler = () => {
-    // [{mark, examAnswerId}]
-    const fixtures = [
-      { mark: 20, examAnswerId: 37 },
-      { mark: 30, examAnswerId: 38 },
-      { mark: 40, examAnswerId: 39 },
-    ];
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    markAnswers(attemptId, fixtures)
+    // const { id: attemptsId } = attemptData.attempt;
+    // const { id: examId } = attemptData.exam;
+
+    const sendMarks = Object.entries(marks).map(([examAnswerId, mark]) => {
+      return { mark, examAnswerId };
+    });
+
+    markAnswers(attemptId, sendMarks)
       .then((result) => {
         console.log(result);
       })
       .catch((err) => {
         console.error(err);
       });
+
+    console.log("clicked");
+  };
+
+  const markHandler = (e, answerId, index) => {
+    setMarks({
+      ...marks,
+      [answerId]: e.target.value,
+    });
+    console.log(marks);
   };
 
   const { attempt, exam, questions, answers } = attemptData;
@@ -66,22 +81,93 @@ export default function AttemptView(props) {
     return { a: answer, q: questions[index] };
   });
 
+  console.log(displayAttempt);
+
   return (
-    <Box>
-      <Typography>Title: {exam && exam.title}</Typography>
-      <Typography>Attempt Id:{attempt && attempt.id}</Typography>
-      {displayAttempt &&
-        displayAttempt.map((dAtt, index) => {
-          return (
-            <Box display="flex" key={dAtt}>
-              <Typography>{dAtt.q.question}</Typography>
-              <Typography>{dAtt.a.answer}</Typography>
-              <TextField value={marks[index]}></TextField>
-              <Typography>Out of: {}</Typography>
-            </Box>
-          );
-        })}
-      <Button onClick={submitHandler}>Submit</Button>
+    <Box margin="auto">
+      <form onSubmit={handleSubmit}>
+        <Paper>
+          <Box margin="1rem" padding="1rem" textAlign="center">
+            <Typography variant="h5" color="primary">
+              Title: {exam && exam.title}
+            </Typography>
+
+            <hr />
+            <Typography color="primary" variant="p">
+              Attempt Id: {attempt && attempt.id}
+            </Typography>
+
+            <hr />
+            <Typography color="primary" variant="p">
+              TypingDNA Authentication Rating:{" "}
+              {attempt && attempt.average_confidence} / 100
+            </Typography>
+            <hr />
+          </Box>
+
+          {displayAttempt &&
+            displayAttempt.map((dAtt, index) => {
+              return (
+                <Box
+                  margin="auto"
+                  display="flex"
+                  flexDirection="column"
+                  width="80%"
+                  key={index}
+                >
+                  <Typography color="primary" variant="h6">
+                    Question {dAtt.q.question_number}
+                  </Typography>
+                  <Box margin="1rem auto">
+                    <Typography>{dAtt.q.question}</Typography>
+                    <Box margin="1rem auto">
+                      <Typography color="primary" variant="h6">
+                        Answer {dAtt.q.question_number}
+                      </Typography>
+                    </Box>
+                    <Typography>{dAtt.a.answer}</Typography>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      margin="2rem auto 2rem auto"
+                    >
+                      <TextField
+                        id="mark"
+                        type="number"
+                        label="Marks"
+                        variant="outlined"
+                        required
+                        // value={marks[dAtt.a.id]}
+                        name="marks"
+                        InputProps={{
+                          inputProps: { min: 0, max: 100 },
+                        }}
+                        autoFocus
+                        onChange={(e) => markHandler(e, dAtt.a.id)}
+                      />
+                      <Box ml={2}>
+                        <Typography m={10} color="primary" variant="h6">
+                          / {dAtt.q.mark_value}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <hr />
+                  </Box>
+                </Box>
+              );
+            })}
+          <Box
+            // margin="1rem auto"
+            padding="3rem"
+            display="flex"
+            justifyContent="center"
+          >
+            <Button type="submit" variant="contained" color="secondary">
+              Submit Grade
+            </Button>
+          </Box>
+        </Paper>
+      </form>
     </Box>
   );
 }
