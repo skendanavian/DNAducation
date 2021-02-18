@@ -68,9 +68,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: PRIMARY,
   },
   flexRox: {
-    display: "flex !important",
+    display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
   },
   counter: {
     marginLeft: "auto",
@@ -209,18 +208,6 @@ export default function ExamCard(props) {
             START
           </Button>
         )}
-        {/* {type === "Teacher" && (
-          <Typography
-            className={classes.counter}
-            variant="b2"
-            color="primary"
-            alignItems="flex-end"
-            // display="inline"
-            // marginLeft="20rem"
-          >
-            12 of 30
-          </Typography>
-        )} */}
       </CardActions>
       <Divider />
       <Dialog

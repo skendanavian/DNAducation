@@ -79,7 +79,10 @@ export default function LandingPage() {
         </div>
 
         <Typography variant="h6" color="primary" className={classes.margin}>
-          The solution for educational assessments in the digital age!{" "}
+          Educational assessments in the age of remote learning!{" "}
+        </Typography>
+        <Typography variant="h6" color="primary" className={classes.margin}>
+          Typing Biometrics{" "}
         </Typography>
       </Box>
     </div>
