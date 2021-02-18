@@ -68,7 +68,7 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
-  const markAnswers = async (marks) => {
+  const markAnswers = (marks) => {
     // [{mark, examAnswerId}]
 
     const patches = [];
@@ -81,6 +81,16 @@ module.exports = (db) => {
       );
     }
     return Promise.all(patches);
+  };
+
+  const markAttempt = (attemptId, marks_earned) => {
+    return db("exam_attempts")
+      .where("id", "=", attemptId)
+      .update({
+        marks_earned
+      })
+      .returning("*")
+      .then((result) => result);
   };
 
   const updateAttempt = (data) => {
@@ -178,5 +188,6 @@ module.exports = (db) => {
     getAnswersByAttemptId,
     getQuestionsbyIds,
     markAnswers,
+    markAttempt,
   };
 };

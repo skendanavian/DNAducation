@@ -10,6 +10,7 @@ module.exports = ({
   updateAttempt,
   setExamAttemptAnswer,
   submitMarkForAnswer,
+  markAttempt,
   markAnswers,
   getSectionStudentId,
   getAnswersByAttemptId,
@@ -96,10 +97,15 @@ module.exports = ({
       .catch((err) => next(err));
   });
 
-  //teacher marks answers after submittal
-  router.patch(`/mark`, (req, res, next) => {
-    const {marks} = req.body;
-    markAnswers(marks)
+  //teacher marks attempt and answers after submittal
+  router.patch(`/:attemptId/mark`, (req, res, next) => {
+    const { marks } = req.body;
+    console.log(req.body);
+    const { attemptId } = req.params;
+    const marks_earned = marks.reduce((acc, m) => acc + m.mark, 0);
+    const markAttemptPatch = markAttempt(Number(attemptId), marks_earned);
+    const markAnswersPatch = markAnswers(marks);
+    return Promise.all([markAttemptPatch, markAnswersPatch])
       .then((result) => {
         res.json(result);
       })
