@@ -22,8 +22,14 @@ module.exports = {
     client: 'pg',
     // connection: process.env.DATABASE_URL,
     connection: {
-      host:process.env.DATABASE_URL,
+      host:"ec2-54-198-73-79.compute-1.amazonaws.com",
+      database: "d35vh2lj2daeq5",
+      user: "tofshwckvdsnug",
+      port: 5432,
+      password: "84c4e1a6a609681393b66684cc6eb580a07e9399e758cf56661d03d8f508d34d",
       ssl: true
+
+
     },
     migrations: {
         directory: __dirname + '/db/migrations',
