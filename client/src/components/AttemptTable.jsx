@@ -15,11 +15,12 @@ import { IconButton } from "@material-ui/core";
 const useStyles = makeStyles({
   table: {
     // minWidth: 650,
+    backgroundColor: "#f5f5f5",
   },
 });
 
 export default function AttemptTable(props) {
-  const { attempts, dueDate, type, updateContentView } = props;
+  const { attempts, type, updateContentView } = props;
   const classes = useStyles();
 
   const clickAttemptHandler = (attemptId) => {
@@ -34,41 +35,47 @@ export default function AttemptTable(props) {
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
-        <TableHead>
+        <TableHead color="primary">
           <TableRow>
+            {type === "Teacher" && <TableCell align="left">Name:</TableCell>}
             <TableCell>Submitted:</TableCell>
-            <TableCell align="right">Status:</TableCell>
+            {type === "Teacher" && <TableCell>Verification:</TableCell>}
             <TableCell align="right">Mark:</TableCell>
-            <TableCell align="right">Open:</TableCell>
+            {type === "Teacher" && <TableCell align="right">Open:</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
           {attempts &&
             attempts.map((row, index) => {
-              let submissionStatus;
-              if (row.time_submitted) {
-                submissionStatus = datesAreInOrder(row.time_submitted, dueDate)
-                  ? "On time"
-                  : "Late";
-              } else {
-                submissionStatus = "Not submitted";
-              }
               return (
                 <TableRow key={`${row.created_at}${index}`}>
+                  {type === "Teacher" && (
+                    <TableCell component="th" scope="row">
+                      {row.name}
+                    </TableCell>
+                  )}
                   <TableCell component="th" scope="row">
-                    {toReadable(row.time_submitted)}
+                    {row.time_submitted
+                      ? toReadable(row.time_submitted)
+                      : "Not Submitted"}
                   </TableCell>
-                  <TableCell align="right">{submissionStatus}</TableCell>
+                  {type === "Teacher" && (
+                    <TableCell align="center">
+                      {row.average_confidence}%
+                    </TableCell>
+                  )}
                   <TableCell align="right">
                     {row.marks_earned || "Not marked"}
                   </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      onClick={() => clickAttemptHandler(row.exam_attempt_id)}
-                    >
-                      <LaunchIcon color="primary" />
-                    </IconButton>
-                  </TableCell>
+                  {type === "Teacher" && (
+                    <TableCell align="right">
+                      <IconButton
+                        onClick={() => clickAttemptHandler(row.exam_attempt_id)}
+                      >
+                        <LaunchIcon color="primary" />
+                      </IconButton>
+                    </TableCell>
+                  )}
                 </TableRow>
               );
             })}
