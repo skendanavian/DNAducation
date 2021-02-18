@@ -68,8 +68,8 @@ export default function Register({ setToken, setUserId }) {
     studentId: "",
     email: "",
     password: "",
+    isTeacher: false,
   });
-  const [isTeacher, setIsTeacher] = useState(false);
   const submitRegistration = (e) => {
     e.preventDefault();
 
@@ -102,9 +102,10 @@ export default function Register({ setToken, setUserId }) {
   };
 
   const checkboxHandler = () => {
-    setIsTeacher((prev) => !prev);
-
-    console.log("checked");
+    setRegistrationForm((prev) => ({
+      ...registrationForm,
+      isTeacher: !prev.isTeacher,
+    }));
   };
 
   return (
@@ -197,7 +198,8 @@ export default function Register({ setToken, setUserId }) {
                 label="Teacher Account:"
                 control={
                   <Checkbox
-                    checked={isTeacher}
+                    name="isTeacher"
+                    checked={registrationForm.isTeacher}
                     onChange={checkboxHandler}
                     inputProps={{ "aria-label": "primary checkbox" }}
                     color="secondary"

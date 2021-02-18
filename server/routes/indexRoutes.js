@@ -61,16 +61,14 @@ module.exports = ({
             student_number: studentId,
             password: hashedPassword,
             email,
-            is_teacher: isTeacher || false
+            is_teacher: isTeacher || false,
           }).then((res) => {
-            console.log(res);
+            console.log("::", res);
             const user = res[0];
-            console.log(user);
-            const {userId} = user;
-            console.log({userId});
-
-            response.json({ token, userId });
-          })
+            console.log(":::", user);
+            const { id } = user;
+            response.json({ token, userId: id });
+          });
         })
         .catch((err) => {
           next(err);
