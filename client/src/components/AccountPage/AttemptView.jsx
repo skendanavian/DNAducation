@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
-import { getAttemptData } from "../../helpers/requestHelpers";
-import { TextField } from "@material-ui/core";
+import { getAttemptData, markAnswers } from "../../helpers/requestHelpers";
+import { Button, TextField } from "@material-ui/core";
 
 export default function AttemptView(props) {
   const { attemptId } = props;
-  console.log(props);
   // we need exam, questions, attempt, attempt answers
   const [attemptData, setAttemptData] = useState({
     attempt: {},
@@ -26,6 +25,9 @@ export default function AttemptView(props) {
           const exam = data[2][0];
           const questions = data[3];
 
+          console.table(questions);
+          console.table(answers);
+
           setAttemptData({
             attempt,
             exam,
@@ -41,12 +43,16 @@ export default function AttemptView(props) {
     return <Typography>Loading...</Typography>;
   }
 
-  // const markHandler = (markIndex) => {
-  //   setMarks((prev) => {
-  //     // prev[markIndex] = ;
-  //     return prev;
-  //   });
-  // };
+  const submitHandler = () => {
+    // [{mark, examAnswerId}]
+    const fixtures = [
+      { mark: 20, examAnswerId: 37 },
+      { mark: 30, examAnswerId: 38 },
+      { mark: 40, examAnswerId: 39 },
+    ];
+
+    markAnswers(fixtures);
+  };
 
   const { attempt, exam, questions, answers } = attemptData;
 
@@ -69,6 +75,7 @@ export default function AttemptView(props) {
             </Box>
           );
         })}
+      <Button onClick={submitHandler}>Submit</Button>
     </Box>
   );
 }
