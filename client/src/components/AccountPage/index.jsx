@@ -28,6 +28,7 @@ const AccountPage = (props) => {
     type: null,
     view: "Loading",
     sectionId: null,
+    attemptId: null,
   });
   const [tdnaOpen, setTdnaOpen] = useState(false);
   const updateContentView = ({ type, view, sectionId, attemptId }) => {
@@ -95,6 +96,7 @@ const AccountPage = (props) => {
                   return {
                     text: code,
                     type,
+                    sectionId,
                     navAction: () =>
                       updateContentView({
                         type,
@@ -152,6 +154,7 @@ const AccountPage = (props) => {
                   return {
                     text: `${code} ${namer.getName(code)}`,
                     type,
+                    sectionId,
                     navAction: () =>
                       updateContentView({
                         type,
@@ -190,6 +193,7 @@ const AccountPage = (props) => {
     navButtons,
     setToken,
     pageTitle: "🧬 DNAducation",
+    contentView,
   };
   const accountContentProps = {
     user,

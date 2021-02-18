@@ -17,8 +17,8 @@ module.exports = ({
 
   //TODO: setup /register route
 
-  router.post("/register", (req, res, next) => {
-    const { name, studentId, email, password } = req.body;
+  router.post("/register", (req, response, next) => {
+    const { name, studentId, email, password, isTeacher } = req.body;
     const salt = bcrypt.genSaltSync(13);
     const hashedPassword = bcrypt.hashSync(password, salt);
     if (!email || !password || !studentId || !name) {
@@ -29,6 +29,7 @@ module.exports = ({
         studentId,
         email,
         password,
+        isTeacher
       });
       //Check DB for email and student ID
 
@@ -55,13 +56,21 @@ module.exports = ({
             { expiresIn: "24h" }
           );
 
-          createNewUser({
+          return createNewUser({
             name,
             student_number: studentId,
             password: hashedPassword,
             email,
-          });
-          res.json({ token });
+            is_teacher: isTeacher || false
+          }).then((res) => {
+            console.log(res);
+            const user = res[0];
+            console.log(user);
+            const {userId} = user;
+            console.log({userId});
+
+            response.json({ token, userId });
+          })
         })
         .catch((err) => {
           next(err);

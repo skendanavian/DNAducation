@@ -57,10 +57,16 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  listSelected: {
+    backgroundColor: "#fdc500",
+  },
+  listUnSelected: {
+    backgroundColor: "white",
+  },
 }));
 
 export default function Nav(props) {
-  const { navButtons, pageTitle, setToken } = props;
+  const { navButtons, pageTitle, setToken, contentView } = props;
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
@@ -86,12 +92,21 @@ export default function Nav(props) {
                 {index > 0 && listSection.length > 0 && <Divider />}
                 <List>
                   {listSection.map((button, index) => {
-                    const { text, navAction, type } = button;
+                    const { text, navAction, type, sectionId } = button;
+                    const isHighlighted =
+                      (sectionId === contentView.sectionId &&
+                        type === contentView.type) ||
+                      text === contentView.view;
                     return (
                       <ListItem
                         button
                         key={`${text}${index}`}
                         onClick={navAction}
+                        className={
+                          isHighlighted
+                            ? classes.listSelected
+                            : classes.listUnSelected
+                        }
                       >
                         <ListItemIcon>
                           <SubjectIcon {...{ text, type }} />

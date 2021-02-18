@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import generateAxios from "../helpers/generateAxios";
 import { useHistory } from "react-router-dom";
 
@@ -7,6 +7,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
+import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -14,6 +15,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import LandingImage from "../images/landingBg.jpg";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
   },
   paper: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(3),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -49,14 +52,14 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   regContainer: {
-    maxWidth: "70vw",
+    maxWidth: "60vw",
   },
 }));
 
 require("dotenv").config({ path: "../../.env" });
 const baseURL = process.env.REACT_APP_REQUEST_URL;
 
-export default function Register({ setToken }) {
+export default function Register({ setToken, setUserId }) {
   const history = useHistory();
   const classes = useStyles();
   const [registrationForm, setRegistrationForm] = useState({
@@ -66,13 +69,15 @@ export default function Register({ setToken }) {
     email: "",
     password: "",
   });
-
+  const [isTeacher, setIsTeacher] = useState(false);
   const submitRegistration = (e) => {
     e.preventDefault();
 
     const axios = generateAxios();
+    localStorage.removeItem("userId");
+    sessionStorage.removeItem("jwt");
 
-    const { firstName, lastName, studentId } = registrationForm;
+    const { firstName, lastName, studentId, isTeacher } = registrationForm;
     const name = `${firstName} ${lastName}`;
     const data = { name, ...registrationForm };
 
@@ -81,6 +86,8 @@ export default function Register({ setToken }) {
       .then((res) => {
         console.log("Register response: ", res.data);
         setToken(res.data.token);
+        setUserId(res.data.userId);
+        localStorage.setItem("userId", res.data.userId);
         sessionStorage.setItem("jwt", res.data.token);
         history.push("/account");
       })
@@ -92,6 +99,12 @@ export default function Register({ setToken }) {
       ...registrationForm,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const checkboxHandler = () => {
+    setIsTeacher((prev) => !prev);
+
+    console.log("checked");
   };
 
   return (
@@ -179,7 +192,19 @@ export default function Register({ setToken }) {
               onChange={handleInput}
               inputProps={{ maxLength: 40 }}
             />
-
+            <FormGroup row>
+              <FormControlLabel
+                label="Teacher Account:"
+                control={
+                  <Checkbox
+                    checked={isTeacher}
+                    onChange={checkboxHandler}
+                    inputProps={{ "aria-label": "primary checkbox" }}
+                    color="secondary"
+                  />
+                }
+              />
+            </FormGroup>
             <Button
               type="submit"
               fullWidth

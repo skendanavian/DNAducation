@@ -8,13 +8,14 @@ module.exports = (db) => {
   };
 
   const createNewUser = (data) => {
-    const { name, student_number, password, email } = data;
+    const { name, student_number, password, email, is_teacher } = data;
     return db("users")
       .insert({
         name,
         student_number,
         email,
         password,
+        is_teacher
       })
       .returning("*")
       .then((result) => result);

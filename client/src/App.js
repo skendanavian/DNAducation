@@ -58,7 +58,7 @@ function App() {
             {token ? (
               <Redirect to="/account" />
             ) : (
-              <Register setToken={setToken} setUserId={setUserId} />
+              <Register userId={userId} setToken={setToken} setUserId={setUserId} />
             )}
           </Route>
           <Route path="/account">
