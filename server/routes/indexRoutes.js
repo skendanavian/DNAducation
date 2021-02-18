@@ -63,10 +63,7 @@ module.exports = ({
             email,
             is_teacher: isTeacher || false,
           }).then((res) => {
-            console.log("::", res);
-            const user = res[0];
-            console.log(":::", user);
-            const { id } = user;
+            const { id } = res[0];
             response.json({ token, userId: id });
           });
         })
