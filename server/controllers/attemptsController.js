@@ -68,10 +68,20 @@ module.exports = (db) => {
       .then((result) => result);
   };
 
-  const markAttempts = (marks) => {
-    return db
-      .where
-  }
+  const markAnswers = async (marks) => {
+    // [{mark, examAnswerId}]
+
+    const patches = [];
+    for (let i = 0; i < marks.length; i++) {
+      const { mark, examAnswerId } = marks[i];
+      patches.push(
+        db("exam_answers").where("id", "=", examAnswerId).update({
+          mark,
+        })
+      );
+    }
+    return Promise.all(patches);
+  };
 
   const updateAttempt = (data) => {
     const { id, average_confidence, time_submitted } = data;
@@ -139,17 +149,13 @@ module.exports = (db) => {
       .from("exams")
       .where({ id: exam_id })
       .then((result) => {
-        console.log(result);
         const section_id = result[0] && result[0].section_id;
         return db
           .select("id")
           .from("section_students")
           .where({ user_id, section_id });
       })
-      .then((result) => {
-        console.log(result);
-        return result;
-      });
+      .then((result) => result);
 
     // return db
     //   .select("*")
@@ -171,5 +177,6 @@ module.exports = (db) => {
     getSectionStudentId,
     getAnswersByAttemptId,
     getQuestionsbyIds,
+    markAnswers,
   };
 };
