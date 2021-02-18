@@ -52,6 +52,10 @@ const useStyles = makeStyles((theme) => ({
   markValue: {
     padding: "0.5rem",
   },
+  success: {
+    color: "#5cb85c",
+    textAlign: "center",
+  },
 }));
 
 export default function Question({ examId, userId, token }) {
@@ -63,6 +67,7 @@ export default function Question({ examId, userId, token }) {
   const [questionObject, setQuestionObject] = useState({ questions: [{}] });
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState(false);
   const [attemptId, setAttemptId] = useState("");
   const [confidenceArray, setConfidenceArray] = useState([]);
 
@@ -166,12 +171,25 @@ export default function Question({ examId, userId, token }) {
               return axios.patch(incrementSubmissionURL);
             })
             .then((res) => {
-              history.push("/account");
+              setSuccess(true);
+              const t = setTimeout(() => {
+                setSuccess(false);
+                history.push("/account");
+                clearTimeout(t);
+              }, 1500);
+
               return;
             });
         }
-        setAnswerText("");
-        setQuestionIndex(questionIndex + 1);
+        setSuccess(true);
+        const t = setTimeout(() => {
+          setSuccess(false);
+          setAnswerText("");
+          setQuestionIndex(questionIndex + 1);
+          clearTimeout(t);
+        }, 1500);
+        // setAnswerText("");
+        // setQuestionIndex(questionIndex + 1);
         return;
       })
       .catch((err) => {
@@ -224,6 +242,9 @@ export default function Question({ examId, userId, token }) {
           </Typography>
           <Typography className={classes.error}>
             {errorMessage && errorMessage}
+          </Typography>
+          <Typography className={classes.success}>
+            {success && "Question Submitted"}
           </Typography>
           <form
             onSubmit={(e) => handleSubmit(e)}
