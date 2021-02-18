@@ -51,7 +51,13 @@ export default function AttemptView(props) {
       { mark: 40, examAnswerId: 39 },
     ];
 
-    markAnswers(fixtures);
+    markAnswers(attemptId, fixtures)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const { attempt, exam, questions, answers } = attemptData;

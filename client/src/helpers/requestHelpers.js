@@ -87,8 +87,8 @@ export function getAttemptData(attemptId) {
   return axios.get(attemptsURL);
 }
 
-export function markAnswers(marks) {
-  const markAnswersURL = `${baseURL}/attempts/mark`;
+export function markAnswers(attemptId, marks) {
+  const markAnswersURL = `${baseURL}/attempts/${attemptId}/mark`;
 
   const axios = generateAxios();
 
