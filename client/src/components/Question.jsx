@@ -59,15 +59,10 @@ export default function Question({ examId, userId, token }) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
   const [questionObject, setQuestionObject] = useState({ questions: [{}] });
-
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
-
-  // Don't need to be in state
   const [attemptId, setAttemptId] = useState("");
   const [confidenceArray, setConfidenceArray] = useState([]);
-
-  console.log(questionObject);
 
   const axios = generateAxios(token);
   const baseURL = process.env.REACT_APP_REQUEST_URL;
@@ -77,9 +72,6 @@ export default function Question({ examId, userId, token }) {
       const createAttemptUrl = baseURL + "/attempts";
       const getQuestionsUrl = baseURL + `/exams/${examId}/questions`;
       const date = new Date(Date.now());
-
-      // Need to get section students ID
-      //GET request
 
       axios
         .post(createAttemptUrl, {
@@ -108,81 +100,84 @@ export default function Question({ examId, userId, token }) {
     targetId: "typeDnaAnswer",
   });
 
-  // const currentQ = questionObject.questions.length
-  //   ? questionObject.questions[questionIndex]
-  //   : "";
-
   const currentQ = questionObject.questions[questionIndex];
   const apiRoute = baseURL + `/api/${userId}`;
   const submitAnswerUrl = baseURL + `/attempts/${attemptId}/answers`;
-  /// look into bug here. Cannot read property id of undefined
-  console.log(currentQ);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     tdna.stop();
 
-    axios.post(apiRoute, { userId, typingPattern }).then((res) => {
-      console.log(res.data);
+    axios
+      .post(apiRoute, { userId, typingPattern })
+      .then((res) => {
+        console.log(res.data);
 
-      const { highConfidence, result, action, statusCode } = res.data;
-      let confidenceValue;
-      console.log({ action });
-      console.log(action.includes("verify"));
-      if (!action.includes("verify") || statusCode !== 200) {
-        // Error case: values of 0 will be thrown out when calculating average
-        confidenceValue = 0;
-      } else {
-        confidenceValue = calculateAnswerConfidence(result, highConfidence);
-      }
-      console.log(confidenceValue);
-      console.log(typingPattern);
-      setConfidenceArray((prev) => [...prev, confidenceValue]);
+        const { highConfidence, result, action, statusCode } = res.data;
+        let confidenceValue;
+        console.log({ action });
+        console.log(action.includes("verify"));
+        if (!action.includes("verify") || statusCode !== 200) {
+          // Error case: values of 0 will be thrown out when calculating average
+          confidenceValue = 0;
+        } else {
+          confidenceValue = calculateAnswerConfidence(result, highConfidence);
+        }
 
-      return axios
-        .post(submitAnswerUrl, {
+        if (currentQ.questionNumber < questionObject.questions.length)
+          setConfidenceArray((prev) => [...prev, confidenceValue]);
+
+        const postAnswer = axios.post(submitAnswerUrl, {
           exam_question_id: currentQ.questionId,
           exam_attempt_id: attemptId,
           answer: answerText,
           confidence_level: confidenceValue,
-        })
-        .then((res) => {
-          // Update exam attempt with avg confidence
-          if (currentQ.questionNumber === questionObject.questions.length) {
-            const submitExamUrl = baseURL + `/attempts/${attemptId}`;
-            const date = new Date(Date.now());
-            const confidencePercentage = calculateExamConfidence(
-              confidenceArray
-            );
-            return axios
-              .patch(submitExamUrl, {
-                id: attemptId,
-                average_confidence: confidencePercentage,
-                time_submitted: date.toISOString(),
-              })
-              .then((res) => {
-                const incrementSubmissionURL =
-                  baseURL + `/exams/${questionObject.examId}`;
-                tdna.reset();
-                tdna.start();
-                return axios.patch(incrementSubmissionURL);
-              })
-              .then((res) => {
-                history.push("/account");
-                return;
-              });
-          }
-          setAnswerText("");
-          setQuestionIndex(questionIndex + 1);
-          return;
-        })
-        .catch((err) => {
-          console.log(err);
-          setErrorMessage(
-            "There was a problem submitting this question. Please try again"
-          );
         });
-    });
+
+        return Promise.all([
+          postAnswer,
+          new Promise((res) => res(confidenceValue)),
+        ]);
+      })
+      .then((res) => {
+        const [__, confidenceValue] = res;
+        console.log(res);
+        res.data = confidenceValue;
+        // Update exam attempt with avg confidence
+        if (currentQ.questionNumber === questionObject.questions.length) {
+          const submitExamUrl = baseURL + `/attempts/${attemptId}`;
+          const date = new Date(Date.now());
+          const updatedArray = [...confidenceArray, confidenceValue];
+          const confidencePercentage = calculateExamConfidence(updatedArray);
+          return axios
+            .patch(submitExamUrl, {
+              id: attemptId,
+              average_confidence: confidencePercentage,
+              time_submitted: date.toISOString(),
+            })
+
+            .then(() => {
+              const incrementSubmissionURL =
+                baseURL + `/exams/${questionObject.examId}`;
+              tdna.reset();
+              tdna.start();
+              return axios.patch(incrementSubmissionURL);
+            })
+            .then((res) => {
+              history.push("/account");
+              return;
+            });
+        }
+        setAnswerText("");
+        setQuestionIndex(questionIndex + 1);
+        return;
+      })
+      .catch((err) => {
+        console.log(err);
+        setErrorMessage(
+          "There was a problem submitting this question. Please try again"
+        );
+      });
   };
 
   return (

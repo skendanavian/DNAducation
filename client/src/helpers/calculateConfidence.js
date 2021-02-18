@@ -28,6 +28,8 @@ const calculateAnswerConfidence = (matchValue, confidenceValue) => {
   return score;
 };
 const calculateExamConfidence = (array) => {
+
+  console.log('Calculate Confidence - Array Input', array);
   const validScores = array.filter((e) => e !== 0);
 
   const validScoresSum = validScores.reduce((a, b) => a + b, 0);
