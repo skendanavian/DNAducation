@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CreateExam(props) {
-  const { details, user, token, updateContentView, setTeacherData } = props;
+  const { details, user, token, updateContentView, updateData } = props;
   const { title, code, section_id } = details;
   const classes = useStyles();
   const date = new Date();
@@ -56,7 +56,7 @@ export default function CreateExam(props) {
           date: "",
         });
         setQuestions([{ question: "", mark: "10" }]);
-        setTeacherData((prev) => !prev);
+        updateData();
         setSubmitSuccess(true);
         const t = setTimeout(() => {
           setSubmitSuccess(false);

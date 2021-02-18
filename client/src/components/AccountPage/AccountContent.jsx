@@ -95,7 +95,10 @@ export default function AccountContent(props) {
         user={user}
         token
         updateContentView={updateContentView}
-        setTeacherData={setTeacherData}
+        updateData={() => {
+          setStudentData((prev) => !prev);
+          setTeacherData((prev) => !prev);
+        }}
       ></CreateExam>
     );
   } else if (view === "Attempt") {
@@ -105,11 +108,11 @@ export default function AccountContent(props) {
           contentView={contentView}
           token
           attemptId={attemptId}
+          updateContentView={updateContentView}
           updateData={() => {
             setStudentData((prev) => !prev);
             setTeacherData((prev) => !prev);
           }}
-          updateContentView={updateContentView}
         ></AttemptView>
       </Box>
     );
