@@ -28,8 +28,9 @@ const theme = createMuiTheme({
     },
   },
   typography: {
-    fontSize: 17,
+    fontSize: 15,
   },
+
 });
 
 function App() {
