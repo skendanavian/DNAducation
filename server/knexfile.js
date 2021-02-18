@@ -23,7 +23,7 @@ module.exports = {
     // connection: process.env.DATABASE_URL,
     connection: {
       host:process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }
+      ssl: true
     },
     migrations: {
         directory: __dirname + '/db/migrations',
