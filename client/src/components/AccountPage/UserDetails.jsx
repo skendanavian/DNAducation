@@ -114,8 +114,8 @@ export default function UserDetails(props) {
               disabled={(user && user.has_recorded_typedna) || false}
             >
               {user && !user.has_recorded_typedna
-                ? `Record Your Typing Profile!`
-                : `Typing Profile Completed`}
+                ? `Record Typing Biometrics`
+                : `Typing Biometrics Completed`}
             </Button>
           </Box>
           {open && (

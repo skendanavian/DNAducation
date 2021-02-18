@@ -45,8 +45,11 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-    backgroundColor: LIGHT_GRAY,
+    backgroundColor: "#ddedff",
     minHeight: "100vh",
+    backgroundImage: `url(
+      "https://www.transparenttextures.com/patterns/light-aluminum.png"
+    )`,
   },
   menuButton: {
     marginRight: theme.spacing(2),

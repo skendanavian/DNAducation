@@ -1,4 +1,5 @@
 import { Box, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 
 import SectionDetails from "./SectionDetails";
 import UserDetails from "./UserDetails";
@@ -11,6 +12,12 @@ import AttemptView from "./AttemptView";
 // teacher account -> latest unmarked
 // student code -> latest from section
 // teacher code ->  latest from section
+
+const useStyles = makeStyles((theme) => ({
+  heading: {
+    fontSize: "1.1rem",
+  },
+}));
 
 const examFilter = ({ type, view, exams, token, sectionId }) => {
   if (!exams) return [];
@@ -29,6 +36,7 @@ const examFilter = ({ type, view, exams, token, sectionId }) => {
 };
 
 export default function AccountContent(props) {
+  const styles = useStyles();
   const {
     contentView,
     updateContentView,
@@ -58,7 +66,12 @@ export default function AccountContent(props) {
     return (
       <Box>
         <UserDetails type={type} user={user} setTdnaOpen={setTdnaOpen} />
-        <Typography variant="overline" color="textPrimary">
+        <Typography
+          className={styles.heading}
+          variant="overline"
+          color="primary"
+          align="center"
+        >
           {type === "Student"
             ? "Unsubmitted Assessments"
             : "Unmarked Submissions"}
@@ -111,7 +124,13 @@ export default function AccountContent(props) {
           view={view}
           updateContentView={updateContentView}
         />
-        <Typography variant="overline">All Assessments</Typography>
+        <Typography
+          className={styles.heading}
+          color="primary"
+          variant="overline"
+        >
+          All Assessments
+        </Typography>
         <ExamsContainer
           setExamId={setExamId}
           type={type}

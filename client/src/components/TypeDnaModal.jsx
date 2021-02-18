@@ -13,13 +13,14 @@ import highlightWords from "highlight-words";
 import generateAxios from "../helpers/generateAxios";
 import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { Link } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: "90vh",
     minWidth: "80vw",
     position: "absolute",
-    backgroundColor: "#00296b",
+    backgroundColor: "rgba(221,237,255,0.75)",
     padding: "0.5rem",
   },
   input: {
@@ -48,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     textAlign: "center",
-    color: "#e4b100",
     marginBottom: "0.5rem",
   },
 }));
@@ -56,12 +56,13 @@ const useStyles = makeStyles((theme) => ({
 export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const classes = useStyles();
   const [textValue, setTextValue] = useState("");
-  const [profileAttempt, setProfileAttempt] = useState(1);
+  const [profileAttempt, setProfileAttempt] = useState(0);
   const [profileError, setProfileError] = useState("");
+  const [view, setView] = useState("INTRO");
 
   const testStrings = [
     "Please type out this line to begin recording your typing biometrics profile",
-    "Here is another sentence that will be used to help record your unique typing.",
+    "Here is another sentence that will be used to help record your unique typing style",
     "This is the last sample that you will need to type out before your typing biometrics profile is completed",
   ];
 
@@ -97,6 +98,11 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const submissionError = "Failed to record profile. Please try again.";
 
   const handleButton = (e) => {
+    if (view === "INTRO") {
+      setProfileAttempt(1);
+      setView("PROFILE");
+      return;
+    }
     const apiRoute = process.env.REACT_APP_REQUEST_URL + `/api/${userId}`;
     axios
       .post(apiRoute, { userId, typingPattern })
@@ -148,66 +154,105 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
         modalProps={{ className: classes.root }}
       >
         <DialogContent>
-          <Box
-            className={classes.input}
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            margin="auto"
-          >
-            <Box flexGrow="1">
-              <Typography
-                className={classes.title}
-              >{`Step ${profileAttempt} of 3`}</Typography>
-              <DialogContentText color="primary">
-                {chunks.map(({ text, match, key }) =>
-                  match ? (
-                    <span className={classes.highlight} key={key}>
-                      {text}
-                    </span>
-                  ) : (
-                    <span key={key}>{text}</span>
-                  )
-                )}
-              </DialogContentText>
-              <div
-                className={
-                  textValue.length === testStringLength && matchedText
-                    ? classes.success
-                    : classes.failure
-                }
-              >
-                {profileError && profileError}
-                {!matchedText && textValue.length === testStringLength
-                  ? "Sentence does not match"
-                  : ""}
-                {tooLong && "Too many characters"}
-                {matchedText ? "Exact Match - Please submit your profile" : ""}
-              </div>
+          {view === "INTRO" && (
+            <Box
+              className={classes.input}
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              margin="auto"
+            >
+              <Typography color="primary" component="h1" variant="h5">
+                🧬 DNAducation{" "}
+              </Typography>
+
+              <hr />
+              <Typography>
+                - DNAduction uses an advanced typing biometrics software
+                provided by{" "}
+                <Link href="https://www.typingdna.com/" target="_blank">
+                  Typingdna
+                </Link>{" "}
+                to help promote academic honesty in remote learning
+                environments.{" "}
+              </Typography>
+              <Typography>
+                - In order to take any online assessments, students must first
+                record a typing biometric reference. Please type out the
+                upcoming sentences as you would in your everyday life.
+              </Typography>
             </Box>
-            <Box flexGrow="1">
-              <form>
-                <TextField
-                  variant="outlined"
-                  placeholder="Type the above line here....."
-                  value={textValue}
-                  multiline
-                  rows={5}
-                  width="xl"
-                  required
-                  onChange={(e) => {
-                    handleTyping(e);
-                  }}
-                  InputProps={{
-                    className: classes.input,
-                    id: "typeDna",
-                  }}
-                ></TextField>
-              </form>
+          )}
+
+          {view === "PROFILE" && (
+            <Box
+              className={classes.input}
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              margin="auto"
+            >
+              <Typography color="primary" component="h1" variant="h5">
+                🧬 DNAducation{" "}
+              </Typography>
+              <hr />
+              <Box flexGrow="1">
+                <Typography
+                  color="primary"
+                  className={classes.title}
+                >{`Step ${profileAttempt} of 3`}</Typography>
+                <DialogContentText color="primary">
+                  {chunks.map(({ text, match, key }) =>
+                    match ? (
+                      <span className={classes.highlight} key={key}>
+                        {text}
+                      </span>
+                    ) : (
+                      <span key={key}>{text}</span>
+                    )
+                  )}
+                </DialogContentText>
+                <div
+                  className={
+                    textValue.length === testStringLength && matchedText
+                      ? classes.success
+                      : classes.failure
+                  }
+                >
+                  {profileError && profileError}
+                  {!matchedText && textValue.length === testStringLength
+                    ? "Sentence does not match"
+                    : ""}
+                  {tooLong && "Too many characters"}
+                  {matchedText ? "Exact Match - Please Submit Profile" : ""}
+                </div>
+              </Box>
+              <Box flexGrow="1">
+                <form>
+                  <TextField
+                    variant="outlined"
+                    placeholder="Type the above line here....."
+                    value={textValue}
+                    multiline
+                    rows={5}
+                    width="xl"
+                    required
+                    onChange={(e) => {
+                      handleTyping(e);
+                    }}
+                    InputProps={{
+                      className: classes.input,
+                      id: "typeDna",
+                    }}
+                  ></TextField>
+                </form>
+              </Box>
             </Box>
-          </Box>
+          )}
         </DialogContent>
+
         <DialogActions className={classes.btnGroup}>
           <Button
             onClick={(e) => {
@@ -215,9 +260,14 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
             }}
             variant="contained"
             color="secondary"
-            disabled={!matchedText && inputLength !== testStringLength}
+            disabled={
+              view === "RECORD" &&
+              !matchedText &&
+              inputLength !== testStringLength
+            }
           >
-            Submit Typing Biometrics
+            {view === "INTRO" && "Begin Recording Profile"}
+            {view === "PROFILE" && "Submit Biometrics"}
           </Button>
           <Button onClick={handleClose} color="primary">
             Cancel

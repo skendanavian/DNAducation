@@ -12,16 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { postSection } from "../../helpers/requestHelpers";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-      width: "18ch",
-    },
-  },
-  error: {
-    fontSize: "0.8rem",
-  },
-
   success: {
     color: "#5cb85c",
   },
@@ -72,7 +62,7 @@ export default function SectionForm(props) {
             handleSectionClick();
             setSuccess(false);
             clearTimeout(t);
-          }, 1500);
+          }, 1800);
           setTdnaOpen((prev) => !prev);
         })
         .catch((err) => setError(err.message));
