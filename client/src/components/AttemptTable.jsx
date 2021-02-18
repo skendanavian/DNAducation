@@ -20,7 +20,6 @@ const useStyles = makeStyles({
 
 export default function AttemptTable(props) {
   const { attempts, dueDate, type, updateContentView } = props;
-  console.log(props);
   const classes = useStyles();
 
   const clickAttemptHandler = (attemptId) => {
