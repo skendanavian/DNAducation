@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SectionForm(props) {
-  const { user, classes, setTdnaOpen } = props;
+  const { user, classes, setTdnaOpen, handleSectionClick } = props;
   const styles = useStyles();
 
   const [classCode, setClassCode] = useState("");
@@ -55,6 +55,8 @@ export default function SectionForm(props) {
     } else {
       setError("");
       setStudentNumberError(false);
+      handleSectionClick();
+
       postSection({
         classId: classCode,
         studentNumbers: splitNumbers,
@@ -74,7 +76,7 @@ export default function SectionForm(props) {
           <Box mb={2} display="flex">
             <Box width="100%">
               <TextField
-                helperText="Enter in the Student Numbers to be enrolled in the section, separated by commas"
+                helperText="Enter in the Student Numbers to be enrolled in the section, separated by commas and no spaces"
                 id="student-numbers"
                 label="Student Numbers"
                 variant="outlined"

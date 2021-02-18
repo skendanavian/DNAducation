@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ClassForm(props) {
-  const { setClasses, user } = props;
+  const { setClasses, user, handleClassClick } = props;
   const styles = useStyles();
 
   const [subject, setSubject] = useState("");
@@ -64,6 +64,7 @@ export default function ClassForm(props) {
         setCodeError(false);
         setError("");
         setClasses((prev) => [...prev, { code, id: classRes[0].id }]);
+        handleClassClick();
       })
       .catch((err) => {
         console.error(err);

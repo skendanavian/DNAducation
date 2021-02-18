@@ -60,9 +60,9 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const [profileError, setProfileError] = useState("");
 
   const testStrings = [
-    "Please type out this line to begin setting up your typing dna profile",
-    "Here is another sentence that will be used to record your typing characteristics",
-    "This is the last sample that you will need to type out before your typing dna profile is complete",
+    "Please type out this line to begin recording your typing biometrics profile",
+    "Here is another sentence that will be used to help record your unique typing.",
+    "This is the last sample that you will need to type out before your typing biometrics profile is completed",
   ];
 
   const testString = testStrings[profileAttempt - 1];
@@ -217,7 +217,7 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
             color="secondary"
             disabled={!matchedText && inputLength !== testStringLength}
           >
-            Submit TypeDNA Profile
+            Submit Typing Biometrics
           </Button>
           <Button onClick={handleClose} color="primary">
             Cancel
