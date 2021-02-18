@@ -10,6 +10,7 @@ module.exports = ({
   updateAttempt,
   setExamAttemptAnswer,
   submitMarkForAnswer,
+  markAnswers,
   getSectionStudentId,
   getAnswersByAttemptId,
   getExamById,
@@ -91,6 +92,16 @@ module.exports = ({
         if (!result.length) throw new ErrorHandler(404, "Not found");
         // console.log(result.fields);
         res.json(result[0]);
+      })
+      .catch((err) => next(err));
+  });
+
+  //teacher marks answers after submittal
+  router.patch(`/mark`, (req, res, next) => {
+    const {marks} = req.body;
+    markAnswers(marks)
+      .then((result) => {
+        res.json(result);
       })
       .catch((err) => next(err));
   });
