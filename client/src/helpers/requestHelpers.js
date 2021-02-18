@@ -86,3 +86,11 @@ export function getAttemptData(attemptId) {
 
   return axios.get(attemptsURL);
 }
+
+export function markAnswers(marks) {
+  const markAnswersURL = `${baseURL}/attempts/mark`;
+
+  const axios = generateAxios();
+
+  return axios.patch(markAnswersURL, { marks });
+}
