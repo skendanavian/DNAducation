@@ -27,7 +27,7 @@ module.exports = {
       user: "tofshwckvdsnug",
       port: 5432,
       password: "84c4e1a6a609681393b66684cc6eb580a07e9399e758cf56661d03d8f508d34d",
-      ssl: true
+      // ssl: true
 
 
     },
