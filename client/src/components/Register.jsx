@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   regContainer: {
-    maxWidth: "60vw",
+    maxWidth: "40vw",
   },
 }));
 
