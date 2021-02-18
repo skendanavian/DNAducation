@@ -15,7 +15,7 @@ if (process.env.NODE_ENV !== "production") {
 
 // Database setup
 const knexfile = require("./knexfile");
-const db = require("knex")(knexfile[process.env.NODE_ENV]);
+const db = require("knex")(knexfile[process.env.NODE_ENV || 'production']);
 
 //Middlewars
 const { authMiddleware } = require("./middlewares/authMiddleware");
