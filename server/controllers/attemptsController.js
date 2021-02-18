@@ -7,7 +7,8 @@ module.exports = (db) => {
         "exam_id",
         "average_confidence",
         "time_submitted",
-        "time_started"
+        "time_started",
+        "marks_earned"
       )
       .from("exam_attempts")
       .join(
@@ -17,23 +18,22 @@ module.exports = (db) => {
         "section_students.id"
       )
       .where({ user_id })
+      .whereNotNull('time_submitted')
       .then((result) => result);
   };
 
   const getAttemptsByTeacher = (teacherId) => {
     return (
       db
-
-        // get all sectionsIds for a teacher
-        // get all section_students fro those sections
-        // get all exam_attempts for those sectioon_students
         .select(
           "exam_attempts.id as exam_attempt_id",
           "section_students_id",
           "exam_id",
           "average_confidence",
           "time_submitted",
-          "time_started"
+          "time_started",
+          "marks_earned",
+          "name"
         )
         .from("exam_attempts")
         .join(
@@ -42,6 +42,7 @@ module.exports = (db) => {
           "=",
           "section_students.id"
         )
+        .join('users', "user_id", '=', 'users.id')
         .join("sections", "section_id", "=", "sections.id")
         .where({ teacher_user_id: teacherId })
         .then((result) => result)

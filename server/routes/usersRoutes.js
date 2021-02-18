@@ -30,6 +30,7 @@ module.exports = ({
       .catch((err) => next(err));
   });
 
+  // in the BIG REQUEST
   // get sections by student id
   router.get(`/:id/sections`, (req, res, next) => {
     const { id } = req.params;
@@ -44,7 +45,8 @@ module.exports = ({
       .catch((err) => next(err));
   });
 
-  // get all attemmpts by student id
+  // in the BIG REQUEST
+  // get all attempts by student id
   router.get(`/:id/attempts`, (req, res, next) => {
     const { id } = req.params;
 
