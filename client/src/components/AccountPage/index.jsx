@@ -31,6 +31,9 @@ const AccountPage = (props) => {
     attemptId: null,
   });
   const [tdnaOpen, setTdnaOpen] = useState(false);
+  const [studentData, setStudentData] = useState(false);
+  const [teacherData, setTeacherData] = useState(false);
+
   const updateContentView = (input, prevFunc) => {
     if (input === "use prev") {
       setContentView(prevFunc);
@@ -135,7 +138,7 @@ const AccountPage = (props) => {
           console.error(err);
         });
     }
-  }, [userId, token, user]);
+  }, [userId, token, user, studentData]);
 
   useEffect(() => {
     if (user && user.is_teacher) {
@@ -194,7 +197,7 @@ const AccountPage = (props) => {
           console.error(err);
         });
     }
-  }, [user, token, userId]);
+  }, [user, token, userId, teacherData]);
 
   const navProps = {
     navButtons,
@@ -211,6 +214,8 @@ const AccountPage = (props) => {
     setExamId,
     token,
     setTdnaOpen,
+    setStudentData,
+    setTeacherData,
   };
   return (
     <Nav {...navProps}>

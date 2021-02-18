@@ -45,6 +45,8 @@ export default function AccountContent(props) {
     sections,
     setExamId,
     setTdnaOpen,
+    setStudentData,
+    setTeacherData,
   } = props;
   if (!contentView) {
     return <Typography>404 Error</Typography>;
@@ -93,6 +95,7 @@ export default function AccountContent(props) {
         user={user}
         token
         updateContentView={updateContentView}
+        setTeacherData={setTeacherData}
       ></CreateExam>
     );
   } else if (view === "Attempt") {
@@ -102,6 +105,10 @@ export default function AccountContent(props) {
           contentView={contentView}
           token
           attemptId={attemptId}
+          updateData={() => {
+            setStudentData((prev) => !prev);
+            setTeacherData((prev) => !prev);
+          }}
           updateContentView={updateContentView}
         ></AttemptView>
       </Box>

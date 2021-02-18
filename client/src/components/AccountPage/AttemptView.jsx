@@ -18,7 +18,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AttemptView(props) {
-  const { attemptId, token, contentView, updateContentView } = props;
+  const {
+    attemptId,
+    token,
+    contentView,
+    updateContentView,
+    setTdnaOpen,
+    updateData,
+  } = props;
   console.log({ props });
   const classes = useStyles();
   console.log({ contentView });
@@ -74,18 +81,18 @@ export default function AttemptView(props) {
         setSuccess(true);
         const t = setTimeout(() => {
           setSuccess(false);
+          updateData((prev) => !prev);
+          const updatingWith = {
+            type: "Teacher",
+            view: "Section",
+            attemptId: null,
+          };
+          // console.log({ updatingWith });
+          updateContentView("use prev", (prev) => {
+            return { ...prev, ...updatingWith };
+          });
           clearTimeout(t);
-        }, 3000);
-
-        const updatingWith = {
-          type: "Teacher",
-          view: "Section",
-          attemptId: null,
-        };
-        console.log({ updatingWith });
-        updateContentView("use prev", (prev) => {
-          return { ...prev, ...updatingWith };
-        });
+        }, 2000);
       })
       .catch((err) => {
         setError(true);
