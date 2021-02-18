@@ -53,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+require("dotenv").config({ path: "../../.env" });
+const baseURL = process.env.REACT_APP_REQUEST_URL;
+
 export default function Register({ setToken }) {
   const history = useHistory();
   const classes = useStyles();
@@ -74,7 +77,7 @@ export default function Register({ setToken }) {
     const data = { name, ...registrationForm };
 
     axios
-      .post("http://localhost:3001/register", data)
+      .post(baseURL + "/register", data)
       .then((res) => {
         console.log("Register response: ", res.data);
         setToken(res.data.token);

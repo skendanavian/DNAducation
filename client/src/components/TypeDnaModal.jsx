@@ -53,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+require("dotenv").config({ path: "../../.env" });
+const baseURL = process.env.REACT_APP_REQUEST_URL;
+
 export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
   const classes = useStyles();
   const [textValue, setTextValue] = useState("");
@@ -121,7 +124,7 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
           if (profileAttempt === 3) {
             const data = { userId, status: true };
             axios
-              .patch(`http://localhost:3001/users/${userId}`, data)
+              .patch(`${baseURL}/users/${userId}`, data)
               .then((res) => {
                 console.log("Update Typingdna: ", res.data);
                 handleClose();

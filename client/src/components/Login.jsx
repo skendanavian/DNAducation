@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+require("dotenv").config({ path: "../../.env" });
+const baseURL = process.env.REACT_APP_REQUEST_URL;
+
 export default function Login({ setToken, setUserId }) {
   const history = useHistory();
   const [loginForm, setLoginForm] = useState({
@@ -67,7 +70,7 @@ export default function Login({ setToken, setUserId }) {
     sessionStorage.removeItem("jwt");
 
     axios
-      .post("http://localhost:3001/login", loginForm)
+      .post(baseURL + "/login", loginForm)
       .then((res) => {
         if (!res.data) {
           console.log(res.data.message);
