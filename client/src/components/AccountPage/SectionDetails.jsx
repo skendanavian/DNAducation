@@ -18,7 +18,6 @@ export default function SectionDetails(props) {
   } = details;
 
   const [teacher, setTeacher] = useState(type === "Teacher" ? user : {});
-
   const token = sessionStorage.getItem("jwt");
 
   // will only request user data if this is a student view, uses teacher object if not
@@ -66,14 +65,14 @@ export default function SectionDetails(props) {
         <>
           <Divider />
           <Box m={1} display="flex" justifyContent="flex-end">
-            <Button
+            {/* <Button
               onClick={editSection}
               size="small"
               // variant="outlined"
               startIcon={<EditIcon />}
             >
               Edit Section
-            </Button>
+            </Button> */}
             <Box ml={1}>
               <Button
                 size="small"

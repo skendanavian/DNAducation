@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
   error: {
     fontSize: "0.8rem",
   },
+
+  success: {
+    color: "#5cb85c",
+  },
 }));
 
 export default function SectionForm(props) {
@@ -32,6 +36,7 @@ export default function SectionForm(props) {
 
   const [studentNumbersError, setStudentNumberError] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleClass = (e) => {
     setClassCode(e.target.value);
@@ -55,7 +60,6 @@ export default function SectionForm(props) {
     } else {
       setError("");
       setStudentNumberError(false);
-      handleSectionClick();
 
       postSection({
         classId: classCode,
@@ -63,6 +67,12 @@ export default function SectionForm(props) {
         userId: user.id,
       })
         .then((rows) => {
+          setSuccess(true);
+          const t = setTimeout(() => {
+            handleSectionClick();
+            setSuccess(false);
+            clearTimeout(t);
+          }, 1500);
           setTdnaOpen((prev) => !prev);
         })
         .catch((err) => setError(err.message));
@@ -72,6 +82,13 @@ export default function SectionForm(props) {
   return (
     <Card>
       <Box display="flex" height="168px" flexDirection="column" m={2}>
+        {success && (
+          <Box display="flex" justifyContent="center">
+            <Typography className={styles.success} variant="p">
+              Your section has been created!
+            </Typography>
+          </Box>
+        )}
         <form onSubmit={submitHandler}>
           <Box mb={2} display="flex">
             <Box width="100%">

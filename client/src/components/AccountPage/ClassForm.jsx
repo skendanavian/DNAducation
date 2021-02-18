@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
   error: {
     fontSize: "0.8rem",
   },
+  success: {
+    color: "#5cb85c",
+  },
 }));
 
 export default function ClassForm(props) {
@@ -35,7 +38,7 @@ export default function ClassForm(props) {
   const [numberCode, setNumberCode] = useState(100);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [codeError, setCodeError] = useState(false);
 
@@ -64,7 +67,12 @@ export default function ClassForm(props) {
         setCodeError(false);
         setError("");
         setClasses((prev) => [...prev, { code, id: classRes[0].id }]);
-        handleClassClick();
+        setSuccess(true);
+        const t = setTimeout(() => {
+          handleClassClick();
+          setSuccess(false);
+          clearTimeout(t);
+        }, 1800);
       })
       .catch((err) => {
         console.error(err);
@@ -79,6 +87,13 @@ export default function ClassForm(props) {
 
   return (
     <Card>
+      {success && (
+        <Box m={2} display="flex" justifyContent="center">
+          <Typography className={styles.success} variant="p">
+            Your new class has been created!
+          </Typography>
+        </Box>
+      )}
       <Box display="flex" height="168px" flexDirection="column" m={2}>
         <form onSubmit={submitHandler}>
           <Box>
