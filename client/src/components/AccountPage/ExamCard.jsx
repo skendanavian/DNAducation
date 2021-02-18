@@ -232,9 +232,11 @@ export default function ExamCard(props) {
         <DialogTitle>
           <Box className={classes.modalTitle}>
             <Typography>{exam.title} Submissions</Typography>
-            <Typography variant="subtitle2" color="textSecondary">
-              Exam Due: {exam && toReadable(exam.due_time)}
-            </Typography>
+            <Box display="flex" justifyContent="center">
+              <Typography variant="subtitle2" color="textSecondary">
+                Exam Due: {exam && toReadable(exam.due_time)}
+              </Typography>
+            </Box>
           </Box>
         </DialogTitle>
 

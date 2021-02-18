@@ -40,7 +40,7 @@ export default function AttemptTable(props) {
             {type === "Teacher" && <TableCell align="left">Name:</TableCell>}
             <TableCell>Submitted:</TableCell>
             {type === "Teacher" && <TableCell>Verification:</TableCell>}
-            <TableCell align="right">Mark:</TableCell>
+            <TableCell align="right">Grade:</TableCell>
             {type === "Teacher" && <TableCell align="right">Open:</TableCell>}
           </TableRow>
         </TableHead>
@@ -65,7 +65,7 @@ export default function AttemptTable(props) {
                     </TableCell>
                   )}
                   <TableCell align="right">
-                    {row.marks_earned || "Not marked"}
+                    {row.marks_earned || "In Progress"}
                   </TableCell>
                   {type === "Teacher" && (
                     <TableCell align="right">
