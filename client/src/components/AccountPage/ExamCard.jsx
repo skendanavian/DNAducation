@@ -31,7 +31,11 @@ import {
   SNOW_WHITE,
 } from "../../constants/colors";
 
-import { getTimeToDue, dateIsPast } from "../../helpers/dateHelpers";
+import {
+  getTimeToDue,
+  dateIsPast,
+  toReadable,
+} from "../../helpers/dateHelpers";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,6 +76,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "auto",
     color: "#5cb85c",
     alignContent: "flex-end",
+  },
+  modalTitile: {
+    display: "flex",
+    flexDirection: "column",
   },
 }));
 
@@ -221,7 +229,14 @@ export default function ExamCard(props) {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <DialogTitle>{exam.title} Submissions</DialogTitle>
+        <DialogTitle>
+          <Box className={classes.modalTitle}>
+            <Typography>{exam.title} Submissions</Typography>
+            <Typography variant="subtitle2" color="textSecondary">
+              Exam Due: {exam && toReadable(exam.due_time)}
+            </Typography>
+          </Box>
+        </DialogTitle>
 
         <DialogContent>
           {exam.attempts.length && (
