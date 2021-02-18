@@ -99,7 +99,7 @@ export default function AccountContent(props) {
     return (
       <Box>
         <AttemptView
-          sectionId={sectionId}
+          contentView={contentView}
           token
           attemptId={attemptId}
           updateContentView={updateContentView}

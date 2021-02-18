@@ -23,12 +23,12 @@ export default function AttemptTable(props) {
   const classes = useStyles();
 
   const clickAttemptHandler = (attemptId) => {
-    updateContentView({
+    updateContentView("use prev", (prev) => ({
+      ...prev,
       view: "Attempt",
       type: "Teacher",
-      sectionId: null,
       attemptId,
-    });
+    }));
   };
 
   return (

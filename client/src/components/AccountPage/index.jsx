@@ -31,7 +31,14 @@ const AccountPage = (props) => {
     attemptId: null,
   });
   const [tdnaOpen, setTdnaOpen] = useState(false);
-  const updateContentView = ({ type, view, sectionId, attemptId }) => {
+  const updateContentView = (input, prevFunc) => {
+    if (input === "use prev") {
+      setContentView(prevFunc);
+      return;
+    }
+
+    const { type, view, sectionId, attemptId } = input;
+
     console.table({ type, view, sectionId, attemptId });
     setContentView({ type, view, sectionId, attemptId });
   };

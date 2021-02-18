@@ -18,10 +18,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AttemptView(props) {
-  const { attemptId, token, sectionId, updateContentView } = props;
+  const { attemptId, token, contentView, updateContentView } = props;
   console.log({ props });
   const classes = useStyles();
-  console.log({ sectionId });
+  console.log({ contentView });
   // we need exam, questions, attempt, attempt answers
   const [attemptData, setAttemptData] = useState({
     attempt: {},
@@ -77,13 +77,15 @@ export default function AttemptView(props) {
           clearTimeout(t);
         }, 3000);
 
-        //Can't get this working - leads to error in section details page.
-        // updateContentView({
-        //   type: "Teacher",
-        //   view: "Section",
-        //   sectionId: sectionId,
-        //   attemptId: null,
-        // });
+        const updatingWith = {
+          type: "Teacher",
+          view: "Section",
+          attemptId: null,
+        };
+        console.log({ updatingWith });
+        updateContentView("use prev", (prev) => {
+          return { ...prev, ...updatingWith };
+        });
       })
       .catch((err) => {
         setError(true);
