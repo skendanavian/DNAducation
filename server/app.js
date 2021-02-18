@@ -6,6 +6,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
+require('dotenv').config();
+
 // Environment setup
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
