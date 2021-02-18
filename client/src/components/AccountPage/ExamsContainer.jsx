@@ -7,7 +7,7 @@ export default function ExamsContainer(props) {
   const { exams, type, setExamId, user, updateContentView } = props;
 
   if (!exams.length) {
-    return <Typography>Nothing Here...</Typography>;
+    return <Typography>There are currently no exams to display...</Typography>;
   }
 
   return (

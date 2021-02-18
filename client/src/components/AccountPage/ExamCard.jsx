@@ -107,7 +107,7 @@ const statusTag = ({
         variant="text"
         size="small"
       >
-        {status === "Submissions" ? status : "No submissions yet"}
+        {status === "Submissions" ? `View ${status}` : "No submissions yet"}
       </Button>
     );
   } else {

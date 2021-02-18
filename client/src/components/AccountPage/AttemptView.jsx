@@ -4,12 +4,24 @@ import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/styles";
 
 import { getAttemptData, markAnswers } from "../../helpers/requestHelpers";
 
+const useStyles = makeStyles((theme) => ({
+  error: {
+    color: "#Df2935",
+  },
+  success: {
+    color: "#5cb85c",
+  },
+}));
+
 export default function AttemptView(props) {
-  const { attemptId, token } = props;
+  const { attemptId, token, sectionId, updateContentView } = props;
   console.log({ props });
+  const classes = useStyles();
+  console.log({ sectionId });
   // we need exam, questions, attempt, attempt answers
   const [attemptData, setAttemptData] = useState({
     attempt: {},
@@ -18,6 +30,8 @@ export default function AttemptView(props) {
     answers: [],
   });
   const [marks, setMarks] = useState([]);
+  const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (attemptId) {
@@ -49,18 +63,30 @@ export default function AttemptView(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // const { id: attemptsId } = attemptData.attempt;
-    // const { id: examId } = attemptData.exam;
-
     const sendMarks = Object.entries(marks).map(([examAnswerId, mark]) => {
       return { mark, examAnswerId };
     });
 
     markAnswers(attemptId, sendMarks)
       .then((result) => {
+        setError(false);
         console.log(result);
+        setSuccess(true);
+        const t = setTimeout(() => {
+          setSuccess(false);
+          clearTimeout(t);
+        }, 3000);
+
+        //Can't get this working - leads to error in section details page.
+        // updateContentView({
+        //   type: "Teacher",
+        //   view: "Section",
+        //   sectionId: sectionId,
+        //   attemptId: null,
+        // });
       })
       .catch((err) => {
+        setError(true);
         console.error(err);
       });
 
@@ -103,6 +129,18 @@ export default function AttemptView(props) {
               {attempt && attempt.average_confidence} / 100
             </Typography>
             <hr />
+            {error && (
+              <Typography className={classes.error} variant="p">
+                There was a problem during submission. Please try again.
+              </Typography>
+            )}
+            {success && (
+              <Box display="flex" justifyContent="center">
+                <Typography className={classes.success} variant="p">
+                  Your grade has been submitted!
+                </Typography>
+              </Box>
+            )}
           </Box>
 
           {displayAttempt &&
@@ -122,7 +160,7 @@ export default function AttemptView(props) {
                     <Typography>{dAtt.q.question}</Typography>
                     <Box margin="1rem auto">
                       <Typography color="primary" variant="h6">
-                        Answer {dAtt.q.question_number}
+                        Answer
                       </Typography>
                     </Box>
                     <Typography>{dAtt.a.answer}</Typography>
@@ -156,6 +194,24 @@ export default function AttemptView(props) {
                 </Box>
               );
             })}
+          {error && (
+            <Box display="flex" justifyContent="center">
+              <Typography className={classes.error} variant="p">
+                There was a problem during submission. Please try again.
+              </Typography>
+            </Box>
+          )}
+          {success && (
+            <Box
+              className={classes.success}
+              display="flex"
+              justifyContent="center"
+            >
+              <Typography className={classes.success} variant="p">
+                Your grade has been submitted!
+              </Typography>
+            </Box>
+          )}
           <Box
             // margin="1rem auto"
             padding="3rem"
