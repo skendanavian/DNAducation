@@ -28,6 +28,13 @@ In the age of remote learning and online assessments, we saw the need for improv
 - Click 'Submissions' on the exam and view the 'Verification Percent'.
 - This number represents the certainty the alogrithm is that the same person completed the exam as recorded their profile.
 
+## Project Photos
+
+<div style="display:flex; justify-content:center">
+<h3 style="text-align:center">Desktop Version</h3>
+</div>
+<img src="">
+
 ## How we built it
 
 We built DNAducation using React on the frontend and Node / Express on the backend. We used PostgreSQL and Knex for our database management. The majority of our react components are made from the Material-Ui library and the typing biometrics are provided via the [TypingDNA](https://www.typingdna.com/) api.
