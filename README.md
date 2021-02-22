@@ -14,7 +14,7 @@ In the age of remote learning and online assessments, we saw the need for improv
 
 ## Try it out
 
-- Visit [this link](https://dnaducation.herokuapp.com/) and click 'Sign Up'.
+- Visit [the deployed version](https://dnaducation.herokuapp.com/) and click 'Sign Up'.
 - Fill in your information, create a random 6-digit student Id and check 'Teacher Account'.
 - First click 'Record your typing DNA profile' and follow the prompts. This records your typing patterns, so type as you would normally.
 - Back in the account view, click 'Create Section'.
