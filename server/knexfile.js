@@ -1,9 +1,5 @@
 require("dotenv").config({ path: "./.env" });
 
-const conn = process.env.DATABASE_URL;
-const [__, user, password, host, port, database] = conn.split(/[/:@]+/g);
-
-
 module.exports = {
   development: {
     client: "pg",
@@ -24,13 +20,8 @@ module.exports = {
   },
   production: {
     client: 'pg',
-    // connection: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
     connection: {
-      user,
-      password,
-      host,
-      port,
-      database,
       ssl: { rejectUnauthorized: false }
     },
     migrations: {
