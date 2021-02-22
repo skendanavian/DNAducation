@@ -1,76 +1,57 @@
-# Getting Started with Create React App
+## Inspiration
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+In the age of remote learning and online assessments, we saw the need for improved student verification during written exams. This is especially needed in situations where teachers or exam proctors are unable to monitor students through webcam video. We were inspired by the authentication possibilities available through the [TypingDNA](https://www.typingdna.com/) api and set out to create an application that utilizes typing biometrics during online assessments.
 
-## Available Scripts
+## What it does
 
-In the project directory, you can run:
+**DNAducation** is a powerful educational assessment portal that provides valuable tools for educators and students alike while verifying user identity throughout the process.
 
-### `npm start`
+- Educators can keep track of their classes and sections in one location with the ability to create new classes, sections, and exams. They get updates on exam submissions and can mark the exams within the application.
+- Students can view all of their classes, upcoming exams and access their grades for each submission.
+- What really makes DNAducation stand out from the crowd is the advanced user verification that takes place under the hood. Students must record a typing profile before they are granted access to any exams. This process records and sends typing biometrics to the [TypingDNA](https://www.typingdna.com/) api a profile is stored for each user.
+- Typing biometrics are monitored and recorded for every exam question and are referenced against the student's typing profile to return a user confidence value to educators for each submission.
+- Educators have access to these confidence levels during grading and exam review to help flag cases of academic dishonesty and student fraud during visually unmonitored exam settings.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Try it out
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Visit [this link](https://dnaducation.herokuapp.com/) and click 'Sign Up'.
+- Fill in your information, create a random 6-digit student Id and check 'Teacher Account'.
+- First click 'Record your typing DNA profile' and follow the prompts. This records your typing patterns, so type as you would normally.
+- Back in the account view, click 'Create Section'.
+- Add your student id to the textbox or copy it from the box above. Two section icons should now appear in the navigation on the left.
+- Select the section icon with the graduation hat.
+- Click 'Create Exam' and fill in the form with random data and add at least three questions.
+- Now click the other section icon, (the 'student' section).
+- From this view, see the exam you created as the teacher, click 'Start Exam'.
+- Answer the questions with any text, but answer normally as the typingdna alogrothim is recording your typing pattern.
+- Finish the exam and navigate back to the Teacher view.
+- Click 'Submissions' on the exam and view the 'Verification Percent'.
+- This number represents the certainty the alogrithm is that the same person completed the exam as recorded their profile.
 
-### `npm test`
+## How we built it
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+We built DNAducation using React on the frontend and Node / Express on the backend. We used PostgreSQL and Knex for our database management. The majority of our react components are made from the Material-Ui library and the typing biometrics are provided via the [TypingDNA](https://www.typingdna.com/) api.
 
-### `npm run build`
+## Challenges we ran into
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+-This was our first time using Knex with PostgreSQL which had a bit of a learning curve at the beginning of the project.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- It was also our first time using Material-UI which similarly took some adapting to fully manipulate their api and customize components and styling as we needed.
+- The initial setup for our jwt and TypingDNA config gave us some issues but once those were sorted out, both worked great.
+- One of our ongoing challenges throughout the project was handling complex React state updates during asynchronous data fetching from our server and the TypeDNA api.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Accomplishments that we're proud of
 
-### `npm run eject`
+- This was our first hackathon which was a great accomplishment in itself.
+- We were able to learn Knex, Material-UI, Jwt, and TypingDNA for the first time while building the project.
+- We are proud of how much we were able to complete in 10 days and we made it to our MVP, if not slightly further.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## What we learned
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- New Technologies (Material-UI, Knex, TypingDNA, Jwt)
+- A much greater understanding of how to handle complex state and handling async behaviours in react.
+- Debugging is extra tricky when you are sleep deprived.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## What's next for DNAducation
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-### Migrating and Seeding DB
-
-knex migrate:latest
-knex migrate:rollback (if needed)
-knex seed:run
+We hope to continue adding features and functionality that we were unable to get to in the short timeframe of the hackathon. This includes the ability for teachers to edit exams, and for students to save partial exam attempts and return later. We weren't able to refactor much of our codebase and would like to do this to boost performance, readability and maintainability.
