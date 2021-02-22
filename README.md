@@ -62,6 +62,10 @@ In the age of remote learning and online assessments, we saw the need for improv
 <h3 style="text-align:center">Student Exam View</h3>
 </div>
 <img src="https://github.com/skendanavian/DNAducation/blob/main/docs/studentExamView.png?raw=true">
+<div style="display:flex; justify-content:center">
+<h3 style="text-align:center">Submissions</h3>
+</div>
+<img src="https://github.com/skendanavian/DNAducation/blob/main/docs/teacherSubmissions.png?raw=true">
 
 ## How we built it
 
