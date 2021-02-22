@@ -1,10 +1,12 @@
 require("dotenv").config({ path: "./.env" });
 
+console.log(process.env.DATABASE_URL);
+
 module.exports = {
   development: {
     client: "pg",
     connection: {
-      host: 'localhost',
+      host: "localhost",
       port: 5432,
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
@@ -19,14 +21,17 @@ module.exports = {
     },
   },
   production: {
-    client: 'pg',
-    connectionString: process.env.DATABASE_URL,
-    // connection:{ssl: { rejectUnauthorized: false }},
+    client: "pg",
+
+    connection: {
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+    },
     migrations: {
-        directory: __dirname + '/db/migrations',
-      },
+      directory: __dirname + "/db/migrations",
+    },
     seeds: {
-        directory: __dirname + '/db/seeds',
-      },
+      directory: __dirname + "/db/seeds",
+    },
   },
 };
