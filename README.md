@@ -31,9 +31,37 @@ In the age of remote learning and online assessments, we saw the need for improv
 ## Project Photos
 
 <div style="display:flex; justify-content:center">
-<h3 style="text-align:center">Desktop Version</h3>
+<h3 style="text-align:center">Landing Page</h3>
 </div>
-<img src="">
+<img src="https://github.com/skendanavian/DNAducation/blob/main/docs/landingPage.png?raw=true">
+<div style="display:flex; justify-content:center">
+<h3 style="text-align:center">Login</h3>
+</div>
+<img src="https://github.com/skendanavian/DNAducation/blob/main/docs/login.png?raw=true">
+<div style="display:flex; justify-content:center">
+<h3 style="text-align:center">Teacher Account Page</h3>
+</div>
+<img src="https://github.com/skendanavian/DNAducation/blob/main/docs/teacherAccount.png?raw=true">
+<div style="display:flex; justify-content:center">
+<h3 style="text-align:center">Student Account Page</h3>
+</div>
+<img src="https://github.com/skendanavian/DNAducation/blob/main/docs/studentAccounts.png?raw=true">
+<div style="display:flex; justify-content:center">
+<h3 style="text-align:center">Typing DNA Profile</h3>
+</div>
+<img src="https://github.com/skendanavian/DNAducation/blob/main/docs/typingActive.png?raw=true">
+<div style="display:flex; justify-content:center">
+<h3 style="text-align:center">Create Exam</h3>
+</div>
+<img src="https://github.com/skendanavian/DNAducation/blob/main/docs/createExam1.png?raw=true">
+<div style="display:flex; justify-content:center">
+<h3 style="text-align:center">Grade Exam</h3>
+</div>
+<img src="https://github.com/skendanavian/DNAducation/blob/main/docs/gradeExam1.png?raw=true">
+<div style="display:flex; justify-content:center">
+<h3 style="text-align:center">Student Exam View</h3>
+</div>
+<img src="https://github.com/skendanavian/DNAducation/blob/main/docs/studentExamView.png?raw=true">
 
 ## How we built it
 
