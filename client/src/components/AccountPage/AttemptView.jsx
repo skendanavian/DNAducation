@@ -87,7 +87,7 @@ export default function AttemptView(props) {
             view: "Section",
             attemptId: null,
           };
-          // console.log({ updatingWith });
+          console.log({ updatingWith });
           updateContentView("use prev", (prev) => {
             return { ...prev, ...updatingWith };
           });
@@ -128,24 +128,24 @@ export default function AttemptView(props) {
             </Typography>
 
             <hr />
-            <Typography color="primary" variant="p">
+            <Typography color="primary">
               Attempt Id: {attempt && attempt.id}
             </Typography>
 
             <hr />
-            <Typography color="primary" variant="p">
+            <Typography color="primary">
               TypingDNA Authentication Rating:{" "}
               {attempt && attempt.average_confidence} / 100
             </Typography>
             <hr />
             {error && (
-              <Typography className={classes.error} variant="p">
+              <Typography className={classes.error}>
                 There was a problem during submission. Please try again.
               </Typography>
             )}
             {success && (
               <Box display="flex" justifyContent="center">
-                <Typography className={classes.success} variant="p">
+                <Typography className={classes.success}>
                   Your grade has been submitted!
                 </Typography>
               </Box>
@@ -163,16 +163,16 @@ export default function AttemptView(props) {
                   key={index}
                 >
                   <Typography color="primary" variant="h6">
-                    Question {dAtt.q.question_number}
+                    Question {dAtt.q && dAtt.q.question_number}
                   </Typography>
                   <Box margin="1rem auto">
-                    <Typography>{dAtt.q.question}</Typography>
+                    <Typography>{dAtt.q && dAtt.q.question}</Typography>
                     <Box margin="1rem auto">
                       <Typography color="primary" variant="h6">
                         Answer
                       </Typography>
                     </Box>
-                    <Typography>{dAtt.a.answer}</Typography>
+                    <Typography>{dAtt.a && dAtt.a.answer}</Typography>
                     <Box
                       display="flex"
                       alignItems="center"
@@ -184,7 +184,6 @@ export default function AttemptView(props) {
                         label="Marks"
                         variant="outlined"
                         required
-                        // value={marks[dAtt.a.id]}
                         name="marks"
                         InputProps={{
                           inputProps: { min: 0, max: 100 },
@@ -194,7 +193,7 @@ export default function AttemptView(props) {
                       />
                       <Box ml={2}>
                         <Typography m={10} color="primary" variant="h6">
-                          / {dAtt.q.mark_value}
+                          / {dAtt.q && dAtt.q.mark_value}
                         </Typography>
                       </Box>
                     </Box>
@@ -205,7 +204,7 @@ export default function AttemptView(props) {
             })}
           {error && (
             <Box display="flex" justifyContent="center">
-              <Typography className={classes.error} variant="p">
+              <Typography className={classes.error}>
                 There was a problem during submission. Please try again.
               </Typography>
             </Box>
@@ -216,7 +215,7 @@ export default function AttemptView(props) {
               display="flex"
               justifyContent="center"
             >
-              <Typography className={classes.success} variant="p">
+              <Typography className={classes.success}>
                 Your grade has been submitted!
               </Typography>
             </Box>
