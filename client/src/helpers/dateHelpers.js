@@ -15,3 +15,7 @@ export function datesAreInOrder(dateA, dateB) {
 export function toReadable(date) {
   return DateTime.fromISO(date).toLocaleString();
 }
+
+export function getNow() {
+  return DateTime.now().toISO();
+}

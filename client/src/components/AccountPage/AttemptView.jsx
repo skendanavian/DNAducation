@@ -18,14 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AttemptView(props) {
-  const {
-    attemptId,
-    token,
-    contentView,
-    updateContentView,
-    setTdnaOpen,
-    updateData,
-  } = props;
+  const { attemptId, contentView, updateContentView, updateData } = props;
   console.log({ props });
   const classes = useStyles();
   console.log({ contentView });

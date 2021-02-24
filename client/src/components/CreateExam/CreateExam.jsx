@@ -31,7 +31,6 @@ export default function CreateExam(props) {
   const { details, user, token, updateContentView, updateData } = props;
   const { title, code, section_id } = details;
   const classes = useStyles();
-  const date = new Date();
   const [questions, setQuestions] = useState([{ question: "", mark: "" }]);
   const [examDetails, setExamDetails] = useState({
     title: "",
@@ -98,8 +97,6 @@ export default function CreateExam(props) {
     updatedQuestions.splice(index, 1);
     setQuestions(updatedQuestions);
   };
-
-  useEffect(() => {}, [questions]);
 
   const questionPanels = questions.map((e, index) => {
     return (

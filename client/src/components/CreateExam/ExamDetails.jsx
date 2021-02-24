@@ -1,4 +1,9 @@
-import { Box, TextField } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import TextField from "@material-ui/core/TextField";
+
+import { getNow } from "../../helpers/dateHelpers";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import LuxonUtils from "@date-io/luxon";
 
 import { makeStyles } from "@material-ui/styles";
 // require("dotenv").config({ path: "../../../.env" });
@@ -38,7 +43,22 @@ export default function ExamDetails({ handleInput, examDetails }) {
         fullWidth
         onChange={handleInput}
       />
-      <TextField
+      <MuiPickersUtilsProvider utils={LuxonUtils}>
+        <DateTimePicker
+          id="date"
+          value={examDetails.date}
+          label="Due Date"
+          name="examDetails"
+          disablePast
+          className={classes.dateField}
+          initialFocusedDate={getNow()}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          onChange={handleInput}
+        />
+      </MuiPickersUtilsProvider>
+      {/* <TextField
         id="date"
         value={examDetails.date}
         label="Due Date"
@@ -50,7 +70,7 @@ export default function ExamDetails({ handleInput, examDetails }) {
           shrink: true,
         }}
         onChange={handleInput}
-      />
+      /> */}
     </Box>
   );
 }
