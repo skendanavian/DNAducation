@@ -172,19 +172,6 @@ export default function ExamCard(props) {
             <SubjectIcon text={exam.section.code} />
           </Avatar>
         }
-        // action={
-        // type === "Teacher" && (
-        // <TooltipMenu
-        //   editExam={() => {
-        //     console.log(`editting: ${exam.id}`);
-        //   }}
-        //   deleteExam={() => {
-        //     console.log(`deleting: ${exam.id}`);
-        //   }}
-        // />
-        //   )
-        // }
-
         title={`${exam.section.code} - ${exam.title}`}
         subheader={`Due ${inTime}`}
       />

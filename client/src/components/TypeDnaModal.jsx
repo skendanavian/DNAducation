@@ -154,7 +154,6 @@ export default function TypeDnaModal({ open, handleClickOpen, handleClose }) {
         aria-labelledby="form-dialog-title"
         scroll="body"
         maxWidth="xl"
-        modalProps={{ className: classes.root }}
       >
         <DialogContent>
           {view === "INTRO" && (

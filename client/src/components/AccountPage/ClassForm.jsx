@@ -89,7 +89,7 @@ export default function ClassForm(props) {
     <Card>
       {success && (
         <Box m={2} display="flex" justifyContent="center">
-          <Typography className={styles.success} variant="p">
+          <Typography className={styles.success} variant="body2">
             Your new class has been created!
           </Typography>
         </Box>

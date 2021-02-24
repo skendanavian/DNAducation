@@ -74,7 +74,7 @@ export default function SectionForm(props) {
       <Box display="flex" height="168px" flexDirection="column" m={2}>
         {success && (
           <Box display="flex" justifyContent="center">
-            <Typography className={styles.success} variant="p">
+            <Typography className={styles.success} variant="body2">
               Your section has been created!
             </Typography>
           </Box>
