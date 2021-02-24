@@ -1,6 +1,8 @@
-import { Box, Typography, Card } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import Card from "@material-ui/core/Card";
 import { makeStyles } from "@material-ui/styles";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ExamDetails from "./ExamDetails";
 import CreateQuestion from "./CreateQuestion";
 import ButtonRow from "./ButtonRow";
@@ -35,24 +37,30 @@ export default function CreateExam(props) {
   const [examDetails, setExamDetails] = useState({
     title: "",
     desc: "",
-    date: "",
+    date: null,
   });
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!examDetails.date) {
+      setError("Please choose a due date before creating the exam.");
+      return;
+    }
+
     const examData = { questions, examDetails, section_id };
     console.table("Exam Data to submit:  ", examData);
 
     createExamAndQuestions(examDetails, questions, section_id, token)
       .then((res) => {
         console.log("Create Exam Response: ", res.data);
-        setError(false);
+        setError("");
         setExamDetails({
           title: "",
           desc: "",
-          date: "",
+          date: null,
         });
         setQuestions([{ question: "", mark: "10" }]);
         updateData();
@@ -69,23 +77,30 @@ export default function CreateExam(props) {
         }, 2000);
       })
       .catch((err) => {
-        setError(true);
+        setError(`Sorry, there was a problem when submitting. ${err.message}`);
         console.log(err);
       });
   };
 
   const handleInput = (e, index) => {
     if (e.target.name === "examDetails") {
-      setExamDetails({
-        ...examDetails,
+      setExamDetails((prev) => ({
+        ...prev,
         [e.target.id]: e.target.value,
-      });
+      }));
     } else {
       const updateItem = { ...questions[index], [e.target.id]: e.target.value };
       const copy = [...questions];
       copy[index] = updateItem;
       setQuestions(copy);
     }
+  };
+
+  const handleDateTimePicker = (dueDate) => {
+    setExamDetails((prev) => ({
+      ...prev,
+      date: dueDate ? dueDate.toISO() : null,
+    }));
   };
 
   const addQuestion = (e) => {
@@ -142,7 +157,7 @@ export default function CreateExam(props) {
         {error && (
           <Box display="flex" justifyContent="center">
             <Typography variant="h7" color="primary" className={classes.error}>
-              Sorry, there was a problem when submitting. Please try again.
+              {error}
             </Typography>
           </Box>
         )}
@@ -161,7 +176,9 @@ export default function CreateExam(props) {
             <form onSubmit={handleSubmit}>
               <ExamDetails
                 handleInput={handleInput}
+                handleDateTimePicker={handleDateTimePicker}
                 examDetails={examDetails}
+                error={error}
               />
               {questions && questionPanels}
               {error && (
@@ -171,8 +188,7 @@ export default function CreateExam(props) {
                     color="primary"
                     className={classes.error}
                   >
-                    Sorry, there was a problem when submitting. Please try
-                    again.
+                    {error}
                   </Typography>
                 </Box>
               )}

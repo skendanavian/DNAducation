@@ -1,7 +1,8 @@
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import DateRangeIcon from "@material-ui/icons/DateRange";
 
-import { getNow } from "../../helpers/dateHelpers";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import LuxonUtils from "@date-io/luxon";
 
@@ -15,7 +16,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ExamDetails({ handleInput, examDetails }) {
+export default function ExamDetails({
+  handleInput,
+  handleDateTimePicker,
+  examDetails,
+  error,
+}) {
   const classes = useStyles();
 
   return (
@@ -46,31 +52,25 @@ export default function ExamDetails({ handleInput, examDetails }) {
       <MuiPickersUtilsProvider utils={LuxonUtils}>
         <DateTimePicker
           id="date"
+          inputVariant="outlined"
+          required
+          clearable
+          minutesStep={5}
           value={examDetails.date}
           label="Due Date"
-          name="examDetails"
           disablePast
+          error={!examDetails.date && error && error.includes("date")}
           className={classes.dateField}
-          initialFocusedDate={getNow()}
-          InputLabelProps={{
-            shrink: true,
+          onChange={handleDateTimePicker}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <DateRangeIcon color="primary" />
+              </InputAdornment>
+            ),
           }}
-          onChange={handleInput}
         />
       </MuiPickersUtilsProvider>
-      {/* <TextField
-        id="date"
-        value={examDetails.date}
-        label="Due Date"
-        name="examDetails"
-        type="datetime-local"
-        fullWidth
-        className={classes.dateField}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        onChange={handleInput}
-      /> */}
     </Box>
   );
 }
