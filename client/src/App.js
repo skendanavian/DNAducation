@@ -9,6 +9,8 @@ import {
   Redirect,
 } from "react-router-dom";
 
+import { GREEN, RED, PRIMARY, SECONDARY, SNOW_WHITE } from "./constants/colors";
+
 import Login from "./components/Login";
 import LandingPage from "./components/LandingPage";
 import AccountPage from "./components/AccountPage";
@@ -18,13 +20,19 @@ import Question from "./components/Question";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#00296b",
+      main: PRIMARY,
     },
     secondary: {
-      main: "#fdc500",
+      main: SECONDARY,
     },
-    light: {
-      main: "#FFFBFE",
+    background: {
+      default: SNOW_WHITE,
+    },
+    success: {
+      main: GREEN,
+    },
+    error: {
+      main: RED,
     },
   },
   typography: {
