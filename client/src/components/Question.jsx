@@ -4,12 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import TypeDNA from "../typeDna/typingdna";
 
-import {
-  calculateAnswerConfidence,
-  calculateExamConfidence,
-} from "../helpers/calculateConfidence";
-import generateAxios from "../helpers/generateAxios";
-import { formatExamQuestions } from "../helpers/formatExamQuestions";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -17,8 +11,16 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+
+import LoadingButton from "./LoadingButton";
+
+import {
+  calculateAnswerConfidence,
+  calculateExamConfidence,
+} from "../helpers/calculateConfidence";
+import generateAxios from "../helpers/generateAxios";
+import { formatExamQuestions } from "../helpers/formatExamQuestions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,12 +69,23 @@ export default function Question({ examId, userId, token }) {
   const [questionObject, setQuestionObject] = useState({ questions: [{}] });
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [buttonStatus, setButtonStatus] = useState("default");
   const [success, setSuccess] = useState(false);
   const [attemptId, setAttemptId] = useState("");
   const [confidenceArray, setConfidenceArray] = useState([]);
 
   const axios = generateAxios(token);
   const baseURL = process.env.REACT_APP_REQUEST_URL;
+
+  const changeButtonStatus = (status) => {
+    setButtonStatus(status);
+    if (status === "error") {
+      const timer = setTimeout(() => {
+        setButtonStatus("default");
+        clearTimeout(timer);
+      }, 1000);
+    }
+  };
 
   useEffect(() => {
     if (userId) {
@@ -114,7 +127,7 @@ export default function Question({ examId, userId, token }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     tdna.stop();
-
+    changeButtonStatus("loading");
     axios
       .post(apiRoute, { userId, typingPattern })
       .then((res) => {
@@ -172,28 +185,38 @@ export default function Question({ examId, userId, token }) {
             })
             .then((res) => {
               setSuccess(true);
+              changeButtonStatus("success");
               const t = setTimeout(() => {
                 setSuccess(false);
+                changeButtonStatus("default");
                 history.push("/account");
                 clearTimeout(t);
               }, 1500);
 
               return;
+            })
+            .catch((err) => {
+              console.log(err);
+              changeButtonStatus("error");
+              setErrorMessage(
+                "There was a problem submitting this question. Please try again"
+              );
             });
         }
         setSuccess(true);
+        changeButtonStatus("success");
         const t = setTimeout(() => {
           setSuccess(false);
+          changeButtonStatus("default");
           setAnswerText("");
           setQuestionIndex(questionIndex + 1);
           clearTimeout(t);
         }, 1500);
-        // setAnswerText("");
-        // setQuestionIndex(questionIndex + 1);
         return;
       })
       .catch((err) => {
         console.log(err);
+        changeButtonStatus("error");
         setErrorMessage(
           "There was a problem submitting this question. Please try again"
         );
@@ -236,15 +259,11 @@ export default function Question({ examId, userId, token }) {
             </Typography>
             <Divider />
           </Typography>
-
           <Typography className={`${classes.centerText} ${classes.question}`}>
             {currentQ.question}
           </Typography>
           <Typography className={classes.error}>
             {errorMessage && errorMessage}
-          </Typography>
-          <Typography className={classes.success}>
-            {success && "Question Submitted"}
           </Typography>
           <form
             onSubmit={(e) => handleSubmit(e)}
@@ -267,11 +286,16 @@ export default function Question({ examId, userId, token }) {
             ></TextField>
 
             <Box display="flex" justifyContent="space-evenly" padding={5}>
-              <Button type="submit" variant="contained" color="secondary">
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                color="secondary"
+                status={buttonStatus}
+              >
                 {questionIndex === questionObject.questions.length - 1
                   ? "Submit Answer & Finish Exam"
                   : "Submit Answer"}
-              </Button>
+              </LoadingButton>
             </Box>
           </form>
         </Container>

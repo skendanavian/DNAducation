@@ -20,9 +20,10 @@ const useStyles = makeStyles((theme) => {
       position: "relative",
     },
     disable: (props) => {
-      let override = theme.palette.primary.main;
-      if (props.error) override = theme.palette.error.main;
-      if (props.success) override = theme.palette.success.main;
+      console.log({ props });
+      let override = theme.palette[props.color].main;
+      if (props.status === "error") override = theme.palette.error.main;
+      if (props.status === "success") override = theme.palette.success.main;
       return {
         "&:hover": {
           backgroundColor: override,
@@ -58,18 +59,23 @@ const useStyles = makeStyles((theme) => {
 
 export default function LoadingButton(props) {
   const {
-    label = "Button",
+    label = props.children || "Button",
     color = "primary",
     variant = "contained",
     size = "medium",
     handleClick = () => {
       console.log("clicked");
     },
-    loading = false,
-    success = false,
-    error = false,
+    type = "submit",
+    status = "default",
+    disabled = false,
   } = props;
-  const classes = useStyles({ loading, success, error });
+
+  const loading = status === "loading";
+  const error = status === "error";
+  const success = status === "success";
+
+  const classes = useStyles(props);
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
@@ -95,7 +101,9 @@ export default function LoadingButton(props) {
           className={buttonClassname}
           onClick={onClick}
           size={size}
+          type={type}
           disableElevation={loading || error || success}
+          disabled={disabled}
         >
           <Typography className={labelClassname}>{label}</Typography>
         </Button>
