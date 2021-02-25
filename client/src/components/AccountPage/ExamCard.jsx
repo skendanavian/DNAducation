@@ -20,8 +20,7 @@ import {
 
 import DialogActions from "@material-ui/core/DialogActions";
 
-import TooltipMenu from "./TooltipMenu";
-import AttemptTable from "../AttemptTable";
+import AttemptTable from "./AttemptTable";
 import SubjectIcon from "../SubjectIcon";
 import {
   GREEN,
