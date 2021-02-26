@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
-import { Box, Divider, Typography, Card, Button } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import Divider from "@material-ui/core/Divider";
+import Typography from "@material-ui/core/Typography";
+import Card from "@material-ui/core/Card";
+import Button from "@material-ui/core/Button";
+
 import AddIcon from "@material-ui/icons/Add";
-import EditIcon from "@material-ui/icons/Edit";
 
 import generateAxios from "../../helpers/generateAxios";
 const baseURL = process.env.REACT_APP_REQUEST_URL;
 require("dotenv").config({ path: "../../../.env" });
 
 export default function SectionDetails(props) {
-  const { details, type, user, editSection, updateContentView } = props;
-  const {
-    title,
-    teacher_user_id,
-    code,
-    description,
-    section_id: sectionId,
-  } = details;
+  const { details, type, user, updateContentView } = props;
 
   const [teacher, setTeacher] = useState(type === "Teacher" ? user : {});
   const token = sessionStorage.getItem("jwt");
@@ -23,13 +20,17 @@ export default function SectionDetails(props) {
   // will only request user data if this is a student view, uses teacher object if not
   useEffect(() => {
     const axios = generateAxios(token);
-    if (type !== "Teacher" && teacher_user_id) {
-      const userURL = baseURL + `/users/${teacher_user_id}`;
+    if (details && type !== "Teacher" && details.teacher_user_id) {
+      const userURL = baseURL + `/users/${details.teacher_user_id}`;
       axios.get(userURL).then(({ data: userRes }) => {
         setTeacher(userRes);
       });
     }
-  }, [teacher_user_id, token, type]);
+  }, [details, token, type]);
+
+  if (!details) return <Typography>"Loading"</Typography>;
+
+  const { title, code, description, section_id: sectionId } = details;
 
   return (
     <Card>
