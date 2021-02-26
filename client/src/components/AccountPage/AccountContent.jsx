@@ -7,18 +7,17 @@ import ExamsContainer from "./ExamsContainer";
 import CreateExam from "../CreateExam/CreateExam";
 import AttemptView from "./AttemptView";
 
-// display the following exams for the following views
-// student account -> latest unsubmitted
-// teacher account -> latest unmarked
-// student code -> latest from section
-// teacher code ->  latest from section
-
 const useStyles = makeStyles((theme) => ({
   heading: {
     fontSize: "1.1rem",
   },
 }));
 
+// display the following exams for the following views
+// student account -> latest unsubmitted
+// teacher account -> latest unmarked
+// student code -> latest from section
+// teacher code ->  latest from section
 const examFilter = ({ type, view, exams, token, sectionId }) => {
   if (!exams) return [];
   let toDisplay;

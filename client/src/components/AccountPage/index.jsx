@@ -46,8 +46,6 @@ const AccountPage = (props) => {
     setContentView({ type, view, sectionId, attemptId });
   };
 
-  // below stored in useRef for good react practice
-  // as value read in useEffect below, eslint complains otherwise
   const [navButtons, setNavButtons] = useState({
     meta: [],
     studentSections: [],
