@@ -42,6 +42,7 @@ export default function AttemptView(props) {
           const exam = data[2][0];
           const questions = data[3];
 
+          console.table(exam);
           console.table(questions);
           console.table(answers);
 
@@ -70,15 +71,15 @@ export default function AttemptView(props) {
     markAnswers(attemptId, sendMarks)
       .then((result) => {
         setError(false);
-        console.log(result);
         setSuccess(true);
+        updateData((prev) => !prev);
         const t = setTimeout(() => {
           setSuccess(false);
-          updateData((prev) => !prev);
           const updatingWith = {
             type: "Teacher",
             view: "Section",
             attemptId: null,
+            sectionId: attemptData.exam.section_id,
           };
           console.log({ updatingWith });
           updateContentView("use prev", (prev) => {
